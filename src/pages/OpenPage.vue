@@ -13,69 +13,6 @@
           </strong>
         </div>
       </section>
-      <section class="section-1">
-        <div class="main-content">
-          <strong>
-            <span>Audictionary</span>
-          </strong>
-        </div>
-      </section>
-      <section class="section-1">
-        <div class="main-content">
-          <strong>
-            <span>Audictionary</span>
-          </strong>
-        </div>
-      </section>
-      <section class="section-1">
-        <div class="main-content">
-          <strong>
-            <span>Audictionary</span>
-          </strong>
-        </div>
-      </section>
-      <section class="section-1">
-        <div class="main-content">
-          <strong>
-            <span>Audictionary</span>
-          </strong>
-        </div>
-      </section>
-      <section class="section-1">
-        <div class="main-content">
-          <strong>
-            <span>Audictionary</span>
-          </strong>
-        </div>
-      </section>
-      <section class="section-1">
-        <div class="main-content">
-          <strong>
-            <span>Audictionary</span>
-          </strong>
-        </div>
-      </section>
-      <section class="section-1">
-        <div class="main-content">
-          <strong>
-            <span>Audictionary</span>
-          </strong>
-        </div>
-      </section>
-      <section class="section-1">
-        <div class="main-content">
-          <strong>
-            <span>Audictionary</span>
-          </strong>
-        </div>
-      </section>
-      <section class="section-1">
-        <div class="main-content">
-          <strong>
-            <span>Audictionary</span>
-          </strong>
-        </div>
-      </section>
       
       <div class="button">
         <ion-button>asdf</ion-button>
