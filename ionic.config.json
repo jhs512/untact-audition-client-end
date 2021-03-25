@@ -1,0 +1,7 @@
+{
+  "name": "audictionary",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "vue"
+}
