@@ -14,7 +14,7 @@
             </ion-button>
           </div>
           <div class="mb-4 flex justify-center items-center h-full">
-            <ion-button color="light" href="/usr/member/login" class="w-full">
+            <ion-button color="light" href="/usr/ap/login" class="w-full">
             로그인
             </ion-button>
           </div>

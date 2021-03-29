@@ -5,6 +5,8 @@ import './index.css';
 
 import { IonicVue } from '@ionic/vue';
 
+import './registerServiceWorker';
+
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/vue/css/core.css';
 
@@ -66,7 +68,7 @@ const loginedMemberJobArea = localStorage.getItem("loginedMemberJobArea")
 const loginedMemberCorp = localStorage.getItem("loginedMemberCorp")
 const loginedMemberAuthLevel = localStorage.getItem("loginedMemberAuthLevel")
 
-const globalShare:any = reactive ({
+const globalShare: any = reactive ({
   fullPath:"",
   loginedMember:{
     authKey,

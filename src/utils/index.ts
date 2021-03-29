@@ -1,8 +1,8 @@
-export function isEmptyObject(param:{}) {
+export function isEmptyObject(param: {}) {
   return Object.keys(param).length === 0 && param.constructor === Object;
 }
 
-export function toInt(data:any, defaultValue:any) {
+export function toInt(data: any, defaultValue: any) {
   if ( data == null ) {
     return defaultValue;
   }
@@ -10,10 +10,10 @@ export function toInt(data:any, defaultValue:any) {
   return parseInt(data)
 }
 
-export function toIntOrUnd(data:any) {
+export function toIntOrUnd(data: any) {
   return toInt(data, undefined);
 } 
 
-export function toIntOrNull(data:any) {
+export function toIntOrNull(data: any) {
   return toInt(data, null);
 }

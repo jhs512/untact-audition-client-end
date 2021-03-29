@@ -4,6 +4,7 @@ import { RouteRecordRaw } from 'vue-router';
 import OpenPage from '../pages/OpenPage.vue'
 import JoinTosPage from '../pages/JoinTosPage.vue'
 import JoinPage from '../pages/JoinPage.vue'
+import LoginPage from '../pages/LoginPage.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -21,6 +22,11 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/usr/ap/join',
     component: JoinPage
+  }
+  ,
+  {
+    path: '/usr/ap/login',
+    component: LoginPage
   }
 ]
 

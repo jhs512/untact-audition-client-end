@@ -16,20 +16,20 @@ abstract class HttpClient {
       this._handleRequest,
       this._handleError,
     );
-  };
+  }
 
   private _initializeResponseInterceptor() {
     this.instance.interceptors.response.use(
       this._handleResponse,
       this._handleError,
     );
-  };
+  }
 
-  protected _handleRequest(config:AxiosRequestConfig) : AxiosRequestConfig {
+  protected _handleRequest(config: AxiosRequestConfig): AxiosRequestConfig {
     return config;
   }
 
-  protected _handleResponse(axiosResponse:AxiosResponse) : AxiosResponse {
+  protected _handleResponse(axiosResponse: AxiosResponse): AxiosResponse {
     return axiosResponse;
   }
 
@@ -50,12 +50,12 @@ abstract class HttpClient {
     }
 
     return Promise.reject(error);
-  };
+  }
 
   public postByForm<T = any, R = AxiosResponse<T>>(url: string, data?: any, config?: AxiosRequestConfig): Promise<R> {
     const params = new URLSearchParams();
 
-    for ( let key in data ) {
+    for ( const key in data ) {
       params.append(key, data[key]);
     }
 
@@ -72,42 +72,42 @@ abstract class HttpClient {
 
 // 응답타입1
 interface Base__IResponseBodyType1 {
-  resultCode:string;
-  msg:string;
+  resultCode: string;
+  msg: string;
 }
 // /usr/member/authKey 의 응답 타입
 export interface MainApi__member_authKey__IResponseBody extends Base__IResponseBodyType1 {
-  body:{
-    authKey: string,
-    member:{
-      id: number,
-      regDate: string,
-      updateDate: string,
-      loginId: string,
-      name: string,
-      engName: string,
-      nickName: string,
-      gender: string,
-      regNumber: string,
-      address: string,
-      cellphoneNo: string,
-      feet: number,
-      weight: number,
-      skinTone: string,
-      eyelid: string,
-      feature: string,
-      filmgraphy: string,
-      jobArea: string,
-      corp: string,
-      authLevel: string
-    }
+  body: {
+    authKey: string;
+    member: {
+      id: number;
+      regDate: string;
+      updateDate: string;
+      loginId: string;
+      name: string;
+      engName: string;
+      nickName: string;
+      gender: string;
+      regNumber: string;
+      address: string;
+      cellphoneNo: string;
+      feet: number;
+      weight: number;
+      skinTone: string;
+      eyelid: string;
+      feature: string;
+      filmgraphy: string;
+      jobArea: string;
+      corp: string;
+      authLevel: string;
+    };
   };
 }
 
 // /usr/member/join 의 응답 타입
 export interface MainApi__member_doJoin__IResponseBody extends Base__IResponseBodyType1 {
-  body:{
-    id: number,
+  body: {
+    id: number;
   };
 }
 
@@ -122,13 +122,13 @@ export class MainApi extends HttpClient {
     );
   }
 
-  protected _handleRequest(config:AxiosRequestConfig) {
+  protected _handleRequest(config: AxiosRequestConfig) {
     config.params = {};
     config.params.authKey = localStorage.getItem("authKey");
     return config;
-  };
+  }
 
-  protected _handleResponse(axiosResponse:AxiosResponse) : AxiosResponse {
+  protected _handleResponse(axiosResponse: AxiosResponse): AxiosResponse {
     if ( ["F-A", "F-B"].includes(axiosResponse?.data?.resultCode) ) {
       alert('로그인 후 이용해주세요.');
 
@@ -160,7 +160,7 @@ export class MainApi extends HttpClient {
     return axiosResponse;
   }
   
-  public ap_authKey(loginId:string, loginPw:string) {
+  public ap_authKey(loginId: string, loginPw: string) {
     return this.postByForm<MainApi__member_authKey__IResponseBody>(
       `/usr/ap/getAuthKey`,
       {
@@ -170,7 +170,7 @@ export class MainApi extends HttpClient {
     );
   }
 
-  public ap_doJoin(loginId:string, loginPw:string, name:string, engName:string, gender:string, regNumber:string, address:string, cellPhoneNo:string, nickName:string, feet:number, weight:number, skinTone:string, eyelid:number, feature:string, filmgraphy:string, jobArea:string, corp:string) {
+  public ap_doJoin(loginId: string, loginPw: string, name: string, engName: string, gender: string, regNumber: string, address: string, cellPhoneNo: string, nickName: string, feet: number, weight: number, skinTone: string, eyelid: number, feature: string, filmgraphy: string, jobArea: string, corp: string) {
     return this.postByForm<MainApi__member_doJoin__IResponseBody>(
       `/usr/ap/doJoin`, 
       {
