@@ -117,7 +117,7 @@ export class MainApi extends HttpClient {
   public constructor() {
     super(
       axios.create({
-        baseURL:'http://localhost:8024',
+        baseURL:'http://192.168.219.104:8024',
       })
     );
   }
