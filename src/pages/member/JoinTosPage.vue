@@ -54,7 +54,7 @@
 
 <script lang="ts">
 import { defineComponent, ref, reactive, getCurrentInstance} from 'vue'
-import { Router } from 'vue-router'
+import router from '@/router'
 
 export default defineComponent({
   name: 'JoinTosPage',
@@ -62,8 +62,7 @@ export default defineComponent({
     const historyBack = () => {
       history.back();
     }
-
-    const router: Router = getCurrentInstance()?.appContext.config.globalProperties.$router;
+    
     const agreeCheckElRef = ref<HTMLInputElement>();
 
     const state = reactive({

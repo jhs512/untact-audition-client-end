@@ -133,8 +133,8 @@
 
 <script lang="ts">
 import { defineComponent, ref, getCurrentInstance, reactive } from 'vue';
-import { MainApi } from '../apis';
-import { Router } from 'vue-router';
+import { useMainApi } from '@/apis';
+import router from '@/router';
 
 export default defineComponent({
   name: 'JoinTosPage',
@@ -143,9 +143,6 @@ export default defineComponent({
       history.back();
     }
 
-
-    const router: Router = getCurrentInstance()?.appContext.config.globalProperties.$router;
-    const mainApi: MainApi = getCurrentInstance()?.appContext.config.globalProperties.$mainApi;
     const loginIdElRef = ref<HTMLInputElement>();
     const loginPwElRef = ref<HTMLInputElement>();
     const loginPwConfirmElRef = ref<HTMLInputElement>();
@@ -165,6 +162,8 @@ export default defineComponent({
     const filmgraphyElRef = ref<HTMLInputElement>();
     const jobAreaElRef = ref<HTMLInputElement>();
     const corpElRef = ref<HTMLInputElement>();
+    
+    const mainApi = useMainApi();
 
     const state = reactive({
       step1: true,
@@ -395,7 +394,7 @@ export default defineComponent({
       
       join(loginIdEl.value, loginPwEl.value, nameEl.value, engNameEl.value, state.genderPicked, regNumberEl.value, addressEl.value, cellPhoneNoEl.value, nickNameEl.value, feetEl, weightEl, skinToneEl.value, state.eyelidPicked, featureEl.value, filmgraphyEl.value, jobAreaEl.value, corpEl.value);
     }
-    function join(loginId: string, loginPw: string, name: string, engName: string, gender: string, regNumber: string, address: string, cellPhoneNo: string, nickName: string, feet: number, weight: number, skinTone: string, eyelid: number, feature: string, filmgraphy: string, jobArea: string, corp: string) {
+    function join(loginId:string, loginPw:string, name:string, engName:string, gender:string, regNumber:string, address:string, cellPhoneNo:string, nickName:string, feet:number, weight:number, skinTone:string, eyelid:number, feature:string, filmgraphy:string, jobArea:string, corp:string) {
       mainApi.ap_doJoin(loginId, loginPw, name, engName, gender, regNumber, address, cellPhoneNo, nickName, feet, weight, skinTone, eyelid, feature, filmgraphy, jobArea, corp)
         .then(axiosResponse => {
           alert(axiosResponse.data.msg);
@@ -404,7 +403,7 @@ export default defineComponent({
             return;
           }
 
-          router.replace('/usr/member/login?loginId=' + loginId)
+          router.replace('/member/login?loginId=' + loginId)
         });
     }
 

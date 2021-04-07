@@ -1,4 +1,4 @@
-import { createApp, reactive, computed } from 'vue'
+import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router';
 import './index.css';
@@ -26,140 +26,48 @@ import '@ionic/vue/css/display.css';
 /* Theme variables */
 import './theme/variables.css';
 
-/* 페이지 전역 설정 */
-import BaseLayout from './components/BaseLayout.vue'
-
 /* ionic component 전역설정 */
-import { 
-  IonPage, 
-  IonToolbar, 
-  IonButtons, 
-  IonButton, 
-  IonTitle, 
-  IonHeader, 
-  IonContent,
-  IonBackButton
-} from '@ionic/vue';
+import * as Ion from '@ionic/vue';
 
-import * as Util from './utils/';
 import FormRow from './components/FormRow.vue';
+import MainHeader from './components/MainHeader.vue';
 
 
-// 전역상태 만들기
-const authKey = localStorage.getItem("authKey")
-const loginedMemberId = Util.toIntOrNull(localStorage.getItem("loginedMemberId"))
-const regDate = localStorage.getItem("regDate")
-const updateDate = localStorage.getItem("updateDate")
-const loginedMemberName = localStorage.getItem("loginedMemberName")
-const loginedMemberNickName = localStorage.getItem("loginedMemberNickName")
-const loginedMemberLoginId = localStorage.getItem("loginedMemberLoginId")
-const loginedMemberCellphoneNo = localStorage.getItem("loginedMemberCellphoneNo")
-const loginedMemberEngName = localStorage.getItem("loginedMemberEngName")
-const loginedMemberGender = localStorage.getItem("loginedMemberGender")
-const loginedMemberRegNumber = localStorage.getItem("loginedMemberRegNumber")
-const loginedMemberAddress = localStorage.getItem("loginedMemberAddress")
-const loginedMemberFeet = Util.toIntOrNull(localStorage.getItem("loginedMemberFeet"))
-const loginedMemberWeight = Util.toIntOrNull(localStorage.getItem("loginedMemberWeight"))
-const loginedMemberSkinTone = localStorage.getItem("loginedMemberSkinTone")
-const loginedMemberEyelid = localStorage.getItem("loginedMemberEyelid")
-const loginedMemberFeature = localStorage.getItem("loginedMemberFeature")
-const loginedMemberFilmgraphy = localStorage.getItem("loginedMemberFilmgraphy")
-const loginedMemberJobArea = localStorage.getItem("loginedMemberJobArea")
-const loginedMemberCorp = localStorage.getItem("loginedMemberCorp")
-const loginedMemberAuthLevel = localStorage.getItem("loginedMemberAuthLevel")
+import { createGlobalState, globalStateSymbol } from "@/stores"
+import { createMainApi, mainApiSymbol } from "@/apis"
 
-const globalShare: any = reactive ({
-  fullPath:"",
-  loginedMember:{
-    authKey,
-    id:loginedMemberId,
-    loginId:loginedMemberLoginId,
-    regDate:regDate,
-    updateDate:updateDate,
-    name:loginedMemberName,
-    nickName:loginedMemberNickName,
-    cellphoneNo:loginedMemberCellphoneNo,
-    engName:loginedMemberEngName,
-    gender:loginedMemberGender,
-    regNumber:loginedMemberRegNumber,
-    address:loginedMemberAddress,
-    feet:loginedMemberFeet,
-    weight:loginedMemberWeight,
-    skinTone:loginedMemberSkinTone,
-    eyelid:loginedMemberEyelid,
-    feature:loginedMemberFeature,
-    Filmgraphy:loginedMemberFilmgraphy,
-    jobArea:loginedMemberJobArea,
-    corp:loginedMemberCorp,
-    authLevel:loginedMemberAuthLevel
-  },
-  isLogined: computed(() => globalShare.loginedMember.id !== null ),
-  isMainLayoutVisible: computed(() => 
-    globalShare.fullPath !== "/" && 
-    globalShare.fullPath !== "" &&
-    globalShare.fullPath !== "/usr/member/login" &&
-    globalShare.fullPath !== "/usr/member/join" &&
-    globalShare.fullPath !== "/usr/ap/join" &&
-    globalShare.fullPath !== "/usr/pd/join" &&
-    globalShare.fullPath !== "/usr/member/joinTos" 
-  ),
-  logout: () => {
-    localStorage.removeItem("authKey");
-    localStorage.removeItem("loginedMemberId");
-    localStorage.removeItem("regDate");
-    localStorage.removeItem("updateDate");
-    localStorage.removeItem("loginedMemberLoginId");
-    localStorage.removeItem("loginedMemberName");
-    localStorage.removeItem("loginedMemberNickName");
-    localStorage.removeItem("loginedMemberCellphoneNo");
-    localStorage.removeItem("loginedMemberEngName")
-    localStorage.removeItem("loginedMemberGender")
-    localStorage.removeItem("loginedMemberRegNumber")
-    localStorage.removeItem("loginedMemberAddress")
-    localStorage.removeItem("loginedMemberFeet")
-    localStorage.removeItem("loginedMemberWeight")
-    localStorage.removeItem("loginedMemberSkinTone")
-    localStorage.removeItem("loginedMemberEyelid")
-    localStorage.removeItem("loginedMemberFeature")
-    localStorage.removeItem("loginedMemberFilmgraphy")
-    localStorage.removeItem("loginedMemberJobArea")
-    localStorage.removeItem("loginedMemberCorp")
-    localStorage.removeItem("loginedMemberAuthLevel")
-
-    location.replace('/member/login');
-  }
-})
-
-// MainApi 불러오기
-import { MainApi } from './apis/'
-
-// MainApi 객체 생성
-const mainApi = new MainApi();
-
-
-router.beforeEach((to, from, next) => {
-  globalShare.fullPath = to.fullPath;
-  next();
-});
-
-const app = createApp(App, { globalShare })
+const app = createApp(App)
   .use(IonicVue)
-  .use(router);
+  .use(router)
+  .provide(globalStateSymbol, createGlobalState())
+  .provide(mainApiSymbol, createMainApi())
+  
+  .component('ion-page', Ion.IonPage)
+  .component('ion-toolbar', Ion.IonToolbar)
+  .component('ion-buttons', Ion.IonButtons)
+  .component('ion-button', Ion.IonButton)
+  .component('ion-back-button', Ion.IonBackButton)
+  .component('ion-title', Ion.IonTitle)
+  .component('ion-header', Ion.IonHeader)
+  .component('ion-content', Ion.IonContent)
+  .component('ion-tabs', Ion.IonTabs)
+  .component('ion-tab-bar', Ion.IonTabBar)
+  .component('ion-tab-button', Ion.IonTabButton)
+  .component('ion-label', Ion.IonLabel)
+  .component('ion-icon', Ion.IonIcon)
+  .component('ion-infinite-scroll', Ion.IonInfiniteScroll)
+  .component('ion-infinite-scroll-content', Ion.IonInfiniteScrollContent)
+  .component('ion-list', Ion.IonList)
+  .component('ion-card', Ion.IonCard)
+  .component('ion-card-content', Ion.IonCardContent)
+  .component('ion-card-subtitle', Ion.IonCardSubtitle)
+  .component('ion-card-title', Ion.IonCardTitle)
+  .component('ion-card-header', Ion.IonCardHeader)
+  .component('ion-segment', Ion.IonSegment)
+  .component('ion-segment-button', Ion.IonSegmentButton)
+  .component('FormRow', FormRow)
+  .component('MainHeader', MainHeader);
 
-app.component('base-layout', BaseLayout);
-app.component('ion-page', IonPage);
-app.component('ion-toolbar', IonToolbar);
-app.component('ion-buttons', IonButtons);
-app.component('ion-button', IonButton);
-app.component('ion-back-button', IonBackButton);
-app.component('ion-title', IonTitle);
-app.component('ion-header', IonHeader);
-app.component('ion-content', IonContent);
-app.component('FormRow', FormRow);
-
-// 전역 라이브러리 등록
-app.config.globalProperties.$mainApi = mainApi;
-app.config.globalProperties.$router = router;
   
 router.isReady().then(() => {
   app.mount('#app');
