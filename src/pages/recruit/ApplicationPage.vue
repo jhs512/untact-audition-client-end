@@ -18,32 +18,32 @@
 
               <ion-card class="text-center mb-10">
                 <ion-card-header>
-                  <ion-card-title>{{state.artwork.title}}</ion-card-title>
-                  <ion-card-subtitle>{{state.artwork.subtitle}}</ion-card-subtitle>
-                  <ion-card-subtitle>{{state.actingRole.name}}</ion-card-subtitle>
+                  <ion-card-title>{{state.recruit.extra__aw_title}}</ion-card-title>
+                  <ion-card-subtitle>{{state.recruit.extra__aw_subtitle}}</ion-card-subtitle>
+                  <ion-card-subtitle>{{state.recruit.extra__ar_name}}</ion-card-subtitle>
                 </ion-card-header>
                 <ion-card-content>
-                  {{state.actingRole.character}}
+                  {{state.recruit.extra__ar_character}}
                 </ion-card-content>
               </ion-card>
 
               <div>
                 <ion-label>1차 오디션 영상 업로드</ion-label>
-                <ion-input class="border my-2"></ion-input>
+                <ion-input type="file" class="border my-2"></ion-input>
               </div>
 
               <div class="border-t-2 my-10"></div>
 
               <div>
                 <ion-label>현재 사진 업로드</ion-label>
-                <ion-input class="border my-2"></ion-input>
+                <ion-input type="file" class="border my-2"></ion-input>
               </div>
 
               <div class="border-t-2 my-10"></div>
 
               <div>
                 <ion-label>프로필 사진 업로드</ion-label>
-                <ion-input class="border my-2"></ion-input>
+                <ion-input type="file" class="border my-2"></ion-input>
               </div>
 
               <div class="text-center my-10">
@@ -63,6 +63,8 @@
             </ion-header>
             <div class="text-xs p-4 font-black">
               <span class="border-b-2 border-gray-400">ARTIST INFO</span>
+
+              <div>{{globalState.loginedMember.name}}</div>
             
               <div class="text-center my-10">
                 <ion-button fill="outline" color="dark">최종 제출하기</ion-button>
@@ -78,7 +80,8 @@
 <script lang="ts">
 import { defineComponent, reactive, onMounted } from 'vue';
 import { useMainApi } from '@/apis'
-import { IActingRole, IArtwork, IRecruit } from '@/types';
+import { IRecruit } from '@/types';
+import { useGlobalState } from '@/stores'
 
 
 export default defineComponent({
@@ -90,13 +93,11 @@ export default defineComponent({
     }
   },
   setup(props) {
-
+    const globalState = useGlobalState();
     const mainApi = useMainApi();
 
     const state = reactive ({
       recruit: {} as IRecruit,
-      artwork: {} as IArtwork,
-      actingRole: {} as IActingRole,
       pageNum: 1
     })
 
@@ -104,8 +105,6 @@ export default defineComponent({
       mainApi.recruit_detail(props.id)
         .then(axiosResponse => {
         state.recruit = axiosResponse.data.body.recruit
-        state.artwork = axiosResponse.data.body.artwork
-        state.actingRole = axiosResponse.data.body.actingRole
       });
     }
 
@@ -128,7 +127,8 @@ export default defineComponent({
       state,
       props,
       nextPage,
-      pageBack
+      pageBack,
+      globalState
     }
   }
 })

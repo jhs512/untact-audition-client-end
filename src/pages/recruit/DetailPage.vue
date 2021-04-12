@@ -12,25 +12,25 @@
       <div class="text-center text-xs p-4 font-black">
 
         <section>
-          <div class="text-lg font-extrabold">{{state.artwork.title}}</div>
+          <div class="text-lg font-extrabold">{{state.recruit.extra__aw_title}}</div>
           <div class="text-xs mt-2">모집기한. {{state.recruit.deadline}}</div>
           <div class="text-right mt-2 text-xs">
-            <span>{{state.artwork.media}}</span>
+            <span>{{state.recruit.extra__aw_media}}</span>
             / 
-            <span>{{state.artwork.genre}}</span>
+            <span>{{state.recruit.extra__aw_genre}}</span>
           </div>
-          <div class="">감독. {{state.artwork.director}}</div>
+          <div class="">감독. {{state.recruit.extra__aw_director}}</div>
           <div class="flex justify-around">
-            <span>프로듀서.</span><span>{{state.artwork.producer}}</span>
-            <span>캐스팅매니저.</span><span>{{state.artwork.castingManager}}</span>
+            <span>프로듀서.</span><span>{{state.recruit.extra__aw_producer}}</span>
+            <span>캐스팅매니저.</span><span>{{state.recruit.extra__aw_castingManager}}</span>
           </div>
           <div class="text-left mt-6">
             <div class="">스토리 라인(줄거리).</div>
-            <div class="border border-black rounded py-2 px-1 mt-1">{{state.artwork.story}}</div>
+            <div class="border border-black rounded py-2 px-1 mt-1">{{state.recruit.extra__aw_story}}</div>
           </div>
           <div class="text-left mt-6">
             <div class="">기타사항.</div>
-            <div class="border border-black rounded py-2 px-1 mt-1">{{state.artwork.etc}}기타사항</div>
+            <div class="border border-black rounded py-2 px-1 mt-1">{{state.recruit.extra__aw_etc}}기타사항</div>
           </div>
         </section>
 
@@ -38,19 +38,19 @@
 
         <section>
           <div class="text-lg font-extrabold">배역 상세 내용</div>
-          <div class="mt-2">배역. {{state.actingRole.name}}</div>
+          <div class="mt-2">배역. {{state.recruit.extra__ar_name}}</div>
           <div class="flex justify-around mt-2">
-            <span>배역나이. </span><span>{{state.actingRole.age}}</span>
-            <span>배역성별. </span><span>{{state.actingRole.gender}}</span>
+            <span>배역나이. </span><span>{{state.recruit.extra__ar_age}}</span>
+            <span>배역성별. </span><span>{{state.recruit.extra__ar_gender}}</span>
           </div>
           <div class="flex justify-around mt-2">
-            <span>배역직업. </span><span>{{state.actingRole.job}}</span>
-            <span>대사유무. </span><span>{{state.actingRole.scriptStatus}}</span>
+            <span>배역직업. </span><span>{{state.recruit.extra__ar_job}}</span>
+            <span>대사유무. </span><span>{{state.recruit.extra__ar_scriptStatus}}</span>
           </div>
 
           <div class="text-left mt-6">
             <div class="">배역 상세 설정.</div>
-            <div class="border border-black rounded py-2 px-1 mt-1">{{state.actingRole.character}}</div>
+            <div class="border border-black rounded py-2 px-1 mt-1">{{state.recruit.extra__ar_character}}</div>
           </div>
 
         </section>
@@ -66,13 +66,13 @@
           </div>
 
           <div class="flex justify-around mt-2">
-            <span>장면 수. </span><span>{{state.actingRole.scenesCount}}컷</span>
-            <span>촬영횟수. </span><span>{{state.actingRole.shootingsCount}}회</span>
+            <span>장면 수. </span><span>{{state.recruit.extra__ar_scenesCount}}컷</span>
+            <span>촬영횟수. </span><span>{{state.recruit.extra__ar_shootingsCount}}회</span>
           </div>
 
           <div class="text-left mt-6">
             <div class="">배역 상세 설정.</div>
-            <div class="border border-black rounded py-2 px-1 mt-1">{{state.actingRole.character}}</div>
+            <div class="border border-black rounded py-2 px-1 mt-1">{{state.recruit.extra__ar_character}}</div>
           </div>
         </section>
 
@@ -124,7 +124,7 @@
 <script lang="ts">
 import { defineComponent, reactive, onMounted } from 'vue';
 import { useMainApi } from '@/apis'
-import { IActingRole, IArtwork, IRecruit } from '@/types';
+import { IRecruit } from '@/types';
 import router from '@/router';
 
 
@@ -141,17 +141,13 @@ export default defineComponent({
     const mainApi = useMainApi();
 
     const state = reactive ({
-      recruit: {} as IRecruit,
-      artwork: {} as IArtwork,
-      actingRole: {} as IActingRole,
+      recruit: {} as IRecruit
     })
 
     function recruitDetail(id: number) {
       mainApi.recruit_detail(props.id)
         .then(axiosResponse => {
         state.recruit = axiosResponse.data.body.recruit
-        state.artwork = axiosResponse.data.body.artwork
-        state.actingRole = axiosResponse.data.body.actingRole
       });
     }
 

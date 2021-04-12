@@ -124,9 +124,7 @@ export interface MainApi__recruit_list__IResponseBody extends Base__IResponseBod
 // /usr/recruit/detail 의 응답 타입
 export interface MainApi__recruit_detail__IResponseBody extends Base__IResponseBodyType1 {
   body: {
-    recruit: IRecruit,
-    artwork: IArtwork,
-    actingRole: IActingRole
+    recruit: IRecruit
   };
 }
 
@@ -136,7 +134,7 @@ export class MainApi extends HttpClient {
   public constructor() {
     super(
       axios.create({
-        baseURL:'http://172.30.12.177:8024',
+        baseURL:'http://192.168.219.103:8024',
       })
     );
   }
