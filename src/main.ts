@@ -66,6 +66,10 @@ const app = createApp(App)
   .component('ion-segment', Ion.IonSegment)
   .component('ion-segment-button', Ion.IonSegmentButton)
   .component('ion-input', Ion.IonInput)
+  .component('ion-grid', Ion.IonGrid)
+  .component('ion-row', Ion.IonRow)
+  .component('ion-col', Ion.IonCol)
+  .component('ion-img', Ion.IonImg)
   .component('FormRow', FormRow)
   .component('MainHeader', MainHeader);
 

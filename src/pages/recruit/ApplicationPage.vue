@@ -30,6 +30,15 @@
               <div>
                 <ion-label>1차 오디션 영상 업로드</ion-label>
                 <ion-input type="file" class="border my-2"></ion-input>
+                <ion-button @click="takePhoto">사진촬영</ion-button>
+
+                <ion-grid>
+                  <ion-row>
+                    <ion-col size="6" :key="photo" v-for="photo in photos">
+                      <ion-img :src="photo.webviewPath"></ion-img>
+                    </ion-col>
+                  </ion-row>
+                </ion-grid>
               </div>
 
               <div class="border-t-2 my-10"></div>
@@ -82,6 +91,7 @@ import { defineComponent, reactive, onMounted } from 'vue';
 import { useMainApi } from '@/apis'
 import { IRecruit } from '@/types';
 import { useGlobalState } from '@/stores'
+import { usePhotoGallery, Photo } from '@/composables/usePhotoGallery'
 
 
 export default defineComponent({
@@ -95,6 +105,7 @@ export default defineComponent({
   setup(props) {
     const globalState = useGlobalState();
     const mainApi = useMainApi();
+    const { photos, takePhoto } = usePhotoGallery();
 
     const state = reactive ({
       recruit: {} as IRecruit,
@@ -128,7 +139,9 @@ export default defineComponent({
       props,
       nextPage,
       pageBack,
-      globalState
+      globalState,
+      takePhoto,
+      photos
     }
   }
 })
