@@ -3,6 +3,7 @@
     <MainHeader />
     <ion-content>
       <section v-show="globalState.isLogined">
+        <span class="px-5 text-xs font-semibold">방금 올라온 공고</span>
         <div class="px-2 text-center">
           <ion-card v-for="recruit in state.recruits">
             <ion-card-header @click="showDetail(recruit.id)" class="cursor-pointer">
@@ -69,7 +70,7 @@ export default defineComponent({
     }
 
     function showDetail(id:number) {
-      router.push('/recruit/detail?id=' + id)
+      router.push('/detail?id=' + id)
     }
 
     function recruitList(limit: number) {

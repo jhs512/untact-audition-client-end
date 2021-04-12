@@ -113,7 +113,7 @@ export default defineComponent({
         return;
       }
 
-      router.push('/usr/ap/join')
+      router.push('/member/join')
     }
     return{
       historyBack,

@@ -17,7 +17,7 @@
         </router-link>
       </div>
       <div class="flex justify-center items-center h-full">
-        <router-link class="w-full" to="/member/join">
+        <router-link class="w-full" to="/member/joinTos">
           <ion-button color="light" class="w-full">회원가입</ion-button>
         </router-link>
       </div>

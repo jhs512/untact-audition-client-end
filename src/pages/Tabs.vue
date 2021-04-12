@@ -3,10 +3,8 @@
     <ion-tabs>
       <ion-tab-bar class="border-t" v-show="globalState.isLogined" slot="bottom">
 
-        <ion-tab-button tab="home">
-          <ion-button fill="clear" router-animation="false" router-link="/home">
+        <ion-tab-button tab="home" href="/home">
             <ion-icon :icon="homeOutline" />
-          </ion-button>
         </ion-tab-button>
         
         <ion-tab-button tab="search" href="/search">
@@ -14,7 +12,7 @@
         </ion-tab-button>
           
         <ion-tab-button tab="recruit" href="/recruit">
-          <ion-icon :icon="videocamOutline" />
+          <ion-label>AD</ion-label>
         </ion-tab-button>
 
         <ion-tab-button tab="member" href="/member">

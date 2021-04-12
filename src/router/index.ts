@@ -46,6 +46,10 @@ const routes: Array<RouteRecordRaw> = [
         path: 'join',
         component: () => import('@/pages/member/JoinPage.vue')
       },
+      {
+        path: 'joinTos',
+        component: () => import('@/pages/member/JoinTosPage.vue')
+      },
     ]
   },
   {
@@ -74,12 +78,18 @@ const routes: Array<RouteRecordRaw> = [
         path: 'list',
         component: () => import('@/pages/recruit/ListPage.vue')
       },
-      {
-        path: 'detail',
-        component: () => import('@/pages/recruit/DetailPage.vue'),
-        props: (route:any) => ({ id: Util.toIntOrUnd(route.query.id)})
-      },
+      
     ]
+  },
+  {
+    path: '/detail',
+    component: () => import('@/pages/recruit/DetailPage.vue'),
+    props: (route:any) => ({ id: Util.toIntOrUnd(route.query.id)})
+  },
+  {
+    path: '/application',
+    component: () => import('@/pages/recruit/ApplicationPage.vue'),
+    props: (route:any) => ({ id: Util.toIntOrUnd(route.query.id)})
   },
 ]
 

@@ -1,6 +1,6 @@
 import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
-import { IRecruit } from '../types';
-import { inject, reactive } from 'vue'
+import { IRecruit , IArtwork, IActingRole} from '../types';
+import { inject } from 'vue'
 
 // API 원형
 abstract class HttpClient {
@@ -125,6 +125,8 @@ export interface MainApi__recruit_list__IResponseBody extends Base__IResponseBod
 export interface MainApi__recruit_detail__IResponseBody extends Base__IResponseBodyType1 {
   body: {
     recruit: IRecruit,
+    artwork: IArtwork,
+    actingRole: IActingRole
   };
 }
 
@@ -134,7 +136,7 @@ export class MainApi extends HttpClient {
   public constructor() {
     super(
       axios.create({
-        baseURL:'http://192.168.219.101:8024',
+        baseURL:'http://172.30.12.177:8024',
       })
     );
   }

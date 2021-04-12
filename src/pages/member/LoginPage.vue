@@ -30,7 +30,7 @@
                 </div>
 
                 <div class="gray-color text-center text-xs mt-5">
-                  <router-link to="/member/join" class="underline">아이디가 없으신가요?</router-link>
+                  <router-link to="/member/joinTos" class="underline">아이디가 없으신가요?</router-link>
                 </div>
                 
               </form>

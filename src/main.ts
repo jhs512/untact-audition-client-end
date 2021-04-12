@@ -65,6 +65,7 @@ const app = createApp(App)
   .component('ion-card-header', Ion.IonCardHeader)
   .component('ion-segment', Ion.IonSegment)
   .component('ion-segment-button', Ion.IonSegmentButton)
+  .component('ion-input', Ion.IonInput)
   .component('FormRow', FormRow)
   .component('MainHeader', MainHeader);
 
