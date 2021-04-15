@@ -128,6 +128,12 @@ export interface MainApi__recruit_detail__IResponseBody extends Base__IResponseB
   };
 }
 
+// /usr/ap/doIdDupCheck 의 응답 타입
+export interface MainApi__ap_doIdDupCheck__IResponseBody extends Base__IResponseBodyType1 {
+  body: {
+  };
+}
+
 
 // http://localhost:8021/usr/ 와의 통신장치
 export class MainApi extends HttpClient {
@@ -218,6 +224,10 @@ export class MainApi extends HttpClient {
 
   public recruit_detail(id:number) {
     return this.instance.get<MainApi__recruit_detail__IResponseBody>(`/usr/recruit/detail?id=${id}`);
+  }
+
+  public ap_doIdDupCheck(loginId:string) {
+    return this.instance.get<MainApi__ap_doIdDupCheck__IResponseBody>(`/usr/ap/doIdDupCheck?loginId=${loginId}`);
   }
 } 
 

@@ -15,7 +15,10 @@
             <div class="px-6 py-6">
               
                 <FormRow title="아이디 (이메일)">
-                  <input ref="loginIdElRef" class="form-row-input" type="email" placeholder="@gmail.com">
+                  <div class="relative flex items-center">
+                    <input ref="loginIdElRef" class="form-row-input" type="email" placeholder="@gmail.com" @input="state.idCheckStatus = false">
+                    <ion-button @click="checkId" size="small" color="medium" fill="outline" class="absolute right-0 mr-2">중복체크</ion-button>
+                  </div>
                 </FormRow>
                 <FormRow title="비밀번호">
                   <input ref="loginPwElRef" class="form-row-input" type="password">
@@ -139,7 +142,7 @@ import { useMainApi } from '@/apis';
 import router from '@/router';
 
 export default defineComponent({
-  name: 'JoinTosPage',
+  name: 'JoinPage',
   setup(){
 
     const loginIdElRef = ref<HTMLInputElement>();
@@ -167,7 +170,8 @@ export default defineComponent({
     const state = reactive({
       pageNum: 1,
       genderPicked: '남자',
-      eyelidPicked: 1
+      eyelidPicked: 1,
+      idCheckStatus: false
     })
 
     const nextPage = () => {
@@ -182,8 +186,7 @@ export default defineComponent({
       document.querySelector('ion-content')?.scrollToTop(500)
     }
 
-    const inputCheck = () => {
-      // 로그인아이디 체크
+    const checkId = () => {
       if ( loginIdElRef.value == null ) {
         return;
       }
@@ -194,6 +197,50 @@ export default defineComponent({
         loginIdEl.focus();
         return;
       }
+      if ( email_check(loginIdEl.value) == false ) {
+        alert('이메일 형식으로 아이디를 입력해주세요.')
+        loginIdEl.focus();
+        return;
+      }
+
+      idDupCheck(loginIdEl.value)
+    }
+
+    function email_check( email:string ) { 
+      var regex = /([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/; 
+      return (email != '' && email != 'undefined' && regex.test(email)); 
+    }
+
+    function idDupCheck(loginId:string) {
+      mainApi.ap_doIdDupCheck(loginId)
+        .then(axiosResponse => {
+
+          if ( axiosResponse.data.resultCode.includes('F-') ) {
+            alert('이미 사용중인 아이디입니다.');
+            state.idCheckStatus = false;
+          } else {
+            alert('사용가능한 아이디입니다.');
+            state.idCheckStatus = true;
+          }
+        });
+    }
+
+    const inputCheck = () => {
+      // 로그인아이디 체크
+      if ( loginIdElRef.value == null ) {
+        return;
+      }
+      if ( state.idCheckStatus == false ){
+        alert('아이디 중복확인을 진행해주세요.')
+      }
+      const loginIdEl = loginIdElRef.value;
+      loginIdEl.value = loginIdEl.value.trim();
+      if ( loginIdEl.value.length == 0 ) {
+        alert('로그인 아이디를 입력해주세요.');
+        loginIdEl.focus();
+        return;
+      }
+      
       // 로그인비번 체크
       if ( loginPwElRef.value == null ) {
         return;
@@ -427,7 +474,8 @@ export default defineComponent({
       nextPage,
       pageBack,
       state,
-      scrollToTop
+      scrollToTop,
+      checkId,
     }
   }
 })
