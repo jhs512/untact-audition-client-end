@@ -29,8 +29,21 @@
 
               <div>
                 <ion-label>1차 오디션 영상 업로드</ion-label>
-                <ion-input type="file" class="border my-2"></ion-input>
-                <ion-button @click="takePhoto">사진촬영</ion-button>
+                <ion-input v-model="input.fileEl" ref="fileElRef" type="file" class="border my-2" v-on:change="setThumbnail"></ion-input>
+                
+                <div class="mx-auto image_container">
+                  <img v-if="fileType.type.startsWith('image')" src="" alt="" class="mx-auto">
+                  <video v-if="fileType.type.startsWith('video')" src="" controls></video>
+                </div>
+              </div>
+
+              <div class="border-t-2 my-10"></div>
+
+              <div>
+                <ion-label>현재 사진 업로드</ion-label>
+                <div>
+                  <ion-button expand="block" color="light" @click="takePhoto">사진촬영</ion-button>
+                </div>
 
                 <ion-grid>
                   <ion-row>
@@ -39,13 +52,6 @@
                     </ion-col>
                   </ion-row>
                 </ion-grid>
-              </div>
-
-              <div class="border-t-2 my-10"></div>
-
-              <div>
-                <ion-label>현재 사진 업로드</ion-label>
-                <ion-input type="file" class="border my-2"></ion-input>
               </div>
 
               <div class="border-t-2 my-10"></div>
@@ -71,9 +77,62 @@
               </ion-toolbar>
             </ion-header>
             <div class="text-xs p-4 font-black">
-              <span class="border-b-2 border-gray-400">ARTIST INFO</span>
+              <span class="text-sm border-b-2 border-gray-400">ARTIST INFO</span>
 
-              <div>{{globalState.loginedMember.name}}</div>
+              <div class="mt-10">
+                <span>이름. </span>
+                <span>{{globalState.loginedMember.name}}</span>
+              </div>
+
+              <div class="my-5">
+                <span>활동명. </span>
+                <span>{{globalState.loginedMember.nickName}}</span>
+              </div>
+
+              <div :key="photo" v-for="photo in photos">
+                <ion-img :src="photo.webviewPath"></ion-img>
+              </div>
+              
+
+              <div class="my-5">
+                <span>성별. </span>
+                <span>{{globalState.loginedMember.gender}}</span>
+              </div>
+
+              <div class="my-5">
+                <span>생년월일. </span>
+                <span>{{globalState.loginedMember.regNumber}}</span>
+              </div>
+
+              <div class="my-5">
+                <span>몸무게. </span>
+                <span>{{globalState.loginedMember.weight}}</span>
+              </div>
+
+              <div class="my-5">
+                <span>키. </span>
+                <span>{{globalState.loginedMember.feet}}</span>
+              </div>
+
+              <div class="my-5">
+                <span>특기. </span>
+                <span>{{globalState.loginedMember.feature}}</span>
+              </div>
+
+              <div class="my-5">
+                <span>출연작. </span>
+                <span>{{globalState.loginedMember.filmgraphy}}</span>
+              </div>
+
+              <div class="mt-10 text-sm">
+                <div>1차 오디션 연기영상.</div>
+                <div class="mx-auto image_container">
+                  <img v-if="fileType.type.startsWith('image')" src="" alt="" class="mx-auto">
+                  <video v-if="fileType.type.startsWith('video')" src="" controls></video>
+                </div>
+              </div>
+
+              
             
               <div class="text-center my-10">
                 <ion-button fill="outline" color="dark">최종 제출하기</ion-button>
@@ -87,7 +146,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, onMounted } from 'vue';
+import { defineComponent, reactive, onMounted, ref } from 'vue';
 import { useMainApi } from '@/apis'
 import { IRecruit } from '@/types';
 import { useGlobalState } from '@/stores'
@@ -107,10 +166,63 @@ export default defineComponent({
     const mainApi = useMainApi();
     const { photos, takePhoto } = usePhotoGallery();
 
+    const fileElRef = ref<HTMLIonInputElement>();
+
     const state = reactive ({
       recruit: {} as IRecruit,
       pageNum: 1
     })
+
+    const input = reactive ({
+      fileEl: new File([''],'')
+    })
+
+    var fileType = reactive({
+      type:''
+    })
+
+    function setThumbnail(event:any){
+      
+      var reader = new FileReader(); 
+      fileType.type = event.target.files[0].type as string;
+      reader.onload = function(event) { 
+        var elements:any;
+        if( fileType.type.startsWith("image") ){
+          elements = document.querySelectorAll('img'); 
+        }else if ( fileType.type.startsWith("video")) {
+          elements = document.querySelectorAll('video'); 
+        }
+        
+        if( elements == null ) {
+          return;
+        }
+        if(event.target?.result == null && typeof event.target?.result != 'string' ){
+          return;
+        }
+        if( typeof event.target.result == 'number' || typeof event.target.result == 'bigint'
+        || typeof event.target.result == 'boolean' || typeof event.target.result == 'symbol' || typeof event.target.result == 'undefined' ||  
+        typeof event.target.result == 'object' || typeof event.target.result == 'function'
+        ){
+          return
+        }
+
+        for ( var i = 0; i < elements.length; i++){
+          elements[i].setAttribute("src", event.target.result);
+        }
+
+        const imgContainers = document.querySelectorAll(".image_container")
+
+        for ( var i = 0; i < imgContainers.length; i++){
+          imgContainers[i].append(elements[i])
+        }
+
+        
+        
+      }; 
+        
+      reader.readAsDataURL(event.target.files[0]);
+      input.fileEl = event.target.files[0];
+    }
 
     function recruitDetail(id: number) {
       mainApi.recruit_detail(props.id)
@@ -141,7 +253,11 @@ export default defineComponent({
       pageBack,
       globalState,
       takePhoto,
-      photos
+      photos,
+      fileElRef,
+      input,
+      setThumbnail,
+      fileType
     }
   }
 })

@@ -1,16 +1,16 @@
 <template>
   <ion-page>
-    <ion-header v-show="state.step1">
-      <ion-toolbar>
-        <ion-buttons slot="start">
-          <ion-back-button @click="historyBack" default-href="/"></ion-back-button>
-        </ion-buttons>
-        <ion-title class="ion-text-center">회원가입 페이지</ion-title>
-      </ion-toolbar>
-    </ion-header>
     <ion-content scroll-events="true" >
       <form v-on:submit.prevent="checkAndJoin">
-        <section v-show="state.step1" class="section-1">
+        <section v-show="state.pageNum == 1" class="section-1">
+          <ion-header>
+            <ion-toolbar>
+              <ion-buttons slot="start">
+                <ion-back-button default-href="/"></ion-back-button>
+              </ion-buttons>
+              <ion-title class="ion-text-center">회원가입 페이지</ion-title>
+            </ion-toolbar>
+          </ion-header>
           <div class="container mx-auto">
             <div class="px-6 py-6">
               
@@ -69,14 +69,16 @@
           </div>
         </section>
 
-        <section v-show="state.step2" class="section-2">
+        <section v-show="state.pageNum == 2" class="section-2">
           
+            <ion-header>
             <ion-toolbar>
               <ion-buttons slot="start">
-                <ion-back-button @click="nextStep" scrollToTop default-href="/"></ion-back-button>
+                <ion-back-button @click="pageBack" default-href="/"></ion-back-button>
               </ion-buttons>
               <ion-title class="ion-text-center">회원가입 페이지</ion-title>
             </ion-toolbar>
+          </ion-header>
 
           <div class="container mx-auto">
             <div class="px-6 py-6">
@@ -166,8 +168,7 @@ export default defineComponent({
     const mainApi = useMainApi();
 
     const state = reactive({
-      step1: true,
-      step2: false,
+      pageNum: 1,
       genderPicked: '남자',
       eyelidPicked: 1
     })
@@ -181,10 +182,13 @@ export default defineComponent({
       console.log(getContent()?.scrollToTop(500))
     }
 
-    const nextStep = () => {
-      state.step1 = !state.step1,
-      state.step2 = !state.step2,
+    const nextPage = () => {
+      state.pageNum = ++state.pageNum;
+      scrollToTop()
+    }
 
+    const pageBack = () => {
+      state.pageNum = --state.pageNum;
       scrollToTop()
     }
 
@@ -281,7 +285,7 @@ export default defineComponent({
         return;
       }
 
-      nextStep()
+      nextPage()
     }
 
     function addrSearch() {
@@ -430,7 +434,8 @@ export default defineComponent({
       jobAreaElRef,
       corpElRef,
       inputCheck,
-      nextStep,
+      nextPage,
+      pageBack,
       state
     }
   }

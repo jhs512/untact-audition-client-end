@@ -12,7 +12,7 @@
         </ion-tab-button>
           
         <ion-tab-button tab="recruit" href="/recruit">
-          <ion-label>AD</ion-label>
+          <ion-label class="text-lg font-semibold">AD</ion-label>
         </ion-tab-button>
 
         <ion-tab-button tab="member" href="/member">

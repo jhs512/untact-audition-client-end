@@ -5,7 +5,7 @@
       <section v-show="globalState.isLogined">
         <div class="px-2 text-center">
           <ion-card v-for="recruit in state.recruits">
-            <ion-card-header>
+            <ion-card-header @click="showDetail(recruit.id)" class="cursor-pointer">
               <ion-card-title>{{recruit.title}}</ion-card-title>
               <ion-card-subtitle>{{recruit.pay}}</ion-card-subtitle>
               <ion-card-subtitle>{{recruit.deadline}}</ion-card-subtitle>
@@ -39,6 +39,7 @@ import { defineComponent, reactive, onMounted, watch } from 'vue';
 import { useGlobalState } from '@/stores'
 import { useMainApi } from '@/apis';
 import { IRecruit } from '@/types';
+import router from '@/router'
 
 
 export default defineComponent({
@@ -54,6 +55,10 @@ export default defineComponent({
     const state = reactive({
       recruits: [] as IRecruit[],
     });
+
+    function showDetail(id:number) {
+      router.push('/detail?id=' + id)
+    }
 
     const loadData = (event:any) => {
       setTimeout(() => {
@@ -92,7 +97,8 @@ export default defineComponent({
       recruitList,
       limit,
       loadData,
-      isDisabled
+      isDisabled,
+      showDetail
     }
   }
 })
