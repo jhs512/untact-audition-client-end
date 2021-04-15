@@ -1,6 +1,6 @@
 <template>
   <ion-page>
-    <ion-content scroll-events="true" >
+    <ion-content scroll-events="true">
       <form v-on:submit.prevent="checkAndJoin">
         <section v-show="state.pageNum == 1" class="section-1">
           <ion-header>
@@ -134,16 +134,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, getCurrentInstance, reactive } from 'vue';
+import { defineComponent, ref, reactive } from 'vue';
 import { useMainApi } from '@/apis';
 import router from '@/router';
 
 export default defineComponent({
   name: 'JoinTosPage',
   setup(){
-    const historyBack = () => {
-      history.back();
-    }
 
     const loginIdElRef = ref<HTMLInputElement>();
     const loginPwElRef = ref<HTMLInputElement>();
@@ -173,23 +170,16 @@ export default defineComponent({
       eyelidPicked: 1
     })
 
-    function getContent() {
-      return document.querySelector('ion-content')
-    }
-
-    function scrollToTop() {
-      getContent()?.scrollToTop(500);
-      console.log(getContent()?.scrollToTop(500))
-    }
-
     const nextPage = () => {
       state.pageNum = ++state.pageNum;
-      scrollToTop()
     }
 
     const pageBack = () => {
       state.pageNum = --state.pageNum;
-      scrollToTop()
+    }
+
+    const scrollToTop = () => {
+      document.querySelector('ion-content')?.scrollToTop(500)
     }
 
     const inputCheck = () => {
@@ -286,6 +276,7 @@ export default defineComponent({
       }
 
       nextPage()
+      scrollToTop()
     }
 
     function addrSearch() {
@@ -412,7 +403,6 @@ export default defineComponent({
     }
 
     return {
-      historyBack,
       checkAndJoin,
       loginIdElRef,
       loginPwElRef,
@@ -436,7 +426,8 @@ export default defineComponent({
       inputCheck,
       nextPage,
       pageBack,
-      state
+      state,
+      scrollToTop
     }
   }
 })
