@@ -5,6 +5,9 @@ import './index.css';
 
 import { IonicVue } from '@ionic/vue';
 
+/* 다음 카카오 주소 api 사용 */
+import VueDaumPostcode from 'vue-daum-postcode'
+
 import './registerServiceWorker';
 
 /* Core CSS required for Ionic components to work properly */
@@ -39,6 +42,7 @@ import { createMainApi, mainApiSymbol } from "@/apis"
 const app = createApp(App)
   .use(IonicVue)
   .use(router)
+  .use(VueDaumPostcode)
   .provide(globalStateSymbol, createGlobalState())
   .provide(mainApiSymbol, createMainApi())
   

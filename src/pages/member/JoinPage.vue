@@ -49,15 +49,13 @@
                   <input ref="regNumberElRef" class="form-row-input bg-white" type="date">
                 </FormRow>
                 <FormRow title="주소">
-                  <div class="grid grid-cols-2 grid-rows-3 gap-1 place-items-center">
-                    <input class="form-row-input" type="text">
-                    <button @click="addrSearch" class="border border-1 w-20 h-full" type="button">주소검색</button>
-                    <div class="col-start-1 col-end-3 w-full">
-                      <input ref="addressElRef" class="form-row-input" type="text" placeholder="도로명주소">
-                    </div>
-                    <input class="form-row-input" type="text" placeholder="상세주소">
-                    <input class="form-row-input" type="text" placeholder="참고항목">
+                  <ion-input readonly="true" v-model="input.addressEl" ref="addressElRef" type="text" placeholder="주소" required="true" enterkeyhint="next" class="input-address relative pr-10">
+                    <ion-button fill="outline" size="small" color="medium" class="absolute right-0 mr-2" @click="openApi">검색</ion-button>
+                  </ion-input>
+                  <div v-if="api.isTrue" class="my-4">
+                    <VueDaumPostcode @complete="confirm"/>
                   </div>
+                  <ion-input v-model="input.address2El" ref="addressElRef" type="text" placeholder="상세주소" required="true" enterkeyhint="next" class="mt-2"></ion-input>
                 </FormRow>
                 <FormRow title="전화번호">
                   <input ref="cellPhoneNoElRef" class="form-row-input" type="tel">
@@ -137,7 +135,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, reactive } from 'vue';
+import { defineComponent, ref, reactive, toRefs } from 'vue';
 import { useMainApi } from '@/apis';
 import router from '@/router';
 
@@ -152,7 +150,7 @@ export default defineComponent({
     const engNameElRef = ref<HTMLInputElement>();
     const genderElRef = ref<HTMLInputElement>();
     const regNumberElRef = ref<HTMLInputElement>();
-    const addressElRef = ref<HTMLInputElement>();
+    const addressElRef = ref<HTMLIonInputElement>();
     const cellPhoneNoElRef = ref<HTMLInputElement>();
 
     const nickNameElRef = ref<HTMLInputElement>();
@@ -166,6 +164,11 @@ export default defineComponent({
     const corpElRef = ref<HTMLInputElement>();
     
     const mainApi = useMainApi();
+
+    const input = reactive({
+      addressEl:'',
+      address2El:''
+    })
 
     const state = reactive({
       pageNum: 1,
@@ -225,13 +228,33 @@ export default defineComponent({
         });
     }
 
+    const api = reactive({
+      isTrue:false
+    })
+
+    function openApi(){
+      if( api.isTrue ){
+        api.isTrue = false;
+      } else {
+        api.isTrue = true;
+      }
+    }
+
+    function confirm(result:any){
+      if(result.buildingName.length > 0 ){
+        input.addressEl = result.address + " ("+result.buildingName +")" + input.address2El;
+      } else {
+        input.addressEl = result.address + input.address2El;
+      }
+      
+      api.isTrue = false;
+      console.log(result);
+    }
+
     const inputCheck = () => {
       // 로그인아이디 체크
       if ( loginIdElRef.value == null ) {
         return;
-      }
-      if ( state.idCheckStatus == false ){
-        alert('아이디 중복확인을 진행해주세요.')
       }
       const loginIdEl = loginIdElRef.value;
       loginIdEl.value = loginIdEl.value.trim();
@@ -239,6 +262,11 @@ export default defineComponent({
         alert('로그인 아이디를 입력해주세요.');
         loginIdEl.focus();
         return;
+      }
+      if ( state.idCheckStatus == false ){
+        alert('아이디 중복확인을 진행해주세요.')
+        loginIdEl.focus();
+        return
       }
       
       // 로그인비번 체크
@@ -299,14 +327,8 @@ export default defineComponent({
       }
 
       // 주소 체크
-      if ( addressElRef.value == null ) {
-        return;
-      }
-      const addressEl = addressElRef.value;
-      addressEl.value = addressEl.value.trim();
-      if ( addressEl.value.length == 0 ) {
-        alert('주소를 입력해주세요.');
-        addressEl.focus();
+      if ( input.addressEl.length == 0 ) {
+        alert('주소를 입력해 주세요.');
         return;
       }
 
@@ -376,8 +398,6 @@ export default defineComponent({
       if ( addressElRef.value == null ) {
         return;
       }
-      const addressEl = addressElRef.value;
-      addressEl.value = addressEl.value.trim();
       
       if ( cellPhoneNoElRef.value == null ) {
         return;
@@ -434,7 +454,7 @@ export default defineComponent({
 
 
       
-      join(loginIdEl.value, loginPwEl.value, nameEl.value, engNameEl.value, state.genderPicked, regNumberEl.value, addressEl.value, cellPhoneNoEl.value, nickNameEl.value, feetEl, weightEl, skinToneEl.value, state.eyelidPicked, featureEl.value, filmgraphyEl.value, jobAreaEl.value, corpEl.value);
+      join(loginIdEl.value, loginPwEl.value, nameEl.value, engNameEl.value, state.genderPicked, regNumberEl.value, input.addressEl, cellPhoneNoEl.value, nickNameEl.value, feetEl, weightEl, skinToneEl.value, state.eyelidPicked, featureEl.value, filmgraphyEl.value, jobAreaEl.value, corpEl.value);
     }
     function join(loginId:string, loginPw:string, name:string, engName:string, gender:string, regNumber:string, address:string, cellPhoneNo:string, nickName:string, feet:number, weight:number, skinTone:string, eyelid:number, feature:string, filmgraphy:string, jobArea:string, corp:string) {
       mainApi.ap_doJoin(loginId, loginPw, name, engName, gender, regNumber, address, cellPhoneNo, nickName, feet, weight, skinTone, eyelid, feature, filmgraphy, jobArea, corp)
@@ -476,6 +496,10 @@ export default defineComponent({
       state,
       scrollToTop,
       checkId,
+      api,
+      openApi,
+      confirm,
+      input
     }
   }
 })
@@ -483,6 +507,12 @@ export default defineComponent({
 
 <style scoped>
 input{
+  border: solid 2px #dadada;
+  height: 48px;
+  padding: 0 10px;
+}
+
+ion-input{
   border: solid 2px #dadada;
   height: 48px;
   padding: 0 10px;
