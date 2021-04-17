@@ -9,8 +9,8 @@
           </div>
         </div>
         <div class="text-center flex flex-col justify-center itmes-center border-b">
-          <span class="font-semibold text-3xl">소민</span>
-          <span class="font-medium text-sm my-2">소민하다</span>
+          <span class="font-semibold text-3xl">{{globalState.loginedMember.nickName}}</span>
+          <span class="font-medium text-sm my-2">본명 : {{globalState.loginedMember.name}}</span>
         </div>
 
         <ion-segment @ionChange="segmentChanged($event)" value="profile" color="dark">
@@ -21,17 +21,17 @@
 
         <span v-if="segment.value == 'profile'">
           <div class="profile-list px-8 pt-2 font-semibold">
-            <div><div class="w-2/5">이름 :</div><div class="w-2/4">최형석</div></div>
-            <div><div class="w-2/5">영문이름 :</div><div class="w-2/4">Choi hyeong-seok</div></div>
-            <div><div class="w-2/5">활동명 :</div><div class="w-2/4">J</div></div>
-            <div><div class="w-2/5">키 :</div><div class="w-2/4">secret</div></div>
-            <div><div class="w-2/5">몸무게 :</div><div class="w-2/4">secret</div></div>
-            <div><div class="w-2/5">성별 :</div><div class="w-2/4">Male</div></div>
-            <div><div class="w-2/5">피부색 :</div><div class="w-2/4">황</div></div>
-            <div><div class="w-2/5">쌍커풀 유무 :</div><div class="w-2/4">무</div></div>
-            <div><div class="w-2/5">특징 :</div><div class="w-2/4">활발함</div></div>
-            <div><div class="w-2/5">커리어 :</div><div class="w-2/4">공부중</div></div>
-            <div><div class="w-2/5">희망분야 :</div><div class="w-2/4">뮤지컬</div></div>
+            <div><div class="w-2/5">이름 :</div><div class="w-2/4">{{globalState.loginedMember.name}}</div></div>
+            <div><div class="w-2/5">영문이름 :</div><div class="w-2/4">{{globalState.loginedMember.engName}}</div></div>
+            <div><div class="w-2/5">활동명 :</div><div class="w-2/4">{{globalState.loginedMember.nickName}}</div></div>
+            <div><div class="w-2/5">키 :</div><div class="w-2/4">{{globalState.loginedMember.feet}}</div></div>
+            <div><div class="w-2/5">몸무게 :</div><div class="w-2/4">{{globalState.loginedMember.weight}}</div></div>
+            <div><div class="w-2/5">성별 :</div><div class="w-2/4">{{globalState.loginedMember.gender}}</div></div>
+            <div><div class="w-2/5">피부색 :</div><div class="w-2/4">{{globalState.loginedMember.skinTone}}</div></div>
+            <div><div class="w-2/5">쌍커풀 유무 :</div><div class="w-2/4">{{globalState.loginedMember.eyelid}}</div></div>
+            <div><div class="w-2/5">특징 :</div><div class="w-2/4">{{globalState.loginedMember.feature}}</div></div>
+            <div><div class="w-2/5">커리어 :</div><div class="w-2/4">{{globalState.loginedMember.filmgraphy}}</div></div>
+            <div><div class="w-2/5">희망분야 :</div><div class="w-2/4">{{globalState.loginedMember.jobArea}}</div></div>
           </div>
         </span>
 
@@ -46,11 +46,13 @@
 <script lang="ts">
 import { defineComponent, reactive } from 'vue';
 import { homeOutline, videocamOutline, searchOutline, personOutline } from 'ionicons/icons';
+import { useGlobalState } from '@/stores'
 
 export default defineComponent({
   name: 'ProfilePage',
   setup() {
 
+    const globalState = useGlobalState();
     const segment = reactive({
       value: 'profile'
     })
@@ -65,7 +67,8 @@ export default defineComponent({
       videocamOutline,
       personOutline,
       segmentChanged,
-      segment
+      segment,
+      globalState
     }
   }
 })

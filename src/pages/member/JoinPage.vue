@@ -169,7 +169,8 @@ export default defineComponent({
     const state = reactive({
       pageNum: 1,
       eyelidPicked: 1,
-      idCheckStatus: false
+      idCheckStatus: false,
+      gender: ''
     })
 
     const nextPage = () => {
@@ -324,6 +325,13 @@ export default defineComponent({
         return;
       }
 
+      if ( input.regNumber2El.substring(0,1) == '1' || input.regNumber2El.substring(0,1) == '3') {
+        state.gender = '남';
+      } 
+      else {
+        state.gender = '여';
+      }
+
       // 주소 체크
       if ( input.addressEl.length == 0 ) {
         alert('주소를 입력해 주세요.');
@@ -373,14 +381,6 @@ export default defineComponent({
       }
       const engNameEl = engNameElRef.value;
       engNameEl.value = engNameEl.value.trim();
-
-      let gender = '';
-      if ( input.regNumber2El.substring(1,1) == '1' || input.regNumber2El.substring(1,1) == '3') {
-        gender = '남';
-      } 
-      else {
-        gender = '여';
-      }
 
       const regNumberEl = input.regNumber1El + input.regNumber2El;  
       const regNumber = Crypto.AES.encrypt(regNumberEl,'regKey');
@@ -442,7 +442,7 @@ export default defineComponent({
       const corpEl = corpElRef.value;
       corpEl.value = corpEl.value.trim();
 
-      join(loginIdEl.value, loginPwConfirmEl.value, nameEl.value, engNameEl.value, gender, regNumber.toString(), input.addressEl, cellPhoneNoEl.value, nickNameEl.value, feetEl, weightEl, skinToneEl.value, state.eyelidPicked, featureEl.value, filmgraphyEl.value, jobAreaEl.value, corpEl.value);
+      join(loginIdEl.value, loginPwConfirmEl.value, nameEl.value, engNameEl.value, state.gender, regNumber.toString(), input.addressEl, cellPhoneNoEl.value, nickNameEl.value, feetEl, weightEl, skinToneEl.value, state.eyelidPicked, featureEl.value, filmgraphyEl.value, jobAreaEl.value, corpEl.value);
     }
     function join(loginId:string, loginPw:string, name:string, engName:string, gender:string, regNumber:string, address:string, cellPhoneNo:string, nickName:string, feet:number, weight:number, skinTone:string, eyelid:number, feature:string, filmgraphy:string, jobArea:string, corp:string) {
       mainApi.ap_doJoin(loginId, loginPw, name, engName, gender, regNumber, address, cellPhoneNo, nickName, feet, weight, skinTone, eyelid, feature, filmgraphy, jobArea, corp)
