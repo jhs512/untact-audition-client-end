@@ -113,12 +113,18 @@ export default defineComponent({
     function login(loginId:string, loginPw:string) {
       mainApi.ap_authKey(loginId, loginPw)
         .then(axiosResponse => {
-
-          alert(axiosResponse.data.msg);
-
-          if ( axiosResponse.data.resultCode.includes('F-') ) {
+          if ( axiosResponse.data.body.member.authStatus == 0){
+            alert('아직 인증이 완료되지 않은 회원입니다. 인증 완료후 로그인 해주시길 바랍니다.')
             return;
           }
+
+          if ( axiosResponse.data.resultCode.includes('F-') ) {
+            alert(axiosResponse.data.msg);
+            return;
+          }
+
+          alert(axiosResponse.data.msg);
+          
 
           const authKey = axiosResponse.data.body.authKey;
           const loginedMemberId = axiosResponse.data.body.member.id;
@@ -141,6 +147,7 @@ export default defineComponent({
           const loginedMemberJobArea = axiosResponse.data.body.member.jobArea;
           const loginedMemberCorp = axiosResponse.data.body.member.corp;
           const loginedMemberAuthLevel = axiosResponse.data.body.member.authLevel;
+          const loginedMemberAuthStatus = axiosResponse.data.body.member.authStatus;
       
           localStorage.setItem("authKey", authKey);
           localStorage.setItem("loginedMemberId", loginedMemberId + "");
@@ -162,7 +169,8 @@ export default defineComponent({
           localStorage.setItem("loginedMemberFilmgraphy", loginedMemberFilmgraphy);
           localStorage.setItem("loginedMemberJobArea", loginedMemberJobArea);
           localStorage.setItem("loginedMemberCorp", loginedMemberCorp);
-          localStorage.setItem("loginedMemberAuthLevel", loginedMemberAuthLevel);
+          localStorage.setItem("loginedMemberAuthLevel", loginedMemberAuthLevel + "");
+          localStorage.setItem("loginedMemberAuthStatus", loginedMemberAuthStatus + "");
 
           location.replace('/')
           

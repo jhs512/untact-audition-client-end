@@ -28,7 +28,8 @@ export interface IAp extends IEntity {
   filmgraphy:string, 
   jobArea:string, 
   corp:string,
-  authLevel:number
+  authLevel:number,
+  authStatus:number
 }
 
 export interface IRecruit extends IEntity {

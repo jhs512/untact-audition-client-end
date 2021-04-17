@@ -442,20 +442,17 @@ export default defineComponent({
       const corpEl = corpElRef.value;
       corpEl.value = corpEl.value.trim();
 
-
-      alert(input.addressEl);
       join(loginIdEl.value, loginPwConfirmEl.value, nameEl.value, engNameEl.value, gender, regNumber.toString(), input.addressEl, cellPhoneNoEl.value, nickNameEl.value, feetEl, weightEl, skinToneEl.value, state.eyelidPicked, featureEl.value, filmgraphyEl.value, jobAreaEl.value, corpEl.value);
     }
     function join(loginId:string, loginPw:string, name:string, engName:string, gender:string, regNumber:string, address:string, cellPhoneNo:string, nickName:string, feet:number, weight:number, skinTone:string, eyelid:number, feature:string, filmgraphy:string, jobArea:string, corp:string) {
       mainApi.ap_doJoin(loginId, loginPw, name, engName, gender, regNumber, address, cellPhoneNo, nickName, feet, weight, skinTone, eyelid, feature, filmgraphy, jobArea, corp)
         .then(axiosResponse => {
-          alert(axiosResponse.data.msg);
-
           if ( axiosResponse.data.resultCode.includes('F-') ) {
+            alert(axiosResponse.data.msg);
             return;
           }
 
-          router.replace('/member/login?loginId=' + loginId)
+          router.replace('/member/joinAfter?email=' + loginId)
         });
     }
 

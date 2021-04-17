@@ -76,6 +76,8 @@ abstract class HttpClient {
 interface Base__IResponseBodyType1 {
   resultCode: string;
   msg: string;
+  fail:boolean;
+  success:boolean;
 }
 // /usr/member/authKey 의 응답 타입
 export interface MainApi__member_authKey__IResponseBody extends Base__IResponseBodyType1 {
@@ -101,7 +103,8 @@ export interface MainApi__member_authKey__IResponseBody extends Base__IResponseB
       filmgraphy: string;
       jobArea: string;
       corp: string;
-      authLevel: string;
+      authLevel: number;
+      authStatus: number;
     };
   };
 }
@@ -131,6 +134,13 @@ export interface MainApi__recruit_detail__IResponseBody extends Base__IResponseB
 // /usr/ap/doIdDupCheck 의 응답 타입
 export interface MainApi__ap_doIdDupCheck__IResponseBody extends Base__IResponseBodyType1 {
   body: {
+  };
+}
+
+// /usr/ap/emailCertForJoin 의 응답 타입
+export interface MainApi__ap_emailCertForJoin__IResponseBody extends Base__IResponseBodyType1 {
+  body: {
+    isCert: boolean
   };
 }
 
@@ -176,6 +186,7 @@ export class MainApi extends HttpClient {
       localStorage.removeItem("loginedMemberJobArea");
       localStorage.removeItem("loginedMemberCorp");
       localStorage.removeItem("loginedMemberAuthLevel");
+      localStorage.removeItem("loginedMemberAuthStatus");
 
       location.replace('/member/login');
     }
@@ -228,6 +239,10 @@ export class MainApi extends HttpClient {
 
   public ap_doIdDupCheck(loginId:string) {
     return this.instance.get<MainApi__ap_doIdDupCheck__IResponseBody>(`/usr/ap/doIdDupCheck?loginId=${loginId}`);
+  }
+
+  public ap_emailCertForJoin(email:string, authKey:string) {
+    return this.instance.get<MainApi__ap_emailCertForJoin__IResponseBody>(`/usr/ap/emailCertForJoin?email=${email}&authKey=${authKey}` );
   }
 } 
 

@@ -1,3 +1,5 @@
+import { alertController } from "@ionic/vue";
+
 export function isEmptyObject(param: {}) {
   return Object.keys(param).length === 0 && param.constructor === Object;
 }
@@ -28,4 +30,21 @@ export function toStringOrNull(data:any) {
   }
 
   return data;
+}
+
+export async function showAlert(title:string,msg:string, method:any|null) {
+  const alert = await alertController
+  .create({
+    header: title,
+    message: msg,
+    buttons:[  
+    {
+      text: '확인',
+      handler: () => {
+        method();
+    }
+  }
+  ]
+  });
+return alert.present();
 }

@@ -50,6 +50,16 @@ const routes: Array<RouteRecordRaw> = [
         path: 'joinTos',
         component: () => import('@/pages/member/JoinTosPage.vue')
       },
+      {
+        path: 'emailCert',
+        component: () => import('@/pages/member/EmailCertPage.vue'),
+        props: (route:any) => ( { email:route.query.email, emailCertKey:route.query.emailCertKey })
+      },
+      {
+        path: 'joinAfter',
+        component: () => import('@/pages/member/JoinAfterPage.vue'),
+        props: (route:any) => ( { email:route.query.email })
+      },
     ]
   },
   {
