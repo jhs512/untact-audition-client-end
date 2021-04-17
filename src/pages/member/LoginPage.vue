@@ -63,6 +63,7 @@
 import { defineComponent, ref, onMounted } from 'vue';
 import { useMainApi } from '@/apis';
 import { useRoute } from 'vue-router';
+import { sha256 } from 'js-sha256'
 
 export default defineComponent({
   name: 'LoginPage',
@@ -106,7 +107,8 @@ export default defineComponent({
         loginPwEl.focus();
         return;
       }
-      login(loginIdEl.value, loginPwEl.value);
+
+      login(loginIdEl.value, sha256(loginPwEl.value));
     }
     function login(loginId:string, loginPw:string) {
       mainApi.ap_authKey(loginId, loginPw)

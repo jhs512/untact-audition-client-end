@@ -17,7 +17,7 @@
                 <FormRow title="아이디 (이메일)">
                   <div class="relative flex items-center">
                     <input ref="loginIdElRef" class="form-row-input" type="email" placeholder="@gmail.com" @input="state.idCheckStatus = false">
-                    <ion-button @click="checkId" size="small" color="medium" fill="outline" class="absolute right-0 mr-2">중복체크</ion-button>
+                    <ion-button @click="checkId" size="small" color="medium" fill="solid" class="absolute right-0 mr-2">중복체크</ion-button>
                   </div>
                 </FormRow>
                 <FormRow title="비밀번호">
@@ -32,25 +32,17 @@
                 <FormRow title="영문이름">
                   <input ref="engNameElRef" class="form-row-input" type="text">
                 </FormRow>
-                <FormRow title="성별">
-                  <div class="flex">
-                    <label class="w-full h-12">
-                      <input ref="genderElRef" class="form-row-input" name="gender" type="radio" v-model="state.genderPicked" value="남자">
-                      <span>남자</span>
-                    </label>
-                    <label class="w-full h-12">
-                      <input ref="genderElRef" class="form-row-input" name="gender" type="radio" v-model="state.genderPicked" value="여자">
-                      <span>여자</span>
-                    </label>
+                
+                <FormRow title="주민등록번호">
+                  <div class="flex items-center w-full mt-2">
+                    <ion-input v-model="input.regNumber1El" type="text" ref="regNumber1ElRef" maxlength="6" inputmode="decimal" placeholder="앞 6자리" required="true" enterkeyhint="next"></ion-input>
+                      <span class="mx-1">-</span>
+                    <ion-input v-model="input.regNumber2El" type="text" ref="regNumber2ElRef" maxlength="7" inputmode="decimal" placeholder="뒤 7자리" required="true" enterkeyhint="next"></ion-input>
                   </div>
                 </FormRow>
-                
-                <FormRow title="생년월일">
-                  <input ref="regNumberElRef" class="form-row-input bg-white" type="date">
-                </FormRow>
                 <FormRow title="주소">
-                  <ion-input readonly="true" v-model="input.addressEl" ref="addressElRef" type="text" placeholder="주소" required="true" enterkeyhint="next" class="input-address relative pr-10">
-                    <ion-button fill="outline" size="small" color="medium" class="absolute right-0 mr-2" @click="openApi">검색</ion-button>
+                  <ion-input readonly="true" v-model="input.addressEl" ref="addressElRef" type="text" placeholder="주소" required="true" enterkeyhint="next" class="input-address relative">
+                    <ion-button fill="solid" size="small" color="medium" class="absolute right-0 mr-2" @click="openApi">검색</ion-button>
                   </ion-input>
                   <div v-if="api.isTrue" class="my-4">
                     <VueDaumPostcode @complete="confirm"/>
@@ -138,6 +130,8 @@
 import { defineComponent, ref, reactive, toRefs } from 'vue';
 import { useMainApi } from '@/apis';
 import router from '@/router';
+import * as Crypto from 'crypto-ts'
+import { sha256 } from 'js-sha256'
 
 export default defineComponent({
   name: 'JoinPage',
@@ -148,8 +142,8 @@ export default defineComponent({
     const loginPwConfirmElRef = ref<HTMLInputElement>();
     const nameElRef = ref<HTMLInputElement>();
     const engNameElRef = ref<HTMLInputElement>();
-    const genderElRef = ref<HTMLInputElement>();
-    const regNumberElRef = ref<HTMLInputElement>();
+    const regNumber1ElRef = ref<HTMLIonInputElement>();
+    const regNumber2ElRef = ref<HTMLIonInputElement>();
     const addressElRef = ref<HTMLIonInputElement>();
     const cellPhoneNoElRef = ref<HTMLInputElement>();
 
@@ -167,12 +161,13 @@ export default defineComponent({
 
     const input = reactive({
       addressEl:'',
-      address2El:''
+      address2El:'',
+      regNumber1El:'',
+      regNumber2El:''
     })
 
     const state = reactive({
       pageNum: 1,
-      genderPicked: '남자',
       eyelidPicked: 1,
       idCheckStatus: false
     })
@@ -242,9 +237,9 @@ export default defineComponent({
 
     function confirm(result:any){
       if(result.buildingName.length > 0 ){
-        input.addressEl = result.address + " ("+result.buildingName +")" + input.address2El;
+        input.addressEl = result.address + " ("+result.buildingName +")";
       } else {
-        input.addressEl = result.address + input.address2El;
+        input.addressEl = result.address;
       }
       
       api.isTrue = false;
@@ -314,15 +309,18 @@ export default defineComponent({
         return;
       }
 
-      // 생년월일 체크
-      if ( regNumberElRef.value == null ) {
+      // 주민등록번호 체크
+      if ( input.regNumber1El == null ) {
         return;
       }
-      const regNumberEl = regNumberElRef.value;
-      regNumberEl.value = regNumberEl.value.trim();
-      if ( regNumberEl.value.length == 0 ) {
-        alert('생년월일을 입력해주세요.');
-        regNumberEl.focus();
+
+      if ( input.regNumber1El.length == 0 ) {
+        alert('주민등록번호를 제대로 입력해 주세요.');
+        return;
+      }
+
+      if ( input.regNumber2El.length == 0 ) {
+        alert('주민등록번호를 입력해 주세요.');
         return;
       }
 
@@ -348,10 +346,6 @@ export default defineComponent({
       scrollToTop()
     }
 
-    function addrSearch() {
-      window.open('https://www.juso.go.kr/addrlink/addrLinkUrl.do?confmKey=devU01TX0FVVEgyMDIxMDMyMDEzMDI1ODExMDk0MzU=&returnUrl=localhost:3000/usr/ap/join', 'addressSearch', 'width=500, height=300, scrollbars=no')
-    }
-
     function checkAndJoin() {
       if ( loginIdElRef.value == null ) {
         return;
@@ -359,17 +353,14 @@ export default defineComponent({
       const loginIdEl = loginIdElRef.value;
       loginIdEl.value = loginIdEl.value.trim();
 
-      if ( loginPwElRef.value == null ) {
-        return;
-      }
-      const loginPwEl = loginPwElRef.value;
-      loginPwEl.value = loginPwEl.value.trim();
       
+
       if ( loginPwConfirmElRef.value == null ) {
         return;
       }
       const loginPwConfirmEl = loginPwConfirmElRef.value;
-      loginPwConfirmEl.value = loginPwConfirmEl.value.trim();
+      loginPwConfirmEl.value = loginPwConfirmEl.value.trim()
+      loginPwConfirmEl.value = sha256(loginPwConfirmEl.value);
       
       if ( nameElRef.value == null ) {
         return;
@@ -382,21 +373,20 @@ export default defineComponent({
       }
       const engNameEl = engNameElRef.value;
       engNameEl.value = engNameEl.value.trim();
-      
-      if ( genderElRef.value == null ) {
-        return;
+
+      let gender = '';
+      if ( input.regNumber2El.substring(1,1) == '1' || input.regNumber2El.substring(1,1) == '3') {
+        gender = '남';
+      } 
+      else {
+        gender = '여';
       }
-      const genderEl = genderElRef.value;
-      genderEl.value = genderEl.value.trim();
-      
-      if ( regNumberElRef.value == null ) {
-        return;
-      }
-      const regNumberEl = regNumberElRef.value;
-      regNumberEl.value = regNumberEl.value.trim();
-      
-      if ( addressElRef.value == null ) {
-        return;
+
+      const regNumberEl = input.regNumber1El + input.regNumber2El;  
+      const regNumber = Crypto.AES.encrypt(regNumberEl,'regKey');
+
+      if ( input.address2El.length != 0 ){
+        input.addressEl = input.addressEl + " " + input.address2El;
       }
       
       if ( cellPhoneNoElRef.value == null ) {
@@ -453,8 +443,8 @@ export default defineComponent({
       corpEl.value = corpEl.value.trim();
 
 
-      
-      join(loginIdEl.value, loginPwEl.value, nameEl.value, engNameEl.value, state.genderPicked, regNumberEl.value, input.addressEl, cellPhoneNoEl.value, nickNameEl.value, feetEl, weightEl, skinToneEl.value, state.eyelidPicked, featureEl.value, filmgraphyEl.value, jobAreaEl.value, corpEl.value);
+      alert(input.addressEl);
+      join(loginIdEl.value, loginPwConfirmEl.value, nameEl.value, engNameEl.value, gender, regNumber.toString(), input.addressEl, cellPhoneNoEl.value, nickNameEl.value, feetEl, weightEl, skinToneEl.value, state.eyelidPicked, featureEl.value, filmgraphyEl.value, jobAreaEl.value, corpEl.value);
     }
     function join(loginId:string, loginPw:string, name:string, engName:string, gender:string, regNumber:string, address:string, cellPhoneNo:string, nickName:string, feet:number, weight:number, skinTone:string, eyelid:number, feature:string, filmgraphy:string, jobArea:string, corp:string) {
       mainApi.ap_doJoin(loginId, loginPw, name, engName, gender, regNumber, address, cellPhoneNo, nickName, feet, weight, skinTone, eyelid, feature, filmgraphy, jobArea, corp)
@@ -476,11 +466,10 @@ export default defineComponent({
       loginPwConfirmElRef,
       nameElRef,
       engNameElRef,
-      genderElRef,
-      regNumberElRef,
+      regNumber1ElRef,
+      regNumber2ElRef,
       addressElRef,
       cellPhoneNoElRef,
-      addrSearch,
       nickNameElRef,
       feetElRef,
       weightElRef,
