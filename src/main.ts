@@ -74,6 +74,7 @@ const app = createApp(App)
   .component('ion-row', Ion.IonRow)
   .component('ion-col', Ion.IonCol)
   .component('ion-img', Ion.IonImg)
+  .component('ion-action-sheet', Ion.IonActionSheet)
   .component('FormRow', FormRow)
   .component('MainHeader', MainHeader);
 
