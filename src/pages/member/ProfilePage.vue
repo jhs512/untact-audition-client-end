@@ -85,7 +85,7 @@ export default defineComponent({
             {
               text: '삭제',
               handler: () => {
-                state.url = "background-image: url('https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png')";
+                state.url = "background-image: url('./img/user-icon.png')";
               }
             }
           ],
