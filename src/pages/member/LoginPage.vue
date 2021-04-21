@@ -148,6 +148,8 @@ export default defineComponent({
           const loginedMemberCorp = axiosResponse.data.body.member.corp;
           const loginedMemberAuthLevel = axiosResponse.data.body.member.authLevel;
           const loginedMemberAuthStatus = axiosResponse.data.body.member.authStatus;
+          const loginedMemberExtra__thumbImg = axiosResponse.data.body.member.extra__thumbImg;
+          const loginedMemberExtra__fileType = axiosResponse.data.body.member.extra__fileType;
       
           localStorage.setItem("authKey", authKey);
           localStorage.setItem("loginedMemberId", loginedMemberId + "");
@@ -171,6 +173,12 @@ export default defineComponent({
           localStorage.setItem("loginedMemberCorp", loginedMemberCorp);
           localStorage.setItem("loginedMemberAuthLevel", loginedMemberAuthLevel + "");
           localStorage.setItem("loginedMemberAuthStatus", loginedMemberAuthStatus + "");
+          if( axiosResponse.data.body.member.extra__thumbImg == null ){
+            localStorage.setItem("loginedMemberExtra__thumbImg", './img/user-icon.png');
+          }else{
+            localStorage.setItem("loginedMemberExtra__thumbImg", loginedMemberExtra__thumbImg);
+          }
+          localStorage.setItem("loginedMemberExtra__fileType", loginedMemberExtra__fileType);
 
           location.replace('/')
           

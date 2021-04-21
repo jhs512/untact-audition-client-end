@@ -29,7 +29,10 @@ export interface IAp extends IEntity {
   jobArea:string, 
   corp:string,
   authLevel:number,
-  authStatus:number
+  authStatus:number,
+  extra__thumbImg:string,
+  extra__fileType:string
+
 }
 
 export interface IRecruit extends IEntity {

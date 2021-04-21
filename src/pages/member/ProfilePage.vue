@@ -51,15 +51,21 @@ import { actionSheetController, alertController  } from '@ionic/vue';
 import { defineComponent, reactive } from 'vue';
 import { useGlobalState } from '@/stores'
 import { close } from 'ionicons/icons';
+import { usePhotoGallery, Photo } from '@/composables/usePhotoGallery'
+import { useMainApi } from '@/apis'
+import * as util from '@/utils'
 
 export default defineComponent({
   name: 'ProfilePage',
   setup() {
+    const globalState = useGlobalState();
+    const mainApi = useMainApi();
+
     const state = reactive({
-      url : "background-image: url('https://picsum.photos/id/237/536/354')"
+      url : "background-image: url('" + globalState.loginedMember.extra__thumbImg + "')",
+
     })
 
-    const globalState = useGlobalState();
     const segment = reactive({
       value: 'profile'
     })
@@ -67,6 +73,8 @@ export default defineComponent({
     function segmentChanged(event:any) {
       segment.value = event.target.value;
     }
+
+    const { photos, takePhoto } = usePhotoGallery();
 
     async function presentAlertMultipleButtons() {
       const alert = await alertController
@@ -85,7 +93,19 @@ export default defineComponent({
             {
               text: '삭제',
               handler: () => {
-                state.url = "background-image: url('./img/user-icon.png')";
+                localStorage.setItem("loginedMemberExtra__thumbImg", './img/user-icon.png')
+
+                const deleteGenFile = async () => {
+                  await mainApi.common_ap_genFile_deleteGenFile(util.toIntOrNull(globalState.loginedMember.id))
+                    .then(axiosResponse => {
+                      if ( axiosResponse.data.fail ) {
+                        return;
+                      }
+                    })
+                }
+
+                deleteGenFile()
+                location.reload();
               }
             }
           ],
@@ -109,6 +129,46 @@ export default defineComponent({
             {
               text: '사진 촬영',
               handler: () => {
+                takePhoto().finally(() => {
+
+                  const input = reactive ({
+                    fileEl: photos.value[photos.value.length-1].file
+                  })
+
+                  const changeThumnailImage = () => {
+                    mainApi.common_ap_genFile_getThumbImgUrl(util.toIntOrNull(globalState.loginedMember.id))
+                      .then(axiosResponse => {
+
+                        if ( axiosResponse.data.fail ) {
+                          alert(axiosResponse.data.msg);
+                          return;
+                        }
+                        else {
+                          localStorage.setItem("loginedMemberExtra__thumbImg", axiosResponse.data.body.imgUrl)                          
+                          location.reload()
+                        }
+                      });
+                  }
+
+                  const startFileUpload = (onSuccess:Function) => {
+                    if ( input.fileEl == null || input.fileEl.size == 0 ) {
+                      return;
+                    }
+                    
+                    mainApi.common_ap_genFile_doUploadForAdd(input.fileEl, util.toStringOrNull(globalState.loginedMember.id))
+                      .then(axiosResponse => {
+                        if ( axiosResponse.data.fail ) {
+                          alert(axiosResponse.data.msg);
+                          return;
+                        }
+                        else {
+                          onSuccess();
+                        }
+                      });
+                  };
+                  
+                  startFileUpload(changeThumnailImage)
+                })
                 
               },
             },
@@ -144,7 +204,9 @@ export default defineComponent({
       segment,
       globalState,
       presentActionSheet,
-      state
+      state,
+      photos,
+      takePhoto
     }
   }
 })

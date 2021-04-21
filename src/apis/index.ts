@@ -70,6 +70,14 @@ abstract class HttpClient {
 
     return this.instance.post(url, params, config);
   }
+
+  public post<T = any, R = AxiosResponse<T>>(url: string, data?: any, config?: AxiosRequestConfig): Promise<R> {
+    return this.instance.post(url, data, config);
+  }
+
+  public get<T = any, R = AxiosResponse<T>>(url: string, config?: AxiosRequestConfig): Promise<R> {
+    return this.instance.get(url, config);
+  }
 }
 
 // 응답타입1
@@ -105,6 +113,8 @@ export interface MainApi__member_authKey__IResponseBody extends Base__IResponseB
       corp: string;
       authLevel: number;
       authStatus: number;
+      extra__thumbImg: string;
+      extra__fileType: string;
     };
   };
 }
@@ -144,13 +154,34 @@ export interface MainApi__ap_emailCertForJoin__IResponseBody extends Base__IResp
   };
 }
 
+// /common/genFile/doUpload 의 응답 타입
+export interface MainApi__common_genFile_doUpload__IResponseBody extends Base__IResponseBodyType1 {
+  body:{
+    genFileIdsStr: string,
+  };
+}
+
+// /common/genFile/getThumbImgUrl 의 응답 타입
+export interface MainApi__common_genFile_getThumbImgUrl___IResponseBody extends Base__IResponseBodyType1 {
+  body:{
+    imgUrl: string,
+  };
+}
+
+// /common/genFile/deleteGenFile 의 응답 타입
+export interface MainApi__common_genFile_doDeleteGenFile___IResponseBody extends Base__IResponseBodyType1 {
+  body:{
+  };
+}
+
+
 
 // http://localhost:8021/usr/ 와의 통신장치
 export class MainApi extends HttpClient {
   public constructor() {
     super(
       axios.create({
-        baseURL:'http://192.168.219.102:8024',
+        baseURL:'http://192.168.219.100:8024',
       })
     );
   }
@@ -187,6 +218,8 @@ export class MainApi extends HttpClient {
       localStorage.removeItem("loginedMemberCorp");
       localStorage.removeItem("loginedMemberAuthLevel");
       localStorage.removeItem("loginedMemberAuthStatus");
+      localStorage.removeItem("loginedMemberExtra__thumbImg");
+      localStorage.removeItem("loginedMemberExtra__fileType");
 
       location.replace('/member/login');
     }
@@ -243,6 +276,22 @@ export class MainApi extends HttpClient {
 
   public ap_emailCertForJoin(email:string, authKey:string) {
     return this.instance.get<MainApi__ap_emailCertForJoin__IResponseBody>(`/usr/ap/emailCertForJoin?email=${email}&authKey=${authKey}` );
+  }
+
+  public common_ap_genFile_doUploadForAdd(file:File, id:string) {
+    const formDate = new FormData();
+    formDate.append("file__ap__" + id + "__common__attachment__1", file);
+    return this.post<MainApi__common_genFile_doUpload__IResponseBody>(
+      `/common/genFile/doUpload`, formDate
+    );
+  }
+
+  public common_ap_genFile_getThumbImgUrl(id:number){
+    return this.instance.get<MainApi__common_genFile_getThumbImgUrl___IResponseBody>(`/common/genFile/getThumbImgUrl?id=${id}`);
+  }
+
+  public common_ap_genFile_deleteGenFile(id:number){
+    return this.instance.get<MainApi__common_genFile_doDeleteGenFile___IResponseBody>(`/common/genFile/deleteGenFile?id=${id}`);
   }
 } 
 

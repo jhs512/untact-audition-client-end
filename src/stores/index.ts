@@ -27,6 +27,8 @@ const loginedMemberJobArea = Util.toStringOrNull(localStorage.getItem("loginedMe
 const loginedMemberCorp = Util.toStringOrNull(localStorage.getItem("loginedMemberCorp"))
 const loginedMemberAuthLevel = Util.toIntOrNull(localStorage.getItem("loginedMemberAuthLevel"))
 const loginedMemberAuthStatus = Util.toIntOrNull(localStorage.getItem("loginedMemberAuthStatus"))
+const loginedMemberExtra__thumbImg = Util.toStringOrNull(localStorage.getItem("loginedMemberExtra__thumbImg"))
+const loginedMemberExtra__fileType = Util.toStringOrNull(localStorage.getItem("loginedMemberExtra__fileType"))
 
 export const createGlobalState = (): GlobalState => {
   return reactive({
@@ -52,7 +54,9 @@ export const createGlobalState = (): GlobalState => {
       jobArea:loginedMemberJobArea,
       corp:loginedMemberCorp,
       authLevel:loginedMemberAuthLevel,
-      authStatus:loginedMemberAuthStatus
+      authStatus:loginedMemberAuthStatus,
+      extra__thumbImg:loginedMemberExtra__thumbImg,
+      extra__fileType:loginedMemberExtra__fileType
     },
     isLogined: computed(() => loginedMemberId !== null ),
     logout: () => {
@@ -78,6 +82,8 @@ export const createGlobalState = (): GlobalState => {
       localStorage.removeItem("loginedMemberCorp")
       localStorage.removeItem("loginedMemberAuthLevel")
       localStorage.removeItem("loginedMemberAuthStatus")
+      localStorage.removeItem("loginedMemberExtra__thumbImg")
+      localStorage.removeItem("loginedMemberExtra__fileType")
   
       location.replace('/member/login');
     }
