@@ -92,14 +92,18 @@ const routes: Array<RouteRecordRaw> = [
     ]
   },
   {
-    path: '/detail',
+    path: '/recruit/detail',
     component: () => import('@/pages/recruit/DetailPage.vue'),
     props: (route:any) => ({ id: Util.toIntOrUnd(route.query.id)})
   },
   {
-    path: '/application',
+    path: '/recruit/application',
     component: () => import('@/pages/recruit/ApplicationPage.vue'),
     props: (route:any) => ({ id: Util.toIntOrUnd(route.query.id)})
+  },
+  {
+    path: '/member/modify',
+    component: () => import('@/pages/member/ModifyPage.vue')
   },
 ]
 

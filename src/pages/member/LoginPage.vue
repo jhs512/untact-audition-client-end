@@ -137,7 +137,7 @@ export default defineComponent({
           const loginedMemberGender = axiosResponse.data.body.member.gender;
           const loginedMemberRegNumber = axiosResponse.data.body.member.regNumber;
           const loginedMemberAddress = axiosResponse.data.body.member.address;
-          const loginedMemberCellphoneNo = axiosResponse.data.body.member.cellphoneNo;
+          const loginedMemberCellPhoneNo = axiosResponse.data.body.member.cellPhoneNo;
           const loginedMemberFeet = axiosResponse.data.body.member.feet;
           const loginedMemberWeight = axiosResponse.data.body.member.weight;
           const loginedMemberSkinTone = axiosResponse.data.body.member.skinTone;
@@ -158,7 +158,7 @@ export default defineComponent({
           localStorage.setItem("loginedMemberLoginId", loginedMemberLoginId);
           localStorage.setItem("loginedMemberName", loginedMemberName);
           localStorage.setItem("loginedMemberNickName", loginedMemberNickName);
-          localStorage.setItem("loginedMemberCellphoneNo", loginedMemberCellphoneNo);
+          localStorage.setItem("loginedMemberCellPhoneNo", loginedMemberCellPhoneNo);
           localStorage.setItem("loginedMemberEngName", loginedMemberEngName);
           localStorage.setItem("loginedMemberGender", loginedMemberGender);
           localStorage.setItem("loginedMemberRegNumber", loginedMemberRegNumber);
@@ -166,7 +166,7 @@ export default defineComponent({
           localStorage.setItem("loginedMemberFeet", loginedMemberFeet + "");
           localStorage.setItem("loginedMemberWeight", loginedMemberWeight + "");
           localStorage.setItem("loginedMemberSkinTone", loginedMemberSkinTone);
-          localStorage.setItem("loginedMemberEyelid", loginedMemberEyelid);
+          localStorage.setItem("loginedMemberEyelid", loginedMemberEyelid + "");
           localStorage.setItem("loginedMemberFeature", loginedMemberFeature);
           localStorage.setItem("loginedMemberFilmgraphy", loginedMemberFilmgraphy);
           localStorage.setItem("loginedMemberJobArea", loginedMemberJobArea);

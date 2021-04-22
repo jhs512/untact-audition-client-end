@@ -1,5 +1,5 @@
 import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
-import { IRecruit , IArtwork, IActingRole} from '../types';
+import { IRecruit , IArtwork, IActingRole, IAp} from '../types';
 import { inject } from 'vue'
 
 // API 원형
@@ -102,11 +102,11 @@ export interface MainApi__member_authKey__IResponseBody extends Base__IResponseB
       gender: string;
       regNumber: string;
       address: string;
-      cellphoneNo: string;
+      cellPhoneNo: string;
       feet: number;
       weight: number;
       skinTone: string;
-      eyelid: string;
+      eyelid: number;
       feature: string;
       filmgraphy: string;
       jobArea: string;
@@ -162,15 +162,23 @@ export interface MainApi__common_genFile_doUpload__IResponseBody extends Base__I
 }
 
 // /common/genFile/getThumbImgUrl 의 응답 타입
-export interface MainApi__common_genFile_getThumbImgUrl___IResponseBody extends Base__IResponseBodyType1 {
+export interface MainApi__common_genFile_getThumbImgUrl__IResponseBody extends Base__IResponseBodyType1 {
   body:{
     imgUrl: string,
   };
 }
 
 // /common/genFile/deleteGenFile 의 응답 타입
-export interface MainApi__common_genFile_doDeleteGenFile___IResponseBody extends Base__IResponseBodyType1 {
+export interface MainApi__common_genFile_doDeleteGenFile__IResponseBody extends Base__IResponseBodyType1 {
   body:{
+  };
+}
+
+// /usr/ap/doModify 의 응답 타입
+export interface MainApi__member_doModify__IResponseBody extends Base__IResponseBodyType1 {
+  body:{
+    authKey: string,
+    ap: IAp
   };
 }
 
@@ -203,7 +211,7 @@ export class MainApi extends HttpClient {
       localStorage.removeItem("loginedMemberLoginId");
       localStorage.removeItem("loginedMemberName");
       localStorage.removeItem("loginedMemberNickName");
-      localStorage.removeItem("loginedMemberCellphoneNo");
+      localStorage.removeItem("loginedMemberCellPhoneNo");
       localStorage.removeItem("loginedMemberEngName");
       localStorage.removeItem("loginedMemberGender");
       localStorage.removeItem("loginedMemberRegNumber");
@@ -287,11 +295,29 @@ export class MainApi extends HttpClient {
   }
 
   public common_ap_genFile_getThumbImgUrl(id:number){
-    return this.instance.get<MainApi__common_genFile_getThumbImgUrl___IResponseBody>(`/common/genFile/getThumbImgUrl?id=${id}`);
+    return this.instance.get<MainApi__common_genFile_getThumbImgUrl__IResponseBody>(`/common/genFile/getThumbImgUrl?id=${id}`);
   }
 
   public common_ap_genFile_deleteGenFile(id:number){
-    return this.instance.get<MainApi__common_genFile_doDeleteGenFile___IResponseBody>(`/common/genFile/deleteGenFile?id=${id}`);
+    return this.instance.get<MainApi__common_genFile_doDeleteGenFile__IResponseBody>(`/common/genFile/deleteGenFile?id=${id}`);
+  }
+
+  public ap_doModify(loginedMemberId: string, nickName: string, feet: number, weight: number, skinTone: string, eyelid: number, feature: string, filmgraphy: string, jobArea: string, corp: string) {
+    return this.postByForm<MainApi__member_doModify__IResponseBody>(
+      `/usr/ap/doModify`, 
+      {
+        loginedMemberId,
+        nickName, 
+        feet, 
+        weight, 
+        skinTone, 
+        eyelid, 
+        feature, 
+        filmgraphy, 
+        jobArea, 
+        corp
+      }
+    );
   }
 } 
 

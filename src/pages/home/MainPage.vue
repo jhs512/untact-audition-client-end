@@ -70,7 +70,7 @@ export default defineComponent({
     }
 
     function showDetail(id:number) {
-      router.push('/detail?id=' + id)
+      router.push('/recruit/detail?id=' + id)
     }
 
     function recruitList(limit: number) {

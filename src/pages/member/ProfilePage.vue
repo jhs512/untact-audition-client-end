@@ -31,7 +31,7 @@
             <div><div class="w-2/5">몸무게 :</div><div class="w-2/4">{{globalState.loginedMember.weight}}</div></div>
             <div><div class="w-2/5">성별 :</div><div class="w-2/4">{{globalState.loginedMember.gender}}</div></div>
             <div><div class="w-2/5">피부색 :</div><div class="w-2/4">{{globalState.loginedMember.skinTone}}</div></div>
-            <div><div class="w-2/5">쌍커풀 유무 :</div><div class="w-2/4">{{globalState.loginedMember.eyelid}}</div></div>
+            <div><div class="w-2/5">쌍커풀 유무 :</div><div class="w-2/4">{{globalState.loginedMember.eyelid == 1 ? '유' : '무'}}</div></div>
             <div><div class="w-2/5">특징 :</div><div class="w-2/4">{{globalState.loginedMember.feature}}</div></div>
             <div><div class="w-2/5">커리어 :</div><div class="w-2/4">{{globalState.loginedMember.filmgraphy}}</div></div>
             <div><div class="w-2/5">희망분야 :</div><div class="w-2/4">{{globalState.loginedMember.jobArea}}</div></div>
@@ -51,9 +51,10 @@ import { actionSheetController, alertController  } from '@ionic/vue';
 import { defineComponent, reactive } from 'vue';
 import { useGlobalState } from '@/stores'
 import { close } from 'ionicons/icons';
-import { usePhotoGallery, Photo } from '@/composables/usePhotoGallery'
-import { useMainApi } from '@/apis'
-import * as util from '@/utils'
+import { usePhotoGallery, Photo } from '@/composables/usePhotoGallery';
+import { useMainApi } from '@/apis';
+import * as util from '@/utils';
+import router from '@/router';
 
 export default defineComponent({
   name: 'ProfilePage',
@@ -181,7 +182,7 @@ export default defineComponent({
             {
               text: '정보 수정',
               handler: () => {
-                
+                router.replace('/member/modify')
               },
             },
             {
