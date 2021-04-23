@@ -77,6 +77,7 @@ const app = createApp(App)
   .component('ion-action-sheet', Ion.IonActionSheet)
   .component('ion-avatar', Ion.IonAvatar)
   .component('ion-item', Ion.IonItem)
+  .component('ion-searchbar', Ion.IonSearchbar)
   .component('FormRow', FormRow)
   .component('MainHeader', MainHeader);
 

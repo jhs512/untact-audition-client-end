@@ -8,7 +8,9 @@
             <ion-card-header @click="showDetail(recruit.id)" class="cursor-pointer">
               <ion-card-title>{{recruit.title}}</ion-card-title>
               <ion-card-subtitle>{{recruit.pay}}</ion-card-subtitle>
-              <ion-card-subtitle>{{recruit.deadline}}</ion-card-subtitle>
+              <ion-card-subtitle v-if="recruit.dateDiff > 0">기한 : {{recruit.dateDiff}}일</ion-card-subtitle>
+              <ion-card-subtitle v-if="recruit.dateDiff == 0">기한 : 오늘까지</ion-card-subtitle>
+              <ion-card-subtitle v-if="recruit.dateDiff < 0">기한 마감</ion-card-subtitle>
             </ion-card-header>
             <ion-card-content>
               {{recruit.body}}
@@ -53,7 +55,7 @@ export default defineComponent({
     let isDisabled = false;
 
     const state = reactive({
-      recruits: [] as IRecruit[],
+      recruits: [] as any[],
     });
 
     function showDetail(id:number) {
@@ -81,6 +83,14 @@ export default defineComponent({
           if ( axiosResponse.data.body.isAllLoaded == true ){
             isAllRoaded = true;
           }
+
+          for(var i = 0 ; i < state.recruits.length ; i++ ){
+            let today = new Date();
+            let regDate = new Date(state.recruits[i].deadline);
+
+            state.recruits[i].dateDiff = Math.ceil((regDate.getTime()-today.getTime())/(1000*3600*24)); 
+          }
+
         });
     }
 

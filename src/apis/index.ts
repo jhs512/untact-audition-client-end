@@ -319,6 +319,11 @@ export class MainApi extends HttpClient {
       }
     );
   }
+
+  public recruit_listByKeyword(limit:number, keyword:string) {
+    return this.instance.get<MainApi__recruit_list__IResponseBody>(`/usr/recruit/search?limit=${limit}&keyword=${keyword}`);
+  }
+
 } 
 
 export const mainApiSymbol = Symbol('mainApiSymbol');

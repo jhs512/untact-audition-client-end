@@ -3,17 +3,22 @@
     <MainHeader />
     <ion-content>
       <section v-show="globalState.isLogined">
-        <span class="px-5 text-xs font-semibold">방금 올라온 공고</span>
+        <div class="px-6 pt-4 text-xs font-semibold">방금 올라온 공고</div>
         <div class="px-2 text-center">
           <ion-card v-for="recruit in state.recruits">
             <ion-card-header @click="showDetail(recruit.id)" class="cursor-pointer">
-              <ion-card-title>{{recruit.title}}</ion-card-title>
-              <ion-card-subtitle>{{recruit.pay}}</ion-card-subtitle>
-              <ion-card-subtitle>{{recruit.deadline}}</ion-card-subtitle>
-              <ion-card-subtitle>{{recruit.id}}</ion-card-subtitle>
+              <ion-card-title>가제 : ({{recruit.title}})</ion-card-title>
+              <ion-card-subtitle>감독 : ({{recruit.extra__aw_director}})</ion-card-subtitle>
+              <ion-card-subtitle v-if="recruit.dateDiff > 0">기한 : {{recruit.dateDiff}}일</ion-card-subtitle>
+              <ion-card-subtitle v-if="recruit.dateDiff == 0">기한 : 오늘까지</ion-card-subtitle>
+              <ion-card-subtitle v-if="recruit.dateDiff < 0">기한 마감</ion-card-subtitle>
+              <ion-card-subtitle>
+                <img :src="recruit.extra__thumbImg" alt="">
+              </ion-card-subtitle>
             </ion-card-header>
             <ion-card-content>
-              {{recruit.body}}
+              <div>배역: ({{recruit.extra__ar_name}})</div>
+              <div>특징: ({{recruit.extra__ar_character}})</div>
             </ion-card-content>
           </ion-card>
           
@@ -53,7 +58,7 @@ export default defineComponent({
     let isAllRoaded = false;
 
     const state = reactive({
-      recruits: [] as IRecruit[],
+      recruits: [] as any[],
     });
 
     const loadData = (event:any) => {
@@ -80,6 +85,13 @@ export default defineComponent({
         
           if ( axiosResponse.data.body.isAllLoaded == true ){
             isAllRoaded = true;
+          }
+
+          for(var i = 0 ; i < state.recruits.length ; i++ ){
+            let today = new Date();
+            let regDate = new Date(state.recruits[i].deadline);
+
+            state.recruits[i].dateDiff = Math.ceil((regDate.getTime()-today.getTime())/(1000*3600*24)); 
           }
         });
     }
