@@ -78,6 +78,8 @@ const app = createApp(App)
   .component('ion-avatar', Ion.IonAvatar)
   .component('ion-item', Ion.IonItem)
   .component('ion-searchbar', Ion.IonSearchbar)
+  .component('ion-popover', Ion.IonPopover)
+  .component('ion-modal', Ion.IonModal)
   .component('FormRow', FormRow)
   .component('MainHeader', MainHeader);
 

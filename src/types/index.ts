@@ -19,7 +19,7 @@ export interface IAp extends IEntity {
   gender:string, 
   regNumber:string, 
   address:string, 
-  cellphoneNo:string, 
+  cellPhoneNo:string, 
   feet:number, 
   weight:number, 
   skinTone:string, 

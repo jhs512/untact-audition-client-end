@@ -12,7 +12,7 @@ const updateDate = Util.toStringOrNull(localStorage.getItem("updateDate"))
 const loginedMemberName = Util.toStringOrNull(localStorage.getItem("loginedMemberName"))
 const loginedMemberNickName = Util.toStringOrNull(localStorage.getItem("loginedMemberNickName"))
 const loginedMemberLoginId = Util.toStringOrNull(localStorage.getItem("loginedMemberLoginId"))
-const loginedMemberCellphoneNo = Util.toStringOrNull(localStorage.getItem("loginedMemberCellphoneNo"))
+const loginedMemberCellPhoneNo = Util.toStringOrNull(localStorage.getItem("loginedMemberCellPhoneNo"))
 const loginedMemberEngName = Util.toStringOrNull(localStorage.getItem("loginedMemberEngName"))
 const loginedMemberGender = Util.toStringOrNull(localStorage.getItem("loginedMemberGender"))
 const loginedMemberRegNumber = Util.toStringOrNull(localStorage.getItem("loginedMemberRegNumber"))
@@ -44,7 +44,7 @@ export const createGlobalState = (): GlobalState => {
       gender:loginedMemberGender,
       regNumber:loginedMemberRegNumber,
       address:loginedMemberAddress,
-      cellphoneNo:loginedMemberCellphoneNo,
+      cellPhoneNo:loginedMemberCellPhoneNo,
       feet:loginedMemberFeet,
       weight:loginedMemberWeight,
       skinTone:loginedMemberSkinTone,
@@ -67,7 +67,7 @@ export const createGlobalState = (): GlobalState => {
       localStorage.removeItem("loginedMemberLoginId");
       localStorage.removeItem("loginedMemberName");
       localStorage.removeItem("loginedMemberNickName");
-      localStorage.removeItem("loginedMemberCellphoneNo");
+      localStorage.removeItem("loginedMemberCellPhoneNo");
       localStorage.removeItem("loginedMemberEngName")
       localStorage.removeItem("loginedMemberGender")
       localStorage.removeItem("loginedMemberRegNumber")
