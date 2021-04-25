@@ -152,7 +152,7 @@ export default defineComponent({
     }
 
     function showApplicationPage(id:number) {
-      router.push('/recruit/application?id=' + id)
+      router.push('/application?id=' + id)
     }
 
     onMounted(() => {

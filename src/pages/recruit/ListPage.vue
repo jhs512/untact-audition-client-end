@@ -40,7 +40,6 @@
 import { defineComponent, reactive, onMounted, watch } from 'vue';
 import { useGlobalState } from '@/stores'
 import { useMainApi } from '@/apis';
-import { IRecruit } from '@/types';
 import router from '@/router'
 
 
@@ -59,7 +58,7 @@ export default defineComponent({
     });
 
     function showDetail(id:number) {
-      router.push('/recruit/detail?id=' + id)
+      router.push('/detail?id=' + id)
     }
 
     const loadData = (event:any) => {

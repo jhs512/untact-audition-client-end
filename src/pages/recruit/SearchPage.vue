@@ -52,7 +52,7 @@ export default defineComponent({
     })
 
     function showDetail(id:number) {
-      router.push('/recruit/detail?id=' + id)
+      router.push('/detail?id=' + id)
     }
 
     function searchKeyword(event: any) {
