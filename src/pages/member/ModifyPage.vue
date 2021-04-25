@@ -54,7 +54,12 @@
 
                 <FormRow title="프로필 사진 설정">
                   <ion-button @click="presentActionSheet" expand="block" color="light">설정하기</ion-button>
+                  <input id="file" ref="profileImgFileElRef" type="file" class="hidden" v-on:change="setThumbnail">
                 </FormRow>
+                <div class="mx-auto image_container">
+                  <img v-if="fileType.type.startsWith('image')" src="" alt="" class="mx-auto">
+                  <video v-if="fileType.type.startsWith('video')" src="" controls></video>
+                </div>
                 <ion-grid v-if="input.profileImgs.length != 0">
                   <ion-row>
                     <ion-col size="6" v-for="imgUrl in input.profileImgs">
@@ -77,7 +82,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, reactive, onMounted } from 'vue';
+import { defineComponent, ref, reactive, onMounted, toHandlerKey } from 'vue';
 import { actionSheetController, alertController } from '@ionic/vue';
 import { usePhotoGallery } from '@/composables/usePhotoGallery';
 import { close } from 'ionicons/icons';
@@ -98,6 +103,7 @@ export default defineComponent({
     const filmgraphyElRef = ref<HTMLInputElement>();
     const jobAreaElRef = ref<HTMLInputElement>();
     const corpElRef = ref<HTMLInputElement>();
+    const profileImgFileElRef = ref<HTMLIonInputElement>();
     
     const mainApi = useMainApi();
     const globalState = useGlobalState();
@@ -117,7 +123,13 @@ export default defineComponent({
       filmgraphyEl: globalState.loginedMember.filmgraphy,
       jobAreaEl: globalState.loginedMember.jobArea,
       corpEl: globalState.loginedMember.corp,
-      profileImgs: [] as any[] 
+      profileImgs: [] as any[],
+      fileEl:new File([''],''),
+      profileImgCount: 1
+    })
+
+    var fileType = reactive({
+      type:''
     })
 
     async function deleteActionSheet(url:any){
@@ -195,18 +207,18 @@ export default defineComponent({
               text: '사진 촬영',
               handler: () => {
                 takePhoto().finally(() => {
+
                   const state = reactive ({
                     fileEl: photos.value[photos.value.length-1].file,
-                    profileImgCount: 1
                   })
 
                   if ( localStorage.getItem('profileImgCount') == null ){
                     localStorage.setItem('profileImgCount', '1')
                   } else if ( localStorage.getItem('profileImgCount') != null ){
-                    state.profileImgCount = util.toIntOrNull(localStorage.getItem('profileImgCount'))
-                    state.profileImgCount = ++state.profileImgCount
+                    input.profileImgCount = util.toIntOrNull(localStorage.getItem('profileImgCount'))
+                    input.profileImgCount = ++input.profileImgCount
                     localStorage.removeItem('profileImgCount')
-                    localStorage.setItem('profileImgCount', state.profileImgCount + '')
+                    localStorage.setItem('profileImgCount', input.profileImgCount + '')
                   }
 
                   const showProfileImg = () => {
@@ -228,14 +240,13 @@ export default defineComponent({
                       return;
                     }
                     
-                    mainApi.common_profileImg_genFile_doUpload(state.fileEl, util.toStringOrNull(globalState.loginedMember.id), util.toStringOrNull(state.profileImgCount))
+                    mainApi.common_profileImg_genFile_doUpload(state.fileEl, util.toStringOrNull(globalState.loginedMember.id), util.toStringOrNull(input.profileImgCount))
                       .then(axiosResponse => {
                         if ( axiosResponse.data.fail ) {
                           alert(axiosResponse.data.msg);
                           return;
                         }
                         else {
-                          console.log(axiosResponse.data.body.genFileIdsStr)
                           onSuccess();
                         }
                       });
@@ -249,7 +260,7 @@ export default defineComponent({
             {
               text: '사진 선택',
               handler: () => {
-                
+                document.getElementById('file')?.click();
               },
             },
             {
@@ -268,8 +279,41 @@ export default defineComponent({
     }
 
     function checkAndModify() {
-      modify(util.toStringOrNull(globalState.loginedMember.id), input.nickNameEl, input.feetEl, input.weightEl, input.skinToneEl, input.eyelidEl, input.featureEl, input.filmgraphyEl, input.jobAreaEl, input.corpEl);
+
+      const startModify = () => {
+        modify(util.toStringOrNull(globalState.loginedMember.id), input.nickNameEl, input.feetEl, input.weightEl, input.skinToneEl, input.eyelidEl, input.featureEl, input.filmgraphyEl, input.jobAreaEl, input.corpEl);
+      }
+
+      const startFileUpload = (onSuccess:Function) => {
+        if ( input.fileEl == null || input.fileEl.size == 0 ) {
+          onSuccess();
+          return;
+        }
+
+        if ( localStorage.getItem('profileImgCount') == null ){
+          localStorage.setItem('profileImgCount', '1')
+        } else if ( localStorage.getItem('profileImgCount') != null ){
+          input.profileImgCount = util.toIntOrNull(localStorage.getItem('profileImgCount'))
+          input.profileImgCount = ++input.profileImgCount
+          localStorage.removeItem('profileImgCount')
+          localStorage.setItem('profileImgCount', input.profileImgCount + '')
+        }
+        
+        mainApi.common_profileImg_genFile_doUpload(input.fileEl, util.toStringOrNull(globalState.loginedMember.id), util.toStringOrNull(input.profileImgCount))
+          .then(axiosResponse => {
+            if ( axiosResponse.data.fail ) {
+              alert(axiosResponse.data.msg);
+              return;
+            }
+            else {
+              onSuccess();
+            }
+          });
+      };
+      
+      startFileUpload(startModify);
     }
+
     function modify(loginedMemberId: string, nickName:string, feet:number, weight:number, skinTone:string, eyelid:number, feature:string, filmgraphy:string, jobArea:string, corp:string) {
       mainApi.ap_doModify(loginedMemberId, nickName, feet, weight, skinTone, eyelid, feature, filmgraphy, jobArea, corp)
         .then(axiosResponse => {
@@ -337,6 +381,49 @@ export default defineComponent({
         });
     }
 
+    function setThumbnail(event:any){
+      
+      var reader = new FileReader(); 
+      fileType.type = event.target.files[0].type as string;
+      reader.onload = function(event) { 
+        var elements:any;
+        if( fileType.type.startsWith("image") ){
+          elements = document.querySelectorAll('img'); 
+        }else if ( fileType.type.startsWith("video")) {
+          elements = document.querySelectorAll('video'); 
+        }
+        
+        if( elements == null ) {
+          return;
+        }
+        if(event.target?.result == null && typeof event.target?.result != 'string' ){
+          return;
+        }
+        if( typeof event.target.result == 'number' || typeof event.target.result == 'bigint'
+        || typeof event.target.result == 'boolean' || typeof event.target.result == 'symbol' || typeof event.target.result == 'undefined' ||  
+        typeof event.target.result == 'object' || typeof event.target.result == 'function'
+        ){
+          return
+        }
+
+        for ( var i = 0; i < elements.length; i++){
+          elements[i].setAttribute("src", event.target.result);
+        }
+
+        const imgContainers = document.querySelectorAll(".image_container")
+
+        for ( var i = 0; i < imgContainers.length; i++){
+          imgContainers[i].append(elements[i])
+        }
+
+        
+        
+      }; 
+        
+      reader.readAsDataURL(event.target.files[0]);
+      input.fileEl = event.target.files[0];
+    }
+
     onMounted(showProfileImg)
     return {
       checkAndModify,
@@ -354,7 +441,10 @@ export default defineComponent({
       historyBack,
       presentActionSheet,
       deleteActionSheet,
-      presentAlertMultipleButtons
+      presentAlertMultipleButtons,
+      setThumbnail,
+      fileType,
+      profileImgFileElRef
     }
   }
 })

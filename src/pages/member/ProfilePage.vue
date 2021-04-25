@@ -36,6 +36,13 @@
             <div><div class="w-2/5">커리어 :</div><div class="w-2/4">{{globalState.loginedMember.filmgraphy}}</div></div>
             <div><div class="w-2/5">희망분야 :</div><div class="w-2/4">{{globalState.loginedMember.jobArea}}</div></div>
           </div>
+          <ion-grid v-if="state.profileImgs.length != 0">
+            <ion-row>
+              <ion-col size="6" v-for="imgUrl in state.profileImgs">
+                <ion-img :src="imgUrl"></ion-img>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
         </span>
 
         <span v-if="segment.value == 'applying'">applying text</span>
@@ -48,7 +55,7 @@
 
 <script lang="ts">
 import { actionSheetController, alertController  } from '@ionic/vue';
-import { defineComponent, reactive } from 'vue';
+import { defineComponent, onMounted, reactive } from 'vue';
 import { useGlobalState } from '@/stores'
 import { close } from 'ionicons/icons';
 import { usePhotoGallery, Photo } from '@/composables/usePhotoGallery';
@@ -64,7 +71,7 @@ export default defineComponent({
 
     const state = reactive({
       url : "background-image: url('" + globalState.loginedMember.extra__thumbImg + "')",
-
+      profileImgs: [] as any[],
     })
 
     const segment = reactive({
@@ -199,6 +206,22 @@ export default defineComponent({
 
       const { role } = await actionSheet.onDidDismiss();
     }
+
+    const showProfileImg = () => {
+      mainApi.common_ap_genFile_getProfileImgUrls(util.toIntOrNull(globalState.loginedMember.id))
+        .then(axiosResponse => {
+
+          if ( axiosResponse.data.fail ) {
+            alert(axiosResponse.data.msg);
+            return;
+          } else {
+            state.profileImgs = axiosResponse.data.body.imgUrls
+          }
+
+        });
+    }
+
+    onMounted(showProfileImg)
 
     return {
       segmentChanged,
