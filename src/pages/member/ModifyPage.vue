@@ -52,6 +52,17 @@
                   <input v-model="input.corpEl" ref="corpElRef" class="form-row-input" type="text">
                 </FormRow>
 
+                <FormRow title="프로필 사진 설정">
+                  <ion-button @click="presentActionSheet" expand="block" color="light">설정하기</ion-button>
+                </FormRow>
+                <ion-grid v-if="input.profileImgs.length != 0">
+                  <ion-row>
+                    <ion-col size="6" v-for="imgUrl in input.profileImgs">
+                      <ion-img @click="deleteActionSheet(imgUrl)" :src="imgUrl"></ion-img>
+                    </ion-col>
+                  </ion-row>
+                </ion-grid>
+
                 <div class="cbg-gray flex justify-center items-center h-12 mt-8 rounded">
                   <button type="submit" class="w-full h-full text-lg font-bold">수정하기</button>
                 </div>
@@ -67,6 +78,9 @@
 
 <script lang="ts">
 import { defineComponent, ref, reactive, onMounted } from 'vue';
+import { actionSheetController, alertController } from '@ionic/vue';
+import { usePhotoGallery } from '@/composables/usePhotoGallery';
+import { close } from 'ionicons/icons';
 import { useMainApi } from '@/apis';
 import { useGlobalState } from '@/stores'
 import router from '@/router';
@@ -87,6 +101,7 @@ export default defineComponent({
     
     const mainApi = useMainApi();
     const globalState = useGlobalState();
+    const { photos, takePhoto } = usePhotoGallery();
 
     const historyBack = () => {
       router.replace('/member/profile')
@@ -102,7 +117,155 @@ export default defineComponent({
       filmgraphyEl: globalState.loginedMember.filmgraphy,
       jobAreaEl: globalState.loginedMember.jobArea,
       corpEl: globalState.loginedMember.corp,
+      profileImgs: [] as any[] 
     })
+
+    async function deleteActionSheet(url:any){
+      const deleteSheet = await actionSheetController
+        .create({
+          header: '사진 삭제',
+          cssClass: 'my-custom-class',
+          buttons: [
+            {
+              text: '사진 삭제',
+              role: 'destructive',
+              handler: () => {
+                presentAlertMultipleButtons(url)
+              },
+            },
+            {
+              text: 'Cancel',
+              icon: close,
+              role: 'cancel',
+              handler: () => {
+                console.log('Cancel clicked')
+              },
+            },
+          ],
+        })
+      await deleteSheet.present();
+
+      const { role } = await deleteSheet.onDidDismiss();
+    }
+
+    async function presentAlertMultipleButtons(url:any) {
+      const alert = await alertController
+        .create({
+          cssClass: 'my-custom-class',
+          header: 'Alert',
+          subHeader: '사진 삭제',
+          message: '프로필사진을 삭제하시겠습니까?',
+          buttons: [
+            {
+              text: '취소',
+              handler: () => {
+                return
+              }
+            },
+            {
+              text: '삭제',
+              handler: () => {
+                const updateDate = url.split('updateDate=')
+
+                const deleteGenFile = async () => {
+                  await mainApi.common_ap_genFile_deleteProfileImg(util.toIntOrNull(globalState.loginedMember.id), util.toStringOrNull(updateDate[1]))
+                    .then(axiosResponse => {
+                      if ( axiosResponse.data.fail ) {
+                        return;
+                      }
+                    })
+                }
+
+                deleteGenFile()
+                location.reload();
+              }
+            }
+          ],
+        });
+      return alert.present();
+    }
+
+    async function presentActionSheet() {
+      const actionSheet = await actionSheetController
+        .create({
+          header: '프로필 사진 설정',
+          cssClass: 'my-custom-class',
+          buttons: [
+            {
+              text: '사진 촬영',
+              handler: () => {
+                takePhoto().finally(() => {
+                  const state = reactive ({
+                    fileEl: photos.value[photos.value.length-1].file,
+                    profileImgCount: 1
+                  })
+
+                  if ( localStorage.getItem('profileImgCount') == null ){
+                    localStorage.setItem('profileImgCount', '1')
+                  } else if ( localStorage.getItem('profileImgCount') != null ){
+                    state.profileImgCount = util.toIntOrNull(localStorage.getItem('profileImgCount'))
+                    state.profileImgCount = ++state.profileImgCount
+                    localStorage.removeItem('profileImgCount')
+                    localStorage.setItem('profileImgCount', state.profileImgCount + '')
+                  }
+
+                  const showProfileImg = () => {
+                    mainApi.common_ap_genFile_getProfileImgUrls(util.toIntOrNull(globalState.loginedMember.id))
+                      .then(axiosResponse => {
+
+                        if ( axiosResponse.data.fail ) {
+                          alert(axiosResponse.data.msg);
+                          return;
+                        } else {
+                          input.profileImgs = axiosResponse.data.body.imgUrls
+                        }
+
+                      });
+                  }
+
+                  const startFileUpload = (onSuccess:Function) => {
+                    if ( state.fileEl == null || state.fileEl.size == 0 ) {
+                      return;
+                    }
+                    
+                    mainApi.common_profileImg_genFile_doUpload(state.fileEl, util.toStringOrNull(globalState.loginedMember.id), util.toStringOrNull(state.profileImgCount))
+                      .then(axiosResponse => {
+                        if ( axiosResponse.data.fail ) {
+                          alert(axiosResponse.data.msg);
+                          return;
+                        }
+                        else {
+                          console.log(axiosResponse.data.body.genFileIdsStr)
+                          onSuccess();
+                        }
+                      });
+                  };
+                  
+                  startFileUpload(showProfileImg)
+                })
+                
+              },
+            },
+            {
+              text: '사진 선택',
+              handler: () => {
+                
+              },
+            },
+            {
+              text: 'Cancel',
+              icon: close,
+              role: 'cancel',
+              handler: () => {
+                console.log('Cancel clicked')
+              },
+            },
+          ],
+        });
+      await actionSheet.present();
+
+      const { role } = await actionSheet.onDidDismiss();
+    }
 
     function checkAndModify() {
       modify(util.toStringOrNull(globalState.loginedMember.id), input.nickNameEl, input.feetEl, input.weightEl, input.skinToneEl, input.eyelidEl, input.featureEl, input.filmgraphyEl, input.jobAreaEl, input.corpEl);
@@ -159,6 +322,22 @@ export default defineComponent({
 
         });
     }
+
+    const showProfileImg = () => {
+      mainApi.common_ap_genFile_getProfileImgUrls(util.toIntOrNull(globalState.loginedMember.id))
+        .then(axiosResponse => {
+
+          if ( axiosResponse.data.fail ) {
+            alert(axiosResponse.data.msg);
+            return;
+          } else {
+            input.profileImgs = axiosResponse.data.body.imgUrls
+          }
+
+        });
+    }
+
+    onMounted(showProfileImg)
     return {
       checkAndModify,
       nickNameElRef,
@@ -172,7 +351,10 @@ export default defineComponent({
       corpElRef,
       input,
       confirm,
-      historyBack
+      historyBack,
+      presentActionSheet,
+      deleteActionSheet,
+      presentAlertMultipleButtons
     }
   }
 })

@@ -168,8 +168,21 @@ export interface MainApi__common_genFile_getThumbImgUrl__IResponseBody extends B
   };
 }
 
+// /common/genFile/getProfileImgUrls 의 응답 타입
+export interface MainApi__common_genFile_getProfileImgUrls__IResponseBody extends Base__IResponseBodyType1 {
+  body:{
+    imgUrls: string[],
+  };
+}
+
 // /common/genFile/deleteGenFile 의 응답 타입
 export interface MainApi__common_genFile_doDeleteGenFile__IResponseBody extends Base__IResponseBodyType1 {
+  body:{
+  };
+}
+
+// /common/genFile/deleteGenFile 의 응답 타입
+export interface MainApi__common_genFile_doDeleteProfileImg__IResponseBody extends Base__IResponseBodyType1 {
   body:{
   };
 }
@@ -288,7 +301,15 @@ export class MainApi extends HttpClient {
 
   public common_ap_genFile_doUploadForAdd(file:File, id:string) {
     const formDate = new FormData();
-    formDate.append("file__ap__" + id + "__common__attachment__1", file);
+    formDate.append("file__ap__" + id + "__thumbnail__attachment__1", file);
+    return this.post<MainApi__common_genFile_doUpload__IResponseBody>(
+      `/common/genFile/doUpload`, formDate
+    );
+  }
+
+  public common_profileImg_genFile_doUpload(file:File, id:string, count:string) {
+    const formDate = new FormData();
+    formDate.append("file__ap__" + id + "__profile__attachment__" + count + "", file);
     return this.post<MainApi__common_genFile_doUpload__IResponseBody>(
       `/common/genFile/doUpload`, formDate
     );
@@ -298,8 +319,16 @@ export class MainApi extends HttpClient {
     return this.instance.get<MainApi__common_genFile_getThumbImgUrl__IResponseBody>(`/common/genFile/getThumbImgUrl?id=${id}`);
   }
 
+  public common_ap_genFile_getProfileImgUrls(id:number){
+    return this.instance.get<MainApi__common_genFile_getProfileImgUrls__IResponseBody>(`/common/genFile/getProfileImgUrls?id=${id}`);
+  }
+
   public common_ap_genFile_deleteGenFile(id:number){
     return this.instance.get<MainApi__common_genFile_doDeleteGenFile__IResponseBody>(`/common/genFile/deleteGenFile?id=${id}`);
+  }
+
+  public common_ap_genFile_deleteProfileImg(id:number, updateDate:string){
+    return this.instance.get<MainApi__common_genFile_doDeleteProfileImg__IResponseBody>(`/common/genFile/deleteProfileImg?id=${id}&updateDate=${updateDate}`);
   }
 
   public ap_doModify(loginedMemberId: string, nickName: string, feet: number, weight: number, skinTone: string, eyelid: number, feature: string, filmgraphy: string, jobArea: string, corp: string) {
