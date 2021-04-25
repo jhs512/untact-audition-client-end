@@ -77,7 +77,7 @@
               </ion-toolbar>
             </ion-header>
             <div class="text-xs p-4 font-black">
-              <span class="text-sm border-b-2 border-gray-400">ARTIST INFO</span>
+              <span class="text-xl border-b-2 border-gray-400">ARTIST INFO</span>
 
               <div class="mt-10">
                 <span>이름. </span>
@@ -101,7 +101,7 @@
 
               <div class="my-5">
                 <span>생년월일. </span>
-                <span>{{globalState.loginedMember.regNumber}}</span>
+                <span>{{state.regNumber}}</span>
               </div>
 
               <div class="my-5">
@@ -150,7 +150,8 @@ import { defineComponent, reactive, onMounted, ref } from 'vue';
 import { useMainApi } from '@/apis'
 import { IRecruit } from '@/types';
 import { useGlobalState } from '@/stores'
-import { usePhotoGallery, Photo } from '@/composables/usePhotoGallery'
+import { usePhotoGallery } from '@/composables/usePhotoGallery'
+import * as Crypto from 'crypto-ts'
 
 
 export default defineComponent({
@@ -170,7 +171,8 @@ export default defineComponent({
 
     const state = reactive ({
       recruit: {} as IRecruit,
-      pageNum: 1
+      pageNum: 1,
+      regNumber: JSON.parse(Crypto.AES.decrypt(globalState.loginedMember.regNumber, 'regKey').toString(Crypto.enc.Utf8).substring(0,6))
     })
 
     const input = reactive ({
