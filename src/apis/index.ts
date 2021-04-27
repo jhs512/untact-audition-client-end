@@ -231,6 +231,28 @@ export interface MainApi__common_application_getApplicationsAndRecruit__IRespons
   };
 }
 
+// /usr/ap/like 의 응답 타입
+export interface MainApi__ap__recruit__like__IResponseBody extends Base__IResponseBodyType1 {
+  body: {
+  };
+}
+
+// /usr/ap/disLike 의 응답 타입
+export interface MainApi__ap__recruit__disLike__IResponseBody extends Base__IResponseBodyType1 {
+  body: {
+  };
+}
+
+// /usr/ap/checkLikeStatus 의 응답 타입
+export interface MainApi__ap__recruit__checkLikeStatus__IResponseBody extends Base__IResponseBodyType1 {
+  body: {
+    likeStatus: string
+  };
+}
+
+
+
+
 
 
 
@@ -436,6 +458,20 @@ export class MainApi extends HttpClient {
   public application_getApplicationsAndRecruit(memberId: number){
     return this.instance.get<MainApi__common_application_getApplicationsAndRecruit__IResponseBody>(`/usr/application/getApplicationsAndRecruit?memberId=${memberId}`);
   }
+
+  public ap_recruit_like(recruitId: number, memberId: number){
+    return this.instance.get<MainApi__ap__recruit__like__IResponseBody>(`/usr/ap/like?recruitId=${recruitId}&memberId=${memberId}`);
+  }
+
+  public ap_recruit_disLike(recruitId: number, memberId: number){
+    return this.instance.get<MainApi__ap__recruit__disLike__IResponseBody>(`/usr/ap/disLike?recruitId=${recruitId}&memberId=${memberId}`);
+  }
+
+  public ap_recruit_checkLikeStatus(recruitId: number, memberId: number){
+    return this.instance.get<MainApi__ap__recruit__checkLikeStatus__IResponseBody>(`/usr/ap/checkLikeStatus?recruitId=${recruitId}&memberId=${memberId}`);
+  }
+
+  
 } 
 
 export const mainApiSymbol = Symbol('mainApiSymbol');

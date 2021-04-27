@@ -111,7 +111,8 @@
         </section>
 
         <section class="my-10 flex justify-around">
-          <ion-button class="w-32" fill="outline" color="dark">좋아요</ion-button>
+          <ion-button v-if="state.likeStatus == 'disLike'" @click="likeRecruit" class="w-32" fill="outline" color="dark">LIKE</ion-button>
+          <ion-button v-if="state.likeStatus == 'like'" @click="disLikeRecruit" class="w-32" fill="outline" color="primary">DISLIKE</ion-button>
           <ion-button @click="showApplicationPage(state.recruit.id)" class="w-32" color="danger">지원하기</ion-button>
         </section>
         
@@ -124,8 +125,10 @@
 <script lang="ts">
 import { defineComponent, reactive, onMounted } from 'vue';
 import { useMainApi } from '@/apis'
+import { useGlobalState } from '@/stores'
 import { IRecruit } from '@/types';
 import router from '@/router';
+import * as util from '@/utils';
 
 
 export default defineComponent({
@@ -139,9 +142,11 @@ export default defineComponent({
   setup(props) {
 
     const mainApi = useMainApi();
+    const globalState = useGlobalState();
 
     const state = reactive ({
-      recruit: {} as IRecruit
+      recruit: {} as IRecruit,
+      likeStatus: ''
     })
 
     function recruitDetail(id: number) {
@@ -155,6 +160,54 @@ export default defineComponent({
       router.push('/application?id=' + id)
     }
 
+    function likeRecruit() {
+      mainApi.ap_recruit_like(props.id, util.toIntOrNull(globalState.loginedMember.id))
+        .then(axiosResponse => {
+          if ( axiosResponse.data.fail ) {
+            util.showAlert("Alert", axiosResponse.data.msg, function(){})
+            return;
+          }
+          else {
+            util.showAlert("Alert", axiosResponse.data.msg, function(){})
+            state.likeStatus = 'like'
+          }
+      })
+    }
+
+    function disLikeRecruit() {
+      mainApi.ap_recruit_disLike(props.id, util.toIntOrNull(globalState.loginedMember.id))
+        .then(axiosResponse => {
+          if ( axiosResponse.data.fail ) {
+            util.showAlert("Alert", axiosResponse.data.msg, function(){})
+            return;
+          }
+          else {
+            util.showAlert("Alert", axiosResponse.data.msg, function(){})
+            state.likeStatus = 'disLike'
+          }
+      })
+    }
+
+    function checkLikeStatus() {
+      mainApi.ap_recruit_checkLikeStatus(props.id, util.toIntOrNull(globalState.loginedMember.id))
+        .then(axiosResponse => {
+          if ( axiosResponse.data.fail ) {
+            util.showAlert("Alert", axiosResponse.data.msg, function(){})
+            return;
+          }
+          else {
+            if( axiosResponse.data.body.likeStatus == 'like'){
+              state.likeStatus = 'like'
+            } else if ( axiosResponse.data.body.likeStatus == 'disLike' ){
+              state.likeStatus = 'disLike'
+            }
+            
+          }
+      })
+    }
+
+    onMounted(checkLikeStatus)
+
     onMounted(() => {
       recruitDetail(props.id);
     });
@@ -165,7 +218,9 @@ export default defineComponent({
       recruitDetail,
       state,
       props,
-      showApplicationPage
+      showApplicationPage,
+      likeRecruit,
+      disLikeRecruit
     }
   }
 })
