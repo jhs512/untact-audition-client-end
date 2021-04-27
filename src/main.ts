@@ -80,6 +80,7 @@ const app = createApp(App)
   .component('ion-searchbar', Ion.IonSearchbar)
   .component('ion-popover', Ion.IonPopover)
   .component('ion-modal', Ion.IonModal)
+  .component('ion-checkbox', Ion.IonCheckbox)
   .component('FormRow', FormRow)
   .component('MainHeader', MainHeader);
 

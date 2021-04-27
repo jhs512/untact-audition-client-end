@@ -175,6 +175,13 @@ export interface MainApi__common_genFile_getProfileImgUrls__IResponseBody extend
   };
 }
 
+// /common/genFile/getProfileImgs 의 응답 타입
+export interface MainApi__common_genFile_getProfileImgs__IResponseBody extends Base__IResponseBodyType1 {
+  body:{
+    genFiles: any[]
+  };
+}
+
 // /common/genFile/deleteGenFile 의 응답 타입
 export interface MainApi__common_genFile_doDeleteGenFile__IResponseBody extends Base__IResponseBodyType1 {
   body:{
@@ -195,6 +202,21 @@ export interface MainApi__member_doModify__IResponseBody extends Base__IResponse
   };
 }
 
+// /common/genFile/getRecentImgUrl 의 응답 타입
+export interface MainApi__common_application_getRecentImg__IResponseBody extends Base__IResponseBodyType1 {
+  body:{
+    imgUrl: string
+  };
+}
+
+
+// /usr/application/write 의 응답 타입
+export interface MainApi__application_doWrite__IResponseBody extends Base__IResponseBodyType1 {
+  body: {
+    id: number;
+  };
+}
+
 
 
 // http://localhost:8021/usr/ 와의 통신장치
@@ -202,7 +224,7 @@ export class MainApi extends HttpClient {
   public constructor() {
     super(
       axios.create({
-        baseURL:'http://192.168.219.100:8024',
+        baseURL:'http://192.168.219.102:8024',
       })
     );
   }
@@ -323,6 +345,11 @@ export class MainApi extends HttpClient {
     return this.instance.get<MainApi__common_genFile_getProfileImgUrls__IResponseBody>(`/common/genFile/getProfileImgUrls?id=${id}`);
   }
 
+  public common_ap_genFile_getProfileImgs(id:number){
+    return this.instance.get<MainApi__common_genFile_getProfileImgs__IResponseBody>(`/common/genFile/getProfileImgs?id=${id}`);
+  }
+  
+
   public common_ap_genFile_deleteGenFile(id:number){
     return this.instance.get<MainApi__common_genFile_doDeleteGenFile__IResponseBody>(`/common/genFile/deleteGenFile?id=${id}`);
   }
@@ -351,6 +378,39 @@ export class MainApi extends HttpClient {
 
   public recruit_listByKeyword(limit:number, keyword:string) {
     return this.instance.get<MainApi__recruit_list__IResponseBody>(`/usr/recruit/search?limit=${limit}&keyword=${keyword}`);
+  }
+
+  public common_application_photo_doUpload(file:File) {
+    const formDate = new FormData();
+    formDate.append("file__application__0__photo__attachment__1", file);
+    return this.post<MainApi__common_genFile_doUpload__IResponseBody>(
+      `/common/genFile/doUpload`, formDate
+    );
+  }
+
+  public common_application_video_doUpload(file:File) {
+    const formDate = new FormData();
+    formDate.append("file__application__0__video__attachment__1", file);
+    return this.post<MainApi__common_genFile_doUpload__IResponseBody>(
+      `/common/genFile/doUpload`, formDate
+    );
+  }
+
+  public common_application_photo_getRecentImgUrl(recentImgFileIdsStr: string){
+    return this.instance.get<MainApi__common_application_getRecentImg__IResponseBody>(`/common/genFile/getRecentImgUrl?recentImgFileIdsStr=${recentImgFileIdsStr}`);
+  }
+
+  public application_doWrite(videoFileIdsStr:string, recentImgFileIdsStr:string, profileImgIdsStr:string, memberId:number, recruitId:number) {
+    return this.postByForm<MainApi__application_doWrite__IResponseBody>(
+      `/usr/application/write`, 
+      {
+        videoFileIdsStr,
+        recentImgFileIdsStr,
+        profileImgIdsStr,
+        memberId,
+        recruitId
+      }
+    );
   }
 
 } 

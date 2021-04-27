@@ -42,23 +42,25 @@
               <div>
                 <ion-label>현재 사진 업로드</ion-label>
                 <div>
-                  <ion-button expand="block" color="light" @click="takePhoto">사진촬영</ion-button>
+                  <ion-button expand="block" color="light" @click="takeRecentPhoto">사진촬영</ion-button>
+                  <div v-if="input.recentImgUrl.length != 0">
+                    <ion-img :src="input.recentImgUrl"></ion-img>
+                  </div>
                 </div>
-
-                <ion-grid>
-                  <ion-row>
-                    <ion-col size="6" :key="photo" v-for="photo in photos">
-                      <ion-img :src="photo.webviewPath"></ion-img>
-                    </ion-col>
-                  </ion-row>
-                </ion-grid>
               </div>
 
               <div class="border-t-2 my-10"></div>
 
               <div>
                 <ion-label>프로필 사진 업로드</ion-label>
-                <ion-input type="file" class="border my-2"></ion-input>
+                <ion-button @click="popOpen" expand="block" color="light">사진선택</ion-button>
+                <ion-grid v-if="state.profileImgIdsStr.length != 0">
+                  <ion-row>
+                    <ion-col size="6" v-for="genFile in state.profileImgIdsStr">
+                      <ion-img :src="genFile.forPrintUrl"></ion-img>
+                    </ion-col>
+                  </ion-row>
+                </ion-grid>
               </div>
 
               <div class="text-center my-10">
@@ -89,8 +91,11 @@
                 <span>{{globalState.loginedMember.nickName}}</span>
               </div>
 
-              <div :key="photo" v-for="photo in photos">
-                <ion-img :src="photo.webviewPath"></ion-img>
+              <div class="mt-10 text-lg">
+                <div>현재사진</div>
+                <div v-if="input.recentImgUrl.length != 0">
+                  <ion-img :src="input.recentImgUrl"></ion-img>
+                </div>
               </div>
               
 
@@ -124,18 +129,30 @@
                 <span>{{globalState.loginedMember.filmgraphy}}</span>
               </div>
 
-              <div class="mt-10 text-sm">
+              <div class="mt-10 text-lg">
                 <div>1차 오디션 연기영상.</div>
                 <div class="mx-auto image_container">
                   <img v-if="fileType.type.startsWith('image')" src="" alt="" class="mx-auto">
                   <video v-if="fileType.type.startsWith('video')" src="" controls></video>
                 </div>
               </div>
+              
+              
+              <div class="mt-10 text-lg">
+                <div>프로필 사진</div>
+                <ion-grid v-if="state.profileImgIdsStr.length != 0">
+                  <ion-row>
+                    <ion-col size="6" v-for="genFile in state.profileImgIdsStr">
+                      <ion-img :src="genFile.forPrintUrl"></ion-img>
+                    </ion-col>
+                  </ion-row>
+                </ion-grid>
+              </div>
 
               
             
               <div class="text-center my-10">
-                <ion-button fill="outline" color="dark">최종 제출하기</ion-button>
+                <ion-button type="submit" fill="outline" color="dark">최종 제출하기</ion-button>
               </div>
             </div>
           </section>
@@ -147,15 +164,24 @@
 
 <script lang="ts">
 import { defineComponent, reactive, onMounted, ref } from 'vue';
-import { useMainApi } from '@/apis'
+import { useMainApi } from '@/apis';
 import { IRecruit } from '@/types';
-import { useGlobalState } from '@/stores'
-import { usePhotoGallery } from '@/composables/usePhotoGallery'
-import * as Crypto from 'crypto-ts'
+import { useGlobalState } from '@/stores';
+import { usePhotoGallery } from '@/composables/usePhotoGallery';
+import * as Crypto from 'crypto-ts';
+import ProfilePopover from '../../components/ProfileImgPopover.vue';
+import '../../components/global.css';
+import * as util from '@/utils';
+import { popoverController } from '@ionic/vue';
+import { profileImage } from '@/stores'
+import router from '@/router'
 
 
 export default defineComponent({
   name:'ApplicationPage',
+  components: {
+    ProfilePopover
+  },
   props: {
     id: {
       type: Number,
@@ -169,14 +195,90 @@ export default defineComponent({
 
     const fileElRef = ref<HTMLIonInputElement>();
 
+    const takeRecentPhoto = () => {
+      takePhoto().finally(()=>{
+
+        const recent = reactive({
+          fileEl: photos.value[photos.value.length-1].file,
+        })
+
+        const showRecentImg = (recentImgFileIdsStr: string) => {
+          mainApi.common_application_photo_getRecentImgUrl(recentImgFileIdsStr)
+            .then(axiosResponse => {
+
+              if ( axiosResponse.data.fail ) {
+                alert(axiosResponse.data.msg);
+                return;
+              } else {
+                input.recentImgUrl = axiosResponse.data.body.imgUrl
+              }
+
+            });
+        }
+
+        const startRecentPhotoUpload = (onSuccess:Function) => {
+          if ( recent.fileEl == null || recent.fileEl.size == 0 ) {
+            return;
+          }
+          
+          mainApi.common_application_photo_doUpload(recent.fileEl)
+            .then(axiosResponse => {
+              if ( axiosResponse.data.fail ) {
+                alert(axiosResponse.data.msg);
+                return;
+              }
+              else {
+                state.recentImgFileIdsStr = axiosResponse.data.body.genFileIdsStr
+                onSuccess(axiosResponse.data.body.genFileIdsStr);
+              }
+            });
+        };
+        
+        startRecentPhotoUpload(showRecentImg)
+      })
+    }
+
+    const popOpen = async (ev: Event) => {
+      await mainApi.common_ap_genFile_getProfileImgs(util.toIntOrNull(globalState.loginedMember.id))
+      .then(axiosResponse => {
+
+        if ( axiosResponse.data.fail ) {
+          alert(axiosResponse.data.msg);
+          return;
+        } else {
+          input.profileImgs = axiosResponse.data.body.genFiles
+        }
+      });
+      
+
+      const popover = await popoverController
+        .create({
+          component: ProfilePopover,
+          componentProps:{
+            controller: popoverController,
+            genFiles: input.profileImgs
+          },
+          cssClass: 'pop-Img-style',
+          event: ev,
+        })
+      await popover.present();
+
+      const { role } = await popover.onDidDismiss();
+    }
+
     const state = reactive ({
       recruit: {} as IRecruit,
       pageNum: 1,
-      regNumber: JSON.parse(Crypto.AES.decrypt(globalState.loginedMember.regNumber, 'regKey').toString(Crypto.enc.Utf8).substring(0,6))
+      regNumber: JSON.parse(Crypto.AES.decrypt(globalState.loginedMember.regNumber, 'regKey').toString(Crypto.enc.Utf8).substring(0,6)),
+      recentImgFileIdsStr:'',
+      videoFileIdsStr:'',
+      profileImgIdsStr: profileImage.checkedList
     })
 
     const input = reactive ({
-      fileEl: new File([''],'')
+      fileEl: new File([''],''),
+      profileImgs:[] as any[],
+      recentImgUrl: ''
     })
 
     var fileType = reactive({
@@ -218,8 +320,6 @@ export default defineComponent({
           imgContainers[i].append(elements[i])
         }
 
-        
-        
       }; 
         
       reader.readAsDataURL(event.target.files[0]);
@@ -241,11 +341,63 @@ export default defineComponent({
       state.pageNum = --state.pageNum;
     }
 
+    const checkAndApplication = () => {
+      if (state.recentImgFileIdsStr.length == 0 || input.fileEl == null || input.fileEl.size == 0 || state.profileImgIdsStr.length == 0){
+        util.showAlert("Alert", "모든 파일을 업로드 후 진행해주세요", function(){})
+        return
+      }
+
+      if (!fileType.type.startsWith("video")){
+        util.showAlert("Alert", "1차 오디션 연기영상은 동영상 파일을 업로드 해주세요", function(){})
+        return
+      }
+
+      const startApplication = () => {
+        let profileImgIdsStr = JSON.stringify(state.profileImgIdsStr)
+        application(state.videoFileIdsStr, state.recentImgFileIdsStr, profileImgIdsStr, util.toIntOrNull(localStorage.getItem("loginedMemberId")), props.id)
+      }
+
+      const startVideoFileUpload = (onSuccess:Function) => {
+        if ( !!!input.fileEl ) {
+          onSuccess("");
+          return;
+        }
+        
+        mainApi.common_application_video_doUpload(input.fileEl)
+          .then(axiosResponse => {
+            if ( axiosResponse.data.fail ) {
+              alert(axiosResponse.data.msg);
+              return;
+            }
+            else {
+              state.videoFileIdsStr = axiosResponse.data.body.genFileIdsStr
+              onSuccess();
+            }
+          });
+      };
+      
+      startVideoFileUpload(startApplication);
+     
+    }
+
+    function application(videoFileIdsStr:string, recentImgFileIdsStr:string, profileImgIdsStr:string, loginedMemberId:number, recruitId:number) {
+      mainApi.application_doWrite(videoFileIdsStr, recentImgFileIdsStr, profileImgIdsStr, loginedMemberId, recruitId)
+        .then(axiosResponse => {
+          if ( axiosResponse.data.fail ) {
+            alert(axiosResponse.data.msg);
+            return;
+          }
+          else {
+            util.showAlert("Alert", axiosResponse.data.msg, function(){})
+            router.replace('/detail?id=' + props.id)
+            profileImage.checkedList = []
+          }
+        })
+    }
+
     onMounted(() => {
       recruitDetail(props.id);
     });
-    
-
 
     return{
       recruitDetail,
@@ -254,12 +406,14 @@ export default defineComponent({
       nextPage,
       pageBack,
       globalState,
-      takePhoto,
       photos,
       fileElRef,
       input,
       setThumbnail,
-      fileType
+      fileType,
+      popOpen,
+      takeRecentPhoto,
+      checkAndApplication
     }
   }
 })

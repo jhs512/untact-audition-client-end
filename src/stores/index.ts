@@ -93,3 +93,7 @@ export const createGlobalState = (): GlobalState => {
 export const useGlobalState = (): GlobalState => inject(globalStateSymbol) as GlobalState;
 
 export const useGlobalStateOutSideOfVue = createGlobalState;
+
+export const profileImage = reactive({
+  checkedList: [] as any
+})

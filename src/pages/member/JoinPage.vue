@@ -244,7 +244,6 @@ export default defineComponent({
       }
       
       api.isTrue = false;
-      console.log(result);
     }
 
     const inputCheck = () => {
