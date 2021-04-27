@@ -45,7 +45,29 @@
           </ion-grid>
         </span>
 
-        <span v-if="segment.value == 'applying'">applying text</span>
+        <span v-if="segment.value == 'applying'">
+          <div class="flex px-8 pt-2 font-semibold justify-around text-sm text-center">
+            <div>
+              <div>지원완료</div>
+              <div class="pt-2 text-lg">{{state.endApplying}}</div>
+            </div>
+            <div>
+              <div>1차 통과</div>
+              <div class="pt-2 text-lg">{{state.firstPass}}</div>
+            </div>
+            <div>
+              <div>최종 합격</div>
+              <div class="pt-2 text-lg">{{state.finalPass}}</div>
+            </div>
+            <div>
+              <div>불합격</div>
+              <div class="pt-2 text-lg">{{state.passFail}}</div>
+            </div>
+          </div>
+          <div class="flex justify-center mt-4">
+            <ion-button @click="showApplyingDetail" size="small" fill="outline" color="dark">자세히보기</ion-button>
+          </div>
+        </span>
         <span v-if="segment.value == 'like'">like text</span>
 
       </section>
@@ -62,6 +84,7 @@ import { usePhotoGallery, Photo } from '@/composables/usePhotoGallery';
 import { useMainApi } from '@/apis';
 import * as util from '@/utils';
 import router from '@/router';
+import { IApplication } from '@/types'
 
 export default defineComponent({
   name: 'ProfilePage',
@@ -72,6 +95,11 @@ export default defineComponent({
     const state = reactive({
       url : "background-image: url('" + globalState.loginedMember.extra__thumbImg + "')",
       profileImgs: [] as any[],
+      applications: [] as IApplication[],
+      endApplying: 0,
+      firstPass: 0,
+      finalPass: 0,
+      passFail: 0
     })
 
     const segment = reactive({
@@ -221,7 +249,41 @@ export default defineComponent({
         });
     }
 
+    const showApplyingStatus = () => {
+      mainApi.application_getApplications(util.toIntOrNull(globalState.loginedMember.id))
+        .then(axiosResponse => {
+          if ( axiosResponse.data.fail ) {
+            alert(axiosResponse.data.msg);
+            return;
+          } else {
+            state.applications = axiosResponse.data.body.applications
+
+            if ( axiosResponse.data.body.applications.length != 0 ){
+              for ( let i = 0; i < axiosResponse.data.body.applications.length; i++){
+                if ( axiosResponse.data.body.applications[i].passStatus == -1 ){
+                  state.passFail = ++state.passFail
+                }
+                else if ( axiosResponse.data.body.applications[i].passStatus == 0 ){
+                  state.endApplying = ++state.endApplying
+                }
+                else if ( axiosResponse.data.body.applications[i].passStatus == 1 ){
+                  state.firstPass = ++state.firstPass
+                }
+                else if ( axiosResponse.data.body.applications[i].passStatus == 2 ){
+                  state.finalPass = ++state.finalPass
+                }
+              }
+            }
+          }
+      })
+    }
+
+    function showApplyingDetail() {
+      router.push('/applying/detail')
+    }
+
     onMounted(showProfileImg)
+    onMounted(showApplyingStatus)
 
     return {
       segmentChanged,
@@ -230,7 +292,8 @@ export default defineComponent({
       presentActionSheet,
       state,
       photos,
-      takePhoto
+      takePhoto,
+      showApplyingDetail
     }
   }
 })

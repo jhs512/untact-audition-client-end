@@ -105,6 +105,26 @@ const routes: Array<RouteRecordRaw> = [
     path: '/member/modify',
     component: () => import('@/pages/member/ModifyPage.vue')
   },
+  {
+    path: '/applying/detail',
+    component: () => import('@/pages/application/DetailPage.vue')
+  },
+  {
+    path: '/applying/endApplyingStatus',
+    component: () => import('@/pages/application/EndApplyingStatusPage.vue')
+  },
+  {
+    path: '/applying/firstPassApplyingStatus',
+    component: () => import('@/pages/application/FirstPassApplyingStatusPage.vue')
+  },
+  {
+    path: '/applying/finalPassApplyingStatus',
+    component: () => import('@/pages/application/FinalPassApplyingStatusPage.vue')
+  },
+  {
+    path: '/applying/passFailApplyingStatus',
+    component: () => import('@/pages/application/PassFailApplyingStatusPage.vue')
+  },
 ]
 
 const router = createRouter({

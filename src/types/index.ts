@@ -10,6 +10,14 @@ export interface GlobalState {
   logout:Function;
 }
 
+export interface IApplication extends IEntity {
+	delDate: string;
+	delStatus: number;
+	memberId: number;
+	recruitId: number;
+	passStatus: number;
+}
+
 export interface IAp extends IEntity {
   authKey:string;
   loginId:string, 

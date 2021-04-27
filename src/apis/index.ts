@@ -1,5 +1,5 @@
 import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
-import { IRecruit , IArtwork, IActingRole, IAp} from '../types';
+import { IRecruit , IAp, IApplication } from '@/types';
 import { inject } from 'vue'
 
 // API 원형
@@ -217,6 +217,22 @@ export interface MainApi__application_doWrite__IResponseBody extends Base__IResp
   };
 }
 
+// /usr/application/getApplications 의 응답 타입
+export interface MainApi__common_application_getApplications__IResponseBody extends Base__IResponseBodyType1 {
+  body: {
+    applications: IApplication[];
+  };
+}
+
+// /usr/application/getApplications 의 응답 타입
+export interface MainApi__common_application_getApplicationsAndRecruit__IResponseBody extends Base__IResponseBodyType1 {
+  body: {
+    applications: any[];
+  };
+}
+
+
+
 
 
 // http://localhost:8021/usr/ 와의 통신장치
@@ -413,6 +429,13 @@ export class MainApi extends HttpClient {
     );
   }
 
+  public application_getApplications(memberId: number){
+    return this.instance.get<MainApi__common_application_getApplications__IResponseBody>(`/usr/application/getApplications?memberId=${memberId}`);
+  }
+
+  public application_getApplicationsAndRecruit(memberId: number){
+    return this.instance.get<MainApi__common_application_getApplicationsAndRecruit__IResponseBody>(`/usr/application/getApplicationsAndRecruit?memberId=${memberId}`);
+  }
 } 
 
 export const mainApiSymbol = Symbol('mainApiSymbol');
