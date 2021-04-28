@@ -19,6 +19,9 @@
             / 
             <span>{{state.recruit.extra__aw_genre}}</span>
           </div>
+          <div v-if="state.recruit.extra != null">
+            <img :src="state.recruit.extra.file__common__attachment[0].forPrintUrl" alt="">
+          </div>
           <div class="">감독. {{state.recruit.extra__aw_director}}</div>
           <div class="flex justify-around">
             <span>프로듀서.</span><span>{{state.recruit.extra__aw_producer}}</span>
