@@ -13,6 +13,7 @@
           <span class="font-medium text-sm my-2">본명 : {{globalState.loginedMember.name}}</span>
           <div>
             <ion-button @click="presentActionSheet" color="dark" size="small" fill="outline">프로필 편집</ion-button>
+            <input id="file" ref="thumbnailImgFileElRef" type="file" class="hidden" v-on:change="fileUploadAndSetThumbnail">
           </div>
         </div>
 
@@ -106,7 +107,7 @@
 
 <script lang="ts">
 import { actionSheetController, alertController  } from '@ionic/vue';
-import { defineComponent, onMounted, reactive } from 'vue';
+import { defineComponent, onMounted, reactive, ref } from 'vue';
 import { useGlobalState } from '@/stores'
 import { close } from 'ionicons/icons';
 import { usePhotoGallery, Photo } from '@/composables/usePhotoGallery';
@@ -120,6 +121,7 @@ export default defineComponent({
   setup() {
     const globalState = useGlobalState();
     const mainApi = useMainApi();
+    const thumbnailImgFileElRef = ref<HTMLIonInputElement>();
 
     const state = reactive({
       url : "background-image: url('" + globalState.loginedMember.extra__thumbImg + "')",
@@ -133,8 +135,16 @@ export default defineComponent({
       likedRecruitsEmpty: ''
     })
 
+    const input = reactive({
+      fileEl:new File([''],''),
+    })
+
     const segment = reactive({
       value: 'profile'
+    })
+
+    var fileType = reactive({
+      type:''
     })
 
     function segmentChanged(event:any) {
@@ -242,7 +252,7 @@ export default defineComponent({
             {
               text: '사진 선택',
               handler: () => {
-                
+                document.getElementById('file')?.click();
               },
             },
             {
@@ -256,7 +266,6 @@ export default defineComponent({
               icon: close,
               role: 'cancel',
               handler: () => {
-                console.log('Cancel clicked')
               },
             },
           ],
@@ -338,6 +347,90 @@ export default defineComponent({
       router.push('/like/list')
     }
 
+    const fileUploadAndSetThumbnail = (event: any) => {
+
+      const startFileUpload = () => {
+
+        function setExtraImgUrl(){
+          mainApi.common_ap_genFile_getThumbImgUrl(util.toIntOrNull(globalState.loginedMember.id))
+            .then(axiosResponse => {
+
+              if ( axiosResponse.data.fail ) {
+                alert(axiosResponse.data.msg);
+                return;
+              }
+              else {
+                localStorage.setItem("loginedMemberExtra__thumbImg", axiosResponse.data.body.imgUrl)                          
+                location.reload()
+              }
+            });
+        }
+        
+        const fileUpload = (onSuccess: Function) => {
+          if ( input.fileEl == null || input.fileEl.size == 0 ) {
+            return;
+          }
+          
+          mainApi.common_ap_genFile_doUploadForAdd(input.fileEl, util.toStringOrNull(globalState.loginedMember.id))
+            .then(axiosResponse => {
+              if ( axiosResponse.data.fail ) {
+                alert(axiosResponse.data.msg);
+                return;
+              }
+              else {
+                onSuccess();
+              }
+            });
+        }
+        
+        fileUpload(setExtraImgUrl)
+      }
+      
+      const setThumbnail = (onSuccess: Function) => {
+        var reader = new FileReader(); 
+        fileType.type = event.target.files[0].type as string;
+        reader.onload = function(event) { 
+          var elements:any;
+          if( fileType.type.startsWith("image") ){
+            elements = document.querySelectorAll('img'); 
+          }else if ( fileType.type.startsWith("video")) {
+            elements = document.querySelectorAll('video'); 
+          }
+          
+          if( elements == null ) {
+            return;
+          }
+          if(event.target?.result == null && typeof event.target?.result != 'string' ){
+            return;
+          }
+          if( typeof event.target.result == 'number' || typeof event.target.result == 'bigint'
+          || typeof event.target.result == 'boolean' || typeof event.target.result == 'symbol' || typeof event.target.result == 'undefined' ||  
+          typeof event.target.result == 'object' || typeof event.target.result == 'function'
+          ){
+            return
+          }
+
+          for ( var i = 0; i < elements.length; i++){
+            elements[i].setAttribute("src", event.target.result);
+          }
+
+          const imgContainers = document.querySelectorAll(".image_container")
+
+          for ( var i = 0; i < imgContainers.length; i++){
+            imgContainers[i].append(elements[i])
+          }
+        }; 
+          
+        reader.readAsDataURL(event.target.files[0]);
+        input.fileEl = event.target.files[0];
+        onSuccess()
+      }
+
+      setThumbnail(startFileUpload)
+    }
+
+    
+
     onMounted(showProfileImg)
     onMounted(showApplyingStatus)
     onMounted(showLikeList)
@@ -352,7 +445,8 @@ export default defineComponent({
       takePhoto,
       showApplyingDetail,
       showRecruitDetail,
-      goLikedListPage
+      goLikedListPage,
+      fileUploadAndSetThumbnail
     }
   }
 })
