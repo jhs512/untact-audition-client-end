@@ -68,7 +68,36 @@
             <ion-button @click="showApplyingDetail" size="small" fill="outline" color="dark">자세히보기</ion-button>
           </div>
         </span>
-        <span v-if="segment.value == 'like'">like text</span>
+        
+        <span v-if="segment.value == 'like'">
+          <div v-if="state.likedRecruitsEmpty != ''">{{state.likedRecruitsEmpty}}</div>
+          <div v-if="state.likedRecruitsEmpty == ''">
+            <ion-list>
+              <ion-item v-for="likedRecruit in state.likedRecruits">
+                <div @click="showRecruitDetail(likedRecruit.id)" class="text-xs flex items-center py-1 w-full">
+                  <div class="w-24 flex justify-center">
+                    <ion-thumbnail v-if="likedRecruit.extra != null">
+                      <ion-img :src="likedRecruit.extra.file__common__attachment[0].forPrintUrl"></ion-img>
+                    </ion-thumbnail>
+                  </div>
+                  <div class="flex-1">
+                    <div class="text-sm font-bold pt-1">
+                      <ion-label>{{likedRecruit.extra__aw_director}} 감독</ion-label>
+                    </div>
+                    <div class="pt-0.5">
+                      <ion-label>가제 : {{likedRecruit.extra__aw_title}}</ion-label>
+                    </div>
+                    <div class="pb-1">
+                      <ion-label>배역 : {{likedRecruit.extra__ar_name}}</ion-label>
+                    </div>
+                  </div>
+                </div>
+              </ion-item>
+            </ion-list>
+            <div @click="goLikedListPage" class="text-right pr-4 text-xs font-bold">모두 보기</div>
+
+          </div>
+        </span>
 
       </section>
     </ion-content>
@@ -84,7 +113,7 @@ import { usePhotoGallery, Photo } from '@/composables/usePhotoGallery';
 import { useMainApi } from '@/apis';
 import * as util from '@/utils';
 import router from '@/router';
-import { IApplication } from '@/types'
+import { IApplication, IRecruit } from '@/types'
 
 export default defineComponent({
   name: 'ProfilePage',
@@ -99,7 +128,9 @@ export default defineComponent({
       endApplying: 0,
       firstPass: 0,
       finalPass: 0,
-      passFail: 0
+      passFail: 0,
+      likedRecruits: [] as IRecruit[],
+      likedRecruitsEmpty: ''
     })
 
     const segment = reactive({
@@ -282,8 +313,34 @@ export default defineComponent({
       router.push('/applying/detail')
     }
 
+    function showLikeList(){
+      mainApi.recruit_like_list(util.toIntOrNull(globalState.loginedMember.id))
+        .then(axiosResponse => {
+          if ( axiosResponse.data.fail ) {
+            state.likedRecruitsEmpty = axiosResponse.data.msg
+            return;
+          } else {
+            if ( axiosResponse.data.body.likedRecruits.length != 0 ){
+              for (let i = axiosResponse.data.body.likedRecruits.length -1; i > axiosResponse.data.body.likedRecruits.length - 5; i--){
+                if( axiosResponse.data.body.likedRecruits[i] != null )
+                state.likedRecruits.push(axiosResponse.data.body.likedRecruits[i])
+              }
+            }
+          }
+      })
+    }
+
+    function showRecruitDetail(id: number){
+      router.push('/detail?id=' + id)
+    }
+
+    function goLikedListPage() {
+      router.push('/like/list')
+    }
+
     onMounted(showProfileImg)
     onMounted(showApplyingStatus)
+    onMounted(showLikeList)
 
     return {
       segmentChanged,
@@ -293,7 +350,9 @@ export default defineComponent({
       state,
       photos,
       takePhoto,
-      showApplyingDetail
+      showApplyingDetail,
+      showRecruitDetail,
+      goLikedListPage
     }
   }
 })

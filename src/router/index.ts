@@ -125,6 +125,10 @@ const routes: Array<RouteRecordRaw> = [
     path: '/applying/passFailApplyingStatus',
     component: () => import('@/pages/application/PassFailApplyingStatusPage.vue')
   },
+  {
+    path: '/like/list',
+    component: () => import('@/pages/member/LikedRecruitListPage.vue')
+  },
 ]
 
 const router = createRouter({

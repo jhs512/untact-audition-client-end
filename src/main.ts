@@ -81,6 +81,7 @@ const app = createApp(App)
   .component('ion-popover', Ion.IonPopover)
   .component('ion-modal', Ion.IonModal)
   .component('ion-checkbox', Ion.IonCheckbox)
+  .component('ion-thumbnail', Ion.IonThumbnail)
   .component('FormRow', FormRow)
   .component('MainHeader', MainHeader);
 

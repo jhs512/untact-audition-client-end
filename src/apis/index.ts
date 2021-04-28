@@ -250,6 +250,15 @@ export interface MainApi__ap__recruit__checkLikeStatus__IResponseBody extends Ba
   };
 }
 
+// /usr/ap/recruitLikeList 의 응답 타입
+export interface MainApi__ap__recruit__likeList__IResponseBody extends Base__IResponseBodyType1 {
+  body: {
+    likedRecruits: IRecruit[]
+  };
+}
+
+
+
 
 
 
@@ -469,6 +478,10 @@ export class MainApi extends HttpClient {
 
   public ap_recruit_checkLikeStatus(recruitId: number, memberId: number){
     return this.instance.get<MainApi__ap__recruit__checkLikeStatus__IResponseBody>(`/usr/ap/checkLikeStatus?recruitId=${recruitId}&memberId=${memberId}`);
+  }
+
+  public recruit_like_list(memberId: number){
+    return this.instance.get<MainApi__ap__recruit__likeList__IResponseBody>(`/usr/ap/recruitLikeList?memberId=${memberId}`);
   }
 
   
