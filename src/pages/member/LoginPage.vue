@@ -140,8 +140,6 @@ export default defineComponent({
           const loginedMemberCellPhoneNo = axiosResponse.data.body.member.cellPhoneNo;
           const loginedMemberFeet = axiosResponse.data.body.member.feet;
           const loginedMemberWeight = axiosResponse.data.body.member.weight;
-          const loginedMemberSkinTone = axiosResponse.data.body.member.skinTone;
-          const loginedMemberEyelid = axiosResponse.data.body.member.eyelid;
           const loginedMemberFeature = axiosResponse.data.body.member.feature;
           const loginedMemberFilmgraphy = axiosResponse.data.body.member.filmgraphy;
           const loginedMemberJobArea = axiosResponse.data.body.member.jobArea;
@@ -165,8 +163,6 @@ export default defineComponent({
           localStorage.setItem("loginedMemberAddress", loginedMemberAddress);
           localStorage.setItem("loginedMemberFeet", loginedMemberFeet + "");
           localStorage.setItem("loginedMemberWeight", loginedMemberWeight + "");
-          localStorage.setItem("loginedMemberSkinTone", loginedMemberSkinTone);
-          localStorage.setItem("loginedMemberEyelid", loginedMemberEyelid + "");
           localStorage.setItem("loginedMemberFeature", loginedMemberFeature);
           localStorage.setItem("loginedMemberFilmgraphy", loginedMemberFilmgraphy);
           localStorage.setItem("loginedMemberJobArea", loginedMemberJobArea);

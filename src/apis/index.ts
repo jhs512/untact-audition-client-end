@@ -105,8 +105,6 @@ export interface MainApi__member_authKey__IResponseBody extends Base__IResponseB
       cellPhoneNo: string;
       feet: number;
       weight: number;
-      skinTone: string;
-      eyelid: number;
       feature: string;
       filmgraphy: string;
       jobArea: string;
@@ -300,8 +298,6 @@ export class MainApi extends HttpClient {
       localStorage.removeItem("loginedMemberAddress");
       localStorage.removeItem("loginedMemberFeet");
       localStorage.removeItem("loginedMemberWeight");
-      localStorage.removeItem("loginedMemberSkinTone");
-      localStorage.removeItem("loginedMemberEyelid");
       localStorage.removeItem("loginedMemberFeature");
       localStorage.removeItem("loginedMemberFilmgraphy");
       localStorage.removeItem("loginedMemberJobArea");
@@ -327,7 +323,7 @@ export class MainApi extends HttpClient {
     );
   }
 
-  public ap_doJoin(loginId: string, loginPw: string, name: string, engName: string, gender: string, regNumber: string, address: string, cellPhoneNo: string, nickName: string, feet: number, weight: number, skinTone: string, eyelid: number, feature: string, filmgraphy: string, jobArea: string, corp: string) {
+  public ap_doJoin(loginId: string, loginPw: string, name: string, engName: string, gender: string, regNumber: string, address: string, cellPhoneNo: string, nickName: string, feet: number, weight: number, feature: string, filmgraphy: string, jobArea: string, corp: string) {
     return this.postByForm<MainApi__member_doJoin__IResponseBody>(
       `/usr/ap/doJoin`, 
       {
@@ -342,8 +338,6 @@ export class MainApi extends HttpClient {
         nickName, 
         feet, 
         weight, 
-        skinTone, 
-        eyelid, 
         feature, 
         filmgraphy, 
         jobArea, 
@@ -405,7 +399,7 @@ export class MainApi extends HttpClient {
     return this.instance.get<MainApi__common_genFile_doDeleteProfileImg__IResponseBody>(`/common/genFile/deleteProfileImg?id=${id}&updateDate=${updateDate}`);
   }
 
-  public ap_doModify(loginedMemberId: string, nickName: string, feet: number, weight: number, skinTone: string, eyelid: number, feature: string, filmgraphy: string, jobArea: string, corp: string) {
+  public ap_doModify(loginedMemberId: string, nickName: string, feet: number, weight: number, feature: string, filmgraphy: string, jobArea: string, corp: string) {
     return this.postByForm<MainApi__member_doModify__IResponseBody>(
       `/usr/ap/doModify`, 
       {
@@ -413,8 +407,6 @@ export class MainApi extends HttpClient {
         nickName, 
         feet, 
         weight, 
-        skinTone, 
-        eyelid, 
         feature, 
         filmgraphy, 
         jobArea, 

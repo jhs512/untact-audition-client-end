@@ -30,8 +30,6 @@ export interface IAp extends IEntity {
   cellPhoneNo:string, 
   feet:number, 
   weight:number, 
-  skinTone:string, 
-  eyelid:number, 
   feature:string, 
   filmgraphy:string, 
   jobArea:string, 

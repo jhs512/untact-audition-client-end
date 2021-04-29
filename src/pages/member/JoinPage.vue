@@ -21,7 +21,7 @@
                   </div>
                 </FormRow>
                 <FormRow title="비밀번호">
-                  <input ref="loginPwElRef" class="form-row-input" type="password">
+                  <input ref="loginPwElRef" class="form-row-input" type="password" placeholder="영어+특수문자+숫자 8~16자리">
                 </FormRow>
                 <FormRow title="비밀번호 확인">
                   <input ref="loginPwConfirmElRef" class="form-row-input" type="password">
@@ -35,9 +35,21 @@
                 
                 <FormRow title="주민등록번호">
                   <div class="flex items-center w-full mt-2">
-                    <ion-input v-model="input.regNumber1El" type="text" ref="regNumber1ElRef" maxlength="6" inputmode="decimal" placeholder="앞 6자리" required="true" enterkeyhint="next"></ion-input>
-                      <span class="mx-1">-</span>
-                    <ion-input v-model="input.regNumber2El" type="text" ref="regNumber2ElRef" maxlength="7" inputmode="decimal" placeholder="뒤 7자리" required="true" enterkeyhint="next"></ion-input>
+                    <div class="w-1/2">
+                      <ion-input v-model="input.regNumber1El" type="text" ref="regNumber1ElRef" maxlength="6" inputmode="decimal" placeholder="YYMMDD" required="true" enterkeyhint="next"></ion-input>
+                    </div>
+                    <span class="mx-1">-</span>
+                    <div class="w-1/12">
+                      <ion-input v-model="input.regNumber2El" type="text" ref="regNumber2ElRef" maxlength="1" inputmode="decimal" placeholder="" required="true" enterkeyhint="next"></ion-input>
+                    </div>
+                    <div class="ml-4 flex justify-around w-28">
+                      <span>*</span>
+                      <span>*</span>
+                      <span>*</span>
+                      <span>*</span>
+                      <span>*</span>
+                      <span>*</span>
+                    </div>
                   </div>
                 </FormRow>
                 <FormRow title="주소">
@@ -50,7 +62,7 @@
                   <ion-input v-model="input.address2El" ref="addressElRef" type="text" placeholder="상세주소" required="true" enterkeyhint="next" class="mt-2"></ion-input>
                 </FormRow>
                 <FormRow title="전화번호">
-                  <input ref="cellPhoneNoElRef" class="form-row-input" type="tel">
+                  <input ref="cellPhoneNoElRef" class="form-row-input" type="tel" placeholder=" '-' 없이 번호만 입력해주세요.">
                 </FormRow>
 
                 <div class="cbg-gray flex justify-center items-center h-12 mt-8 rounded">
@@ -85,21 +97,6 @@
                 <FormRow title="몸무게">
                   <input ref="weightElRef" value="0" class="form-row-input" type="number">
                 </FormRow>
-                <FormRow title="피부색">
-                  <input ref="skinToneElRef" class="form-row-input" type="text">
-                </FormRow>
-                <FormRow title="쌍커풀 유무">
-                  <div class="flex">
-                    <label class="w-full h-12">
-                      <input ref="eyelidElRef" class="form-row-input" name="eyelid" type="radio" v-model="state.eyelidPicked" value=1>
-                      <span>있음</span>
-                    </label>
-                    <label class="w-full h-12">
-                      <input ref="eyelidElRef" class="form-row-input" name="eyelid" type="radio" v-model="state.eyelidPicked" value=2>
-                      <span>없음</span>
-                    </label>
-                  </div>
-                </FormRow>
                 <FormRow title="특징">
                   <input ref="featureElRef" class="form-row-input" type="text">
                 </FormRow>
@@ -130,7 +127,6 @@
 import { defineComponent, ref, reactive, toRefs } from 'vue';
 import { useMainApi } from '@/apis';
 import router from '@/router';
-import * as Crypto from 'crypto-ts'
 import { sha256 } from 'js-sha256'
 
 export default defineComponent({
@@ -150,8 +146,6 @@ export default defineComponent({
     const nickNameElRef = ref<HTMLInputElement>();
     const feetElRef = ref<HTMLInputElement>();
     const weightElRef = ref<HTMLInputElement>();
-    const skinToneElRef = ref<HTMLInputElement>();
-    const eyelidElRef = ref<HTMLInputElement>();
     const featureElRef = ref<HTMLInputElement>();
     const filmgraphyElRef = ref<HTMLInputElement>();
     const jobAreaElRef = ref<HTMLInputElement>();
@@ -196,6 +190,14 @@ export default defineComponent({
         loginIdEl.focus();
         return;
       }
+      const emailBits = loginIdEl.value.split('@');
+
+      if ( idCheck(emailBits[0]) == false ){
+        alert('올바른 아이디를 입력해주세요.( 한자리 아이디 및 특수문자 사용 불가 )')
+        loginIdEl.focus();
+        return;
+      }
+
       if ( email_check(loginIdEl.value) == false ) {
         alert('이메일 형식으로 아이디를 입력해주세요.')
         loginIdEl.focus();
@@ -205,9 +207,43 @@ export default defineComponent({
       idDupCheck(loginIdEl.value)
     }
 
+    function idCheck(emailBits:string){
+       var idPattern = /^[A-Za-z0-9]{2,19}$/
+       return(emailBits != '' && emailBits != 'undefined' && idPattern.test(emailBits))
+    }
+
+    function pwCheck(pw:string){
+      var pwPattern = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,16}$/;
+      return (pw != '' && pw != 'undefined' && pwPattern .test(pw)); 
+    }
+
     function email_check( email:string ) { 
-      var regex = /([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/; 
-      return (email != '' && email != 'undefined' && regex.test(email)); 
+      var emailPattern  = /([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/; 
+      return (email != '' && email != 'undefined' && emailPattern .test(email)); 
+    }
+
+    function phoneCheck(cellPhoneNo: string){
+      var phonePattern = /(^02.{0}|^01.{1}|[0-9]{3})([0-9]{4})([0-9]{4})/g;
+      return (cellPhoneNo != '' && cellPhoneNo != 'undefined' && phonePattern .test(cellPhoneNo)); 
+    }
+
+    function regNumber1Check(regNumber: string){
+      var regNumberPattern = /([0-9]{2}(0[1-9]|1[0-2])(0[1-9]|[1,2][0-9]|3[0,1]))/;
+      return (regNumber != '' && regNumber != 'undefined' && regNumberPattern .test(regNumber)); 
+    }
+    function regNumber2Check(regNumber: string){
+      var regNumberPattern = /^[1-4]$/;
+      return (regNumber != '' && regNumber != 'undefined' && regNumberPattern .test(regNumber)); 
+    }
+
+    function nameCheck(name: string){
+      var namePattern = /^[가-힣]{2,6}$/;
+      return (name != '' && name != 'undefined' && namePattern .test(name)); 
+    }
+
+    function engNameCheck(engName: string){
+      var engNamePattern = /^[a-zA-Z\s]+$/;
+      return (engName != '' && engName != 'undefined' && engNamePattern .test(engName)); 
     }
 
     function idDupCheck(loginId:string) {
@@ -275,6 +311,12 @@ export default defineComponent({
         loginPwEl.focus();
         return;
       }
+
+      if ( pwCheck(loginPwEl.value) == false ){
+        alert('올바른 비밀번호를 입력해주세요. (영어+특수문자+숫자 8~16자리)');
+        loginPwEl.focus();
+        return;
+      }
       // 로그인비번확인 체크
       if ( loginPwConfirmElRef.value == null ) {
         return;
@@ -297,30 +339,52 @@ export default defineComponent({
         nameEl.focus();
         return;
       }
+
+      if (nameCheck(nameEl.value) == false){
+        alert('올바른 이름을 입력해주세요 ( 한글 2~6 자리 )');
+        nameEl.focus();
+        return;
+      }
+
       // 영문이름 체크
       if ( engNameElRef.value == null ) {
         return;
       }
       const engNameEl = engNameElRef.value;
-      engNameEl.value = engNameEl.value.trim();
       if ( engNameEl.value.length == 0 ) {
         alert('영문이름을 입력해주세요.');
         engNameEl.focus();
         return;
       }
 
-      // 주민등록번호 체크
+      if ( engNameCheck(engNameEl.value) == false ){
+        alert('올바른 영문이름을 입력해주세요. ( 영문만 입력가능 )');
+        engNameEl.focus();
+        return;
+      }
+
+      // 생년월일 체크
       if ( input.regNumber1El == null ) {
         return;
       }
 
       if ( input.regNumber1El.length == 0 ) {
-        alert('주민등록번호를 제대로 입력해 주세요.');
+        alert('생년월일을 입력해 주세요.');
+        return;
+      }
+
+      if (regNumber1Check(input.regNumber1El) == false){
+        alert('올바른 생년월일을 입력해주세요.')
         return;
       }
 
       if ( input.regNumber2El.length == 0 ) {
-        alert('주민등록번호를 입력해 주세요.');
+        alert('성별 식별 번호를 입력해 주세요.');
+        return;
+      }
+
+      if (regNumber2Check(input.regNumber2El) == false){
+        alert('올바른 식별 번호를 입력해 주세요. ( 1 ~ 4 입력 가능)');
         return;
       }
 
@@ -345,6 +409,12 @@ export default defineComponent({
       cellPhoneNoEl.value = cellPhoneNoEl.value.trim();
       if ( cellPhoneNoEl.value.length == 0 ) {
         alert('휴대전화번호를 입력해주세요.');
+        cellPhoneNoEl.focus();
+        return;
+      }
+
+      if(phoneCheck(cellPhoneNoEl.value) == false){
+        alert('전화번호 양식에 맞춰 입력해주세요 ( - 없이 숫자만 입력 가능 )');
         cellPhoneNoEl.focus();
         return;
       }
@@ -381,8 +451,7 @@ export default defineComponent({
       const engNameEl = engNameElRef.value;
       engNameEl.value = engNameEl.value.trim();
 
-      const regNumberEl = input.regNumber1El + input.regNumber2El;  
-      const regNumber = Crypto.AES.encrypt(regNumberEl,'regKey');
+      const regNumber = input.regNumber1El + input.regNumber2El;  ;
 
       if ( input.address2El.length != 0 ){
         input.addressEl = input.addressEl + " " + input.address2El;
@@ -410,13 +479,7 @@ export default defineComponent({
         return;
       }
       const weightEl = weightElRef.value.valueAsNumber;
-      
-      if ( skinToneElRef.value == null ) {
-        return;
-      }
-      const skinToneEl = skinToneElRef.value;
-      skinToneEl.value = skinToneEl.value.trim();
-    
+
       if ( featureElRef.value == null ) {
         return;
       }
@@ -441,10 +504,10 @@ export default defineComponent({
       const corpEl = corpElRef.value;
       corpEl.value = corpEl.value.trim();
 
-      join(loginIdEl.value, loginPwConfirmEl.value, nameEl.value, engNameEl.value, state.gender, regNumber.toString(), input.addressEl, cellPhoneNoEl.value, nickNameEl.value, feetEl, weightEl, skinToneEl.value, state.eyelidPicked, featureEl.value, filmgraphyEl.value, jobAreaEl.value, corpEl.value);
+      join(loginIdEl.value, loginPwConfirmEl.value, nameEl.value, engNameEl.value, state.gender, regNumber.toString(), input.addressEl, cellPhoneNoEl.value, nickNameEl.value, feetEl, weightEl, featureEl.value, filmgraphyEl.value, jobAreaEl.value, corpEl.value);
     }
-    function join(loginId:string, loginPw:string, name:string, engName:string, gender:string, regNumber:string, address:string, cellPhoneNo:string, nickName:string, feet:number, weight:number, skinTone:string, eyelid:number, feature:string, filmgraphy:string, jobArea:string, corp:string) {
-      mainApi.ap_doJoin(loginId, loginPw, name, engName, gender, regNumber, address, cellPhoneNo, nickName, feet, weight, skinTone, eyelid, feature, filmgraphy, jobArea, corp)
+    function join(loginId:string, loginPw:string, name:string, engName:string, gender:string, regNumber:string, address:string, cellPhoneNo:string, nickName:string, feet:number, weight:number, feature:string, filmgraphy:string, jobArea:string, corp:string) {
+      mainApi.ap_doJoin(loginId, loginPw, name, engName, gender, regNumber, address, cellPhoneNo, nickName, feet, weight, feature, filmgraphy, jobArea, corp)
         .then(axiosResponse => {
           if ( axiosResponse.data.resultCode.includes('F-') ) {
             alert(axiosResponse.data.msg);
@@ -469,8 +532,6 @@ export default defineComponent({
       nickNameElRef,
       feetElRef,
       weightElRef,
-      skinToneElRef,
-      eyelidElRef,
       featureElRef,
       filmgraphyElRef,
       jobAreaElRef,

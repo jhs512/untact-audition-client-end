@@ -24,21 +24,6 @@
                 <FormRow title="몸무게">
                   <input v-model="input.weightEl" ref="weightElRef" class="form-row-input" type="number">
                 </FormRow>
-                <FormRow title="피부색">
-                  <input v-model="input.skinToneEl" ref="skinToneElRef" class="form-row-input" type="text">
-                </FormRow>
-                <FormRow title="쌍커풀 유무">
-                  <div class="flex">
-                    <label class="w-full h-12">
-                      <input ref="eyelidElRef" class="form-row-input" name="eyelid" type="radio" v-model="input.eyelidEl" value=1>
-                      <span>있음</span>
-                    </label>
-                    <label class="w-full h-12">
-                      <input ref="eyelidElRef" class="form-row-input" name="eyelid" type="radio" v-model="input.eyelidEl" value=2>
-                      <span>없음</span>
-                    </label>
-                  </div>
-                </FormRow>
                 <FormRow title="특징">
                   <input v-model="input.featureEl" ref="featureElRef" class="form-row-input" type="text">
                 </FormRow>
@@ -97,8 +82,6 @@ export default defineComponent({
     const nickNameElRef = ref<HTMLInputElement>();
     const feetElRef = ref<HTMLInputElement>();
     const weightElRef = ref<HTMLInputElement>();
-    const skinToneElRef = ref<HTMLInputElement>();
-    const eyelidElRef = ref<HTMLInputElement>();
     const featureElRef = ref<HTMLInputElement>();
     const filmgraphyElRef = ref<HTMLInputElement>();
     const jobAreaElRef = ref<HTMLInputElement>();
@@ -114,11 +97,9 @@ export default defineComponent({
     }
 
     const input = reactive({
-      eyelidEl: util.toIntOrNull(globalState.loginedMember.eyelid),
       nickNameEl: globalState.loginedMember.nickName,
       feetEl: util.toIntOrNull(globalState.loginedMember.feet),
       weightEl: util.toIntOrNull(globalState.loginedMember.weight),
-      skinToneEl: globalState.loginedMember.skinTone,
       featureEl: globalState.loginedMember.feature,
       filmgraphyEl: globalState.loginedMember.filmgraphy,
       jobAreaEl: globalState.loginedMember.jobArea,
@@ -279,7 +260,7 @@ export default defineComponent({
     function checkAndModify() {
 
       const startModify = () => {
-        modify(util.toStringOrNull(globalState.loginedMember.id), input.nickNameEl, input.feetEl, input.weightEl, input.skinToneEl, input.eyelidEl, input.featureEl, input.filmgraphyEl, input.jobAreaEl, input.corpEl);
+        modify(util.toStringOrNull(globalState.loginedMember.id), input.nickNameEl, input.feetEl, input.weightEl, input.featureEl, input.filmgraphyEl, input.jobAreaEl, input.corpEl);
       }
 
       const startFileUpload = (onSuccess:Function) => {
@@ -312,8 +293,8 @@ export default defineComponent({
       startFileUpload(startModify);
     }
 
-    function modify(loginedMemberId: string, nickName:string, feet:number, weight:number, skinTone:string, eyelid:number, feature:string, filmgraphy:string, jobArea:string, corp:string) {
-      mainApi.ap_doModify(loginedMemberId, nickName, feet, weight, skinTone, eyelid, feature, filmgraphy, jobArea, corp)
+    function modify(loginedMemberId: string, nickName:string, feet:number, weight:number, feature:string, filmgraphy:string, jobArea:string, corp:string) {
+      mainApi.ap_doModify(loginedMemberId, nickName, feet, weight, feature, filmgraphy, jobArea, corp)
         .then(axiosResponse => {
           if ( axiosResponse.data.resultCode.includes('F-') ) {
             alert(axiosResponse.data.msg);
@@ -331,12 +312,6 @@ export default defineComponent({
           if( loginedAp.weight != null ){
               localStorage.removeItem("loginedMemberWeight");
           }
-          if( loginedAp.skinTone != null ){
-              localStorage.removeItem("loginedMemberSkinTone");
-          }
-          if( loginedAp.eyelid != null ){
-              localStorage.removeItem("loginedMemberEyelid");
-          }
           if( loginedAp.feature != null ){
               localStorage.removeItem("loginedMemberFeature");
           }
@@ -353,8 +328,6 @@ export default defineComponent({
           localStorage.setItem("loginedMemberNickName", loginedAp.nickName);
           localStorage.setItem("loginedMemberFeet", loginedAp.feet + "");
           localStorage.setItem("loginedMemberWeight", loginedAp.weight + "");
-          localStorage.setItem("loginedMemberSkinTone", loginedAp.skinTone);
-          localStorage.setItem("loginedMemberEyelid", loginedAp.eyelid + "");
           localStorage.setItem("loginedMemberFeature", loginedAp.feature);
           localStorage.setItem("loginedMemberFilmgraphy", loginedAp.filmgraphy);
           localStorage.setItem("loginedMemberJobArea", loginedAp.jobArea);
@@ -428,8 +401,6 @@ export default defineComponent({
       nickNameElRef,
       feetElRef,
       weightElRef,
-      skinToneElRef,
-      eyelidElRef,
       featureElRef,
       filmgraphyElRef,
       jobAreaElRef,

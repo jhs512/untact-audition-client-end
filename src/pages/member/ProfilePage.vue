@@ -25,14 +25,8 @@
 
         <span v-if="segment.value == 'profile'">
           <div class="profile-list px-8 pt-2 font-semibold">
-            <div><div class="w-2/5">이름 :</div><div class="w-2/4">{{globalState.loginedMember.name}}</div></div>
-            <div><div class="w-2/5">영문이름 :</div><div class="w-2/4">{{globalState.loginedMember.engName}}</div></div>
-            <div><div class="w-2/5">활동명 :</div><div class="w-2/4">{{globalState.loginedMember.nickName}}</div></div>
             <div><div class="w-2/5">키 :</div><div class="w-2/4">{{globalState.loginedMember.feet}}</div></div>
             <div><div class="w-2/5">몸무게 :</div><div class="w-2/4">{{globalState.loginedMember.weight}}</div></div>
-            <div><div class="w-2/5">성별 :</div><div class="w-2/4">{{globalState.loginedMember.gender}}</div></div>
-            <div><div class="w-2/5">피부색 :</div><div class="w-2/4">{{globalState.loginedMember.skinTone}}</div></div>
-            <div><div class="w-2/5">쌍커풀 유무 :</div><div class="w-2/4">{{globalState.loginedMember.eyelid == 1 ? '유' : '무'}}</div></div>
             <div><div class="w-2/5">특징 :</div><div class="w-2/4">{{globalState.loginedMember.feature}}</div></div>
             <div><div class="w-2/5">커리어 :</div><div class="w-2/4">{{globalState.loginedMember.filmgraphy}}</div></div>
             <div><div class="w-2/5">희망분야 :</div><div class="w-2/4">{{globalState.loginedMember.jobArea}}</div></div>
@@ -71,7 +65,7 @@
         </span>
         
         <span v-if="segment.value == 'like'">
-          <div v-if="state.likedRecruitsEmpty != ''">{{state.likedRecruitsEmpty}}</div>
+          <div v-if="state.likedRecruitsEmpty != ''" class="py-5 px-8">{{state.likedRecruitsEmpty}}</div>
           <div v-if="state.likedRecruitsEmpty == ''">
             <ion-list>
               <ion-item v-for="likedRecruit in state.likedRecruits">
@@ -446,7 +440,8 @@ export default defineComponent({
       showApplyingDetail,
       showRecruitDetail,
       goLikedListPage,
-      fileUploadAndSetThumbnail
+      fileUploadAndSetThumbnail,
+      thumbnailImgFileElRef
     }
   }
 })
