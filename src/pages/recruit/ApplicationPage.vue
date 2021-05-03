@@ -168,7 +168,6 @@ import { useMainApi } from '@/apis';
 import { IRecruit } from '@/types';
 import { useGlobalState } from '@/stores';
 import { usePhotoGallery } from '@/composables/usePhotoGallery';
-import * as Crypto from 'crypto-ts';
 import ProfilePopover from '../../components/ProfileImgPopover.vue';
 import '../../components/global.css';
 import * as util from '@/utils';
@@ -269,7 +268,7 @@ export default defineComponent({
     const state = reactive ({
       recruit: {} as IRecruit,
       pageNum: 1,
-      regNumber: JSON.parse(Crypto.AES.decrypt(globalState.loginedMember.regNumber, 'regKey').toString(Crypto.enc.Utf8).substring(0,6)),
+      regNumber: globalState.loginedMember.regNumber.substring(0,6),
       recentImgFileIdsStr:'',
       videoFileIdsStr:'',
       profileImgIdsStr: profileImage.checkedList
