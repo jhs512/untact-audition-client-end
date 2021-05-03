@@ -184,6 +184,47 @@ export default defineComponent({
       return alert.present();
     }
 
+    async function deleteAcountButton() {
+      const alert = await alertController
+        .create({
+          cssClass: 'my-custom-class',
+          header: 'Alert',
+          subHeader: '회원 탈퇴',
+          message: '탈퇴를 선택하시면 되돌릴수없습니다. 탈퇴하시겠습니까?',
+          buttons: [
+            {
+              text: '취소',
+              handler: () => {
+                return
+              }
+            },
+            {
+              text: '탈퇴',
+              handler: () => {
+                const deleteAcount = async (onSuccess: Function) => {
+                  await mainApi.ap__deleteAcount(util.toStringOrNull(globalState.loginedMember.id))
+                    .then(axiosResponse => {
+                      if ( axiosResponse.data.fail ) {
+                        return;
+                      }
+
+                      util.showAlert("Alert", axiosResponse.data.msg, function(){})
+                      onSuccess()
+                    })
+                }
+
+                function resetAcount() {
+                  globalState.logout()
+                }
+
+                deleteAcount(resetAcount)
+              }
+            }
+          ],
+        });
+      return alert.present();
+    }
+
     async function presentActionSheet() {
       const actionSheet = await actionSheetController
         .create({
@@ -253,6 +294,13 @@ export default defineComponent({
               text: '정보 수정',
               handler: () => {
                 router.replace('/member/modify')
+              },
+            },
+            {
+              text: '회원 탈퇴',
+              role: 'destructive',
+              handler: () => {
+                deleteAcountButton()
               },
             },
             {

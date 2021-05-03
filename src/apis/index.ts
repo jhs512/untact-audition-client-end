@@ -255,6 +255,12 @@ export interface MainApi__ap__recruit__likeList__IResponseBody extends Base__IRe
   };
 }
 
+// /usr/ap/doDelete 의 응답 타입
+export interface MainApi__ap__deleteAcount__IResponseBody extends Base__IResponseBodyType1 {
+  body: {
+  };
+}
+
 
 
 
@@ -269,7 +275,7 @@ export class MainApi extends HttpClient {
   public constructor() {
     super(
       axios.create({
-        baseURL:'http://172.20.10.4:8024',
+        baseURL:'http://192.168.0.6:8024',
       })
     );
   }
@@ -476,6 +482,14 @@ export class MainApi extends HttpClient {
     return this.instance.get<MainApi__ap__recruit__likeList__IResponseBody>(`/usr/ap/recruitLikeList?memberId=${memberId}`);
   }
 
+  public ap__deleteAcount(memberId: string){
+    return this.postByForm<MainApi__ap__deleteAcount__IResponseBody>(
+      `/usr/ap/doDelete`, 
+      {
+        memberId
+      }
+    );
+  }
   
 } 
 
