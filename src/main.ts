@@ -82,6 +82,7 @@ const app = createApp(App)
   .component('ion-modal', Ion.IonModal)
   .component('ion-checkbox', Ion.IonCheckbox)
   .component('ion-thumbnail', Ion.IonThumbnail)
+  .component('ion-loading', Ion.IonLoading)
   .component('FormRow', FormRow)
   .component('MainHeader', MainHeader);
 

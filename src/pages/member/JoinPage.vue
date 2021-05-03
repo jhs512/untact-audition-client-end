@@ -112,6 +112,13 @@
 
                 <div class="cbg-gray flex justify-center items-center h-12 mt-8 rounded">
                   <button type="submit" class="w-full h-full text-lg font-bold">회원가입</button>
+                  <ion-loading  
+                  :is-open="isOpenRef" cssClass="my-custom-class" 
+                  message="Please wait..."
+                  :duration="timeout"
+                  @didDismiss="setOpen(false)"
+                  >
+                  </ion-loading>
                 </div>
                 
             </div>
@@ -152,6 +159,12 @@ export default defineComponent({
     const corpElRef = ref<HTMLInputElement>();
     
     const mainApi = useMainApi();
+
+    const timeout = 10000;
+    const isOpenRef = ref(false);
+    const setOpen = (status: boolean) => {
+      isOpenRef.value = status;
+    }
 
     const input = reactive({
       addressEl:'',
@@ -424,6 +437,8 @@ export default defineComponent({
     }
 
     function checkAndJoin() {
+
+      
       if ( loginIdElRef.value == null ) {
         return;
       }
@@ -507,6 +522,9 @@ export default defineComponent({
       join(loginIdEl.value, loginPwConfirmEl.value, nameEl.value, engNameEl.value, state.gender, regNumber.toString(), input.addressEl, cellPhoneNoEl.value, nickNameEl.value, feetEl, weightEl, featureEl.value, filmgraphyEl.value, jobAreaEl.value, corpEl.value);
     }
     function join(loginId:string, loginPw:string, name:string, engName:string, gender:string, regNumber:string, address:string, cellPhoneNo:string, nickName:string, feet:number, weight:number, feature:string, filmgraphy:string, jobArea:string, corp:string) {
+
+      setOpen(true);
+
       mainApi.ap_doJoin(loginId, loginPw, name, engName, gender, regNumber, address, cellPhoneNo, nickName, feet, weight, feature, filmgraphy, jobArea, corp)
         .then(axiosResponse => {
           if ( axiosResponse.data.resultCode.includes('F-') ) {
@@ -515,6 +533,7 @@ export default defineComponent({
           }
 
           router.replace('/member/joinAfter?email=' + loginId)
+          isOpenRef.value = false
         });
     }
 
@@ -545,7 +564,10 @@ export default defineComponent({
       api,
       openApi,
       confirm,
-      input
+      input,
+      isOpenRef,
+      setOpen,
+      timeout
     }
   }
 })

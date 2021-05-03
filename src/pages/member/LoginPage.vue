@@ -113,13 +113,13 @@ export default defineComponent({
     function login(loginId:string, loginPw:string) {
       mainApi.ap_authKey(loginId, loginPw)
         .then(axiosResponse => {
-          if ( axiosResponse.data.body.member.authStatus == 0){
-            alert('아직 인증이 완료되지 않은 회원입니다. 인증 완료후 로그인 해주시길 바랍니다.')
+          if ( axiosResponse.data.resultCode.includes('F-') ) {
+            alert(axiosResponse.data.msg);
             return;
           }
 
-          if ( axiosResponse.data.resultCode.includes('F-') ) {
-            alert(axiosResponse.data.msg);
+          if ( axiosResponse.data.body.member.authStatus == 0){
+            alert('아직 인증이 완료되지 않은 회원입니다. 인증 완료후 로그인 해주시길 바랍니다.')
             return;
           }
 
