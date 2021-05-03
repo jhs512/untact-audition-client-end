@@ -40,6 +40,13 @@
                 
                 <div class="cbg-gray flex justify-center items-center h-12 mt-8 rounded">
                   <button type="submit" class="w-full h-full text-lg font-bold">비밀번호 찾기</button>
+                  <ion-loading  
+                  :is-open="isOpenRef" cssClass="my-custom-class" 
+                  message="Please wait..."
+                  :duration="timeout"
+                  @didDismiss="setOpen(false)"
+                  >
+                  </ion-loading>
                 </div>
 
                 <div class="gray-color text-center text-xs mt-5">
@@ -62,7 +69,6 @@
 <script lang="ts">
 import { defineComponent, ref, reactive } from 'vue';
 import { useMainApi } from '@/apis';
-import * as util from '@/utils';
 import router from '@/router';
 
 export default defineComponent({
@@ -73,6 +79,12 @@ export default defineComponent({
     const regNumber1ElRef = ref<HTMLIonInputElement>();
     const regNumber2ElRef = ref<HTMLIonInputElement>();
     const mainApi = useMainApi();
+
+    const timeout = 10000;
+    const isOpenRef = ref(false);
+    const setOpen = (status: boolean) => {
+      isOpenRef.value = status;
+    }
 
     const input = reactive({
       regNumber1El:'',
@@ -157,6 +169,9 @@ export default defineComponent({
     }
 
     function findLoginPw(loginId:string, regNumber:string){
+
+      setOpen(true);
+
       mainApi.ap_findLoginPw(loginId, regNumber)
         .then(axiosResponse => {
           if ( axiosResponse.data.resultCode.includes('F-') ) {
@@ -164,6 +179,7 @@ export default defineComponent({
             return;
           } else {
             router.replace('/member/findPwAfter?email=' + loginId )
+            isOpenRef.value = false
           }
         })
     }
@@ -172,7 +188,10 @@ export default defineComponent({
       loginIdElRef,
       regNumber1ElRef,
       regNumber2ElRef,
-      input
+      input,
+      timeout,
+      setOpen,
+      isOpenRef
     }
   }
 })
