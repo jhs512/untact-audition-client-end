@@ -261,8 +261,25 @@ export interface MainApi__ap__deleteAcount__IResponseBody extends Base__IRespons
   };
 }
 
+// /usr/ap/findLoginId 의 응답 타입
+export interface MainApi__ap__findLoginId__IResponseBody extends Base__IResponseBodyType1 {
+  body: {
+    loginId: string
+  };
+}
+
+// /usr/ap/findLoginPw 의 응답 타입
+export interface MainApi__ap__findLoginPw__IResponseBody extends Base__IResponseBodyType1 {
+  body: {
+  };
+}
 
 
+// /usr/ap/modifyPw 의 응답 타입
+export interface MainApi__ap__modifyPw__IResponseBody extends Base__IResponseBodyType1 {
+  body: {
+  };
+}
 
 
 
@@ -490,6 +507,33 @@ export class MainApi extends HttpClient {
       }
     );
   }
+
+  public ap_findLoginId(name: string, regNumber: string){
+    return this.instance.get<MainApi__ap__findLoginId__IResponseBody>(`/usr/ap/findLoginId?name=${name}&regNumber=${regNumber}`);
+  }
+
+  public ap_findLoginPw(loginId: string, regNumber: string){
+    return this.postByForm<MainApi__ap__findLoginPw__IResponseBody>(
+      `/usr/ap/findLoginPw`, 
+      {
+        loginId,
+        regNumber
+      }
+    );
+  }
+  
+  public ap_modifyPw(loginId: string, loginPw: string, key: string){
+    return this.postByForm<MainApi__ap__modifyPw__IResponseBody>(
+      `/usr/ap/modifyPw`, 
+      {
+        loginId,
+        loginPw,
+        key
+      }
+    );
+  }
+  
+  
   
 } 
 

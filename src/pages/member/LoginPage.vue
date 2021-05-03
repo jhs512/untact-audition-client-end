@@ -17,12 +17,17 @@
                 <FormRow title="아이디">
                   <input ref="loginIdElRef" class="form-row-input" type="text">
                 </FormRow>
+
+                <div class="gray-color text-right text-xs mt-1">
+                  <router-link to="/member/findLoginId" class="underline">아이디가 기억나지 않으시나요?</router-link>
+                </div>
+
                 <FormRow title="비밀번호">
                   <input ref="loginPwElRef" class="form-row-input" type="password">
                 </FormRow>
 
                 <div class="gray-color text-right text-xs mt-1">
-                  <a href="#" class="underline">비밀번호가 기억나지 않으시나요?</a>
+                  <router-link to="/member/findLoginPw" class="underline">비밀번호가 기억나지 않으시나요?</router-link>
                 </div>
                 
                 <div class="cbg-gray flex justify-center items-center h-12 mt-8 rounded">
@@ -67,6 +72,12 @@ import { sha256 } from 'js-sha256'
 
 export default defineComponent({
   name: 'LoginPage',
+  props:{
+    email : {
+      type: String,
+      required: false
+    }
+  },
   setup() {
     const route = useRoute();
     const mainApi = useMainApi();
@@ -74,14 +85,14 @@ export default defineComponent({
     const loginPwElRef = ref<HTMLInputElement>();
 
     onMounted(() => {
-      if ( route.query.loginId != null ) {
+      if ( route.query.email != null ) {
         if ( loginIdElRef.value == null ) {
           return;
         }
         if ( loginPwElRef.value == null ) {
           return;
         }
-        loginIdElRef.value.value = route.query.loginId as any;
+        loginIdElRef.value.value = route.query.email as any;
         loginPwElRef.value.focus();
       }
     })

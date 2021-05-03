@@ -40,7 +40,8 @@ const routes: Array<RouteRecordRaw> = [
       },
       {
         path: 'login',
-        component: () => import('@/pages/member/LoginPage.vue')
+        component: () => import('@/pages/member/LoginPage.vue'),
+        props: (route:any) => ( { email:route.query.email })
       },
       {
         path: 'join',
@@ -128,6 +129,24 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/like/list',
     component: () => import('@/pages/member/LikedRecruitListPage.vue')
+  },
+  {
+    path: '/member/findLoginId',
+    component: () => import('@/pages/member/FindLoginIdPage.vue')
+  },
+  {
+    path: '/member/findLoginPw',
+    component: () => import('@/pages/member/FindLoginPwPage.vue')
+  },
+  {
+    path: '/member/findPwAfter',
+    component: () => import('@/pages/member/FindPwAfterPage.vue'),
+    props: (route:any) => ( { email:route.query.email })
+  },
+  {
+    path: '/member/modifyPw',
+    component: () => import('@/pages/member/ModifyPwPage.vue'),
+    props: (route:any) => ( { email:route.query.email, emailCertKey:route.query.emailCertKey })
   },
 ]
 
