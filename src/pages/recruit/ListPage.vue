@@ -21,8 +21,8 @@
 
           <ion-card v-for="recruit in state.recruits">
             <ion-card-header @click="showDetail(recruit.id)" class="cursor-pointer">
-              <ion-card-title>{{recruit.title}}</ion-card-title>
-              <ion-card-subtitle>{{recruit.pay}}</ion-card-subtitle>
+              <ion-card-title>가제 : ({{recruit.title}})</ion-card-title>
+              <ion-card-subtitle>감독 : ({{recruit.extra__aw_director}})</ion-card-subtitle>
               <ion-card-subtitle v-if="recruit.dateDiff > 0">기한 : {{recruit.dateDiff}}일</ion-card-subtitle>
               <ion-card-subtitle v-if="recruit.dateDiff == 0">기한 : 오늘까지</ion-card-subtitle>
               <ion-card-subtitle v-if="recruit.dateDiff < 0">기한 마감</ion-card-subtitle>
@@ -31,7 +31,8 @@
               </ion-card-subtitle>
             </ion-card-header>
             <ion-card-content>
-              {{recruit.body}}
+              <div>배역: ({{recruit.extra__ar_name}})</div>
+              <div>특징: ({{recruit.extra__ar_character}})</div>
             </ion-card-content>
           </ion-card>
           

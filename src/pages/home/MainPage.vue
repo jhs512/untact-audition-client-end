@@ -3,7 +3,9 @@
     <MainHeader />
     <ion-content>
       <section v-show="globalState.isLogined">
-        <div class="px-6 pt-4 text-xs font-semibold">방금 올라온 공고</div>
+        <div class="px-6 pt-4 text-xs font-semibold">
+          <span class="subtitle">방금 올라온 공고</span>
+        </div>
         <div class="px-2 text-center">
           <ion-card v-for="recruit in state.recruits">
             <ion-card-header @click="showDetail(recruit.id)" class="cursor-pointer">
@@ -21,19 +23,27 @@
               <div>특징: ({{recruit.extra__ar_character}})</div>
             </ion-card-content>
           </ion-card>
-          
-          <ion-infinite-scroll
-            @ionInfinite="loadData($event)" 
-            threshold="100px" 
-            id="infinite-scroll"
-          >
-            <ion-infinite-scroll-content
-              loading-spinner="bubbles"
-              loading-text="불러오는 중입니다...">
-            </ion-infinite-scroll-content>
-          </ion-infinite-scroll>
-
         </div>
+
+        <div class="px-6 pt-4 text-xs font-semibold">
+          <span class="subtitle">많이 물어본 질문</span>
+        </div>
+
+        <div class="px-2 text-center">
+          <ion-card>
+            <ion-card-header class="cursor-pointer font-bold py-7">
+              <ion-card-title class="font-bold pb-5">캐스팅은 어떻게 진행되나요?</ion-card-title>
+              <ion-card-subtitle class="font-bold justify-end mr-10 flex items-center">알아보기 <ion-icon :icon="arrowForwardOutline"></ion-icon></ion-card-subtitle>
+            </ion-card-header>
+          </ion-card>
+          <ion-card>
+            <ion-card-header class="cursor-pointer font-bold py-7">
+              <ion-card-title class="font-bold pb-5">익명성 보장이 되나요?</ion-card-title>
+              <ion-card-subtitle class="font-bold justify-end mr-10 flex items-center">알아보기 <ion-icon :icon="arrowForwardOutline"></ion-icon></ion-card-subtitle>
+            </ion-card-header>
+          </ion-card>
+        </div>
+
       </section>
     </ion-content>
 
@@ -46,6 +56,7 @@ import { useGlobalState } from '@/stores';
 import { useMainApi } from '@/apis';
 import router from '@/router';
 import * as util from '@/utils';
+import { arrowForwardOutline } from 'ionicons/icons';
 
 export default defineComponent({
   name:'MainPage',
@@ -53,25 +64,11 @@ export default defineComponent({
     const mainApi = useMainApi();
     const globalState = useGlobalState();
 
-    let limit:number = 5;
-    let isAllRoaded = false;
+    let limit:number = 2;
 
     const state = reactive({
       recruits: [] as any[],
     });
-
-    const loadData = (event:any) => {
-      setTimeout(() => {
-        limit = limit + 3
-        recruitList(limit, null);
-        console.log('Loaded data');
-        event.target.complete();
-
-        if ( isAllRoaded == true ){
-          document.getElementById('infinite-scroll')?.setAttribute('disabled', 'true');
-        }
-      }, 500);
-    }
 
     function showDetail(id:number) {
       router.push('/detail?id=' + id)
@@ -81,10 +78,6 @@ export default defineComponent({
       mainApi.recruit_list(util.toStringOrNull(limit), keyword)
         .then(axiosResponse => {
           state.recruits = axiosResponse.data.body.recruits
-        
-          if ( axiosResponse.data.body.isAllLoaded == true ){
-            isAllRoaded = true;
-          }
 
           for(var i = 0 ; i < state.recruits.length ; i++ ){
             let today = new Date();
@@ -103,9 +96,8 @@ export default defineComponent({
       globalState,
       state,
       recruitList,
-      limit,
-      loadData,
-      showDetail
+      showDetail,
+      arrowForwardOutline
     }
   }
 })
@@ -121,5 +113,13 @@ export default defineComponent({
     border-radius:25px;
     box-shadow: 0px 5px 8px rgba(0, 0, 0, 0.25);
     border:2px solid #DADADA;
+  }
+
+  .subtitle{
+    background: linear-gradient(white 60%,rgba(200, 94, 94, 0.44) 10%);
+  }
+
+  ion-icon {
+    --ionicon-stroke-width: 60px;
   }
 </style>
