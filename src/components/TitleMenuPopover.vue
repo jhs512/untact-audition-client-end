@@ -1,25 +1,25 @@
 <template>
   <ion-content class="ion-padding">
              <ion-item lines="none" button="true">
-              <ion-label color="light" class="text-center">
+              <ion-label @click="notService" color="light" class="text-center">
                 이것만은 꼭!
               </ion-label>
             </ion-item>
 
              <ion-item lines="none" button="true">
-              <ion-label color="light" class="text-center">
+              <ion-label @click="notService" color="light" class="text-center">
                 공지사항
               </ion-label>
             </ion-item>
 
              <ion-item lines="none" button="true">
-              <ion-label color="light" class="text-center">
+              <ion-label @click="notService" color="light" class="text-center">
                 문의사항
               </ion-label>
             </ion-item>
 
              <ion-item lines="none" button="true">
-              <ion-label color="light" class="text-center">
+              <ion-label @click="notService" color="light" class="text-center">
                 About Audictionary
               </ion-label>
             </ion-item>
@@ -45,8 +45,13 @@ export default defineComponent({
       globalState.logout();
     }
 
+    function notService(){
+      alert('추후 서비스 예정입니다.')
+    }
+
     return{
-      logout
+      logout,
+      notService
     }
   }
 });
