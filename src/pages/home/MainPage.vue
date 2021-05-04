@@ -112,8 +112,14 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.text-size {
-  font-size: 12px;
-  color:black;
-}
+  .text-size {
+    font-size: 12px;
+    color:black;
+  }
+
+  ion-card {
+    border-radius:25px;
+    box-shadow: 0px 5px 8px rgba(0, 0, 0, 0.25);
+    border:2px solid #DADADA;
+  }
 </style>

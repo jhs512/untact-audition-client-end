@@ -14,10 +14,6 @@
                     <ion-chip color="primary" :class="`chip_${index}`" @click="addFilter(item)" v-bind:key="item" v-for="(item,index) in filterItems">{{item}}</ion-chip>
                   </div>
                   
-                  <div class="flex justify-end mr-2 mt-20">
-                    <ion-button>저장하기</ion-button>
-                  </div>
-                  
                 </ion-content>
               </ion-popover>
             </div>
@@ -203,5 +199,11 @@ export default defineComponent({
 
 .filtered{
   background-color: blue;
+}
+
+ion-card {
+  border-radius:25px;
+  box-shadow: 0px 5px 8px rgba(0, 0, 0, 0.25);
+  border:2px solid #DADADA;
 }
 </style>
