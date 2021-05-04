@@ -25,11 +25,13 @@
         <div class="text-left">(필수) 개인정보 수집 및 이용에 대한 동의</div>
         <div @click="openTos2Modal" class="detail text-center">자세히보기</div>
       </div>
+      <!--
       <div class="grid custom-grid my-3 gray-color text-xs">
         <input :checked="state.isCheckTos3" v-on:change="checkTos3" ref="agreeCheckElRef" type="checkbox" class="ml-4">
         <div class="text-left">(필수) 개인정보의 제3자 제공에 대한 동의</div>
         <div @click="openTos3Modal" class="detail text-center">자세히보기</div>
-      </div>
+      </div> 
+      -->
     </div>
 
     <div class="h-1 w-full cbg-gray my-3"></div>
@@ -58,7 +60,7 @@ import router from '@/router'
 import { modalController } from '@ionic/vue'
 import AudictionaryTosPage from '../tos/AudictionaryTosPage.vue'
 import PrivacyPolicyTosPage from '../tos/PrivacyPolicyTosPage.vue'
-import ThirdPartyTosPage from '../tos/ThirdPartyTosPage.vue'
+//import ThirdPartyTosPage from '../tos/ThirdPartyTosPage.vue'
 
 export default defineComponent({
   name: 'JoinTosPage',
@@ -72,7 +74,7 @@ export default defineComponent({
     const state = reactive({
       isCheckTos1: false,
       isCheckTos2: false,
-      isCheckTos3: false
+      //isCheckTos3: false
     });
 
     function checkTos1(event: any) {
@@ -91,6 +93,7 @@ export default defineComponent({
       }
     }
 
+    /*
     function checkTos3(event: any) {
       if (event.target.checked) {
         state.isCheckTos3 = true;
@@ -98,21 +101,22 @@ export default defineComponent({
         state.isCheckTos3 = false;
       }
     }
-    
+    */
+
     function check(event: any){
       if(event.target.checked) {
         state.isCheckTos1 = true;
         state.isCheckTos2 = true;
-        state.isCheckTos3 = true;
+        //state.isCheckTos3 = true;
       } else {
         state.isCheckTos1 = false;
         state.isCheckTos2 = false;
-        state.isCheckTos3 = false;
+        //state.isCheckTos3 = false;
       }
     }
 
     function checkAndAgree() {
-      if ( state.isCheckTos1 == false || state.isCheckTos2 == false || state.isCheckTos3 == false ) {
+      if ( state.isCheckTos1 == false || state.isCheckTos2 == false /*|| state.isCheckTos3 == false */ ) {
         alert('모든 필수 동의 약관에 체크해주시기 바랍니다.');
         return;
       }
@@ -142,6 +146,7 @@ export default defineComponent({
         return modal.present();
     }
 
+    /*
     async function openTos3Modal(){
       const modal = await modalController
         .create({
@@ -152,6 +157,7 @@ export default defineComponent({
         })
         return modal.present();
     }
+    */
 
     return{
       historyBack,
@@ -161,10 +167,10 @@ export default defineComponent({
       check,
       checkTos1,
       checkTos2,
-      checkTos3,
+      //checkTos3,
       openTos1Modal,
       openTos2Modal,
-      openTos3Modal
+      //openTos3Modal
     }
   }
 })
