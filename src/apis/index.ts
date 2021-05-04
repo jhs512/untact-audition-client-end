@@ -292,7 +292,7 @@ export class MainApi extends HttpClient {
   public constructor() {
     super(
       axios.create({
-        baseURL:'http://192.168.0.6:8024',
+        baseURL:'http://192.168.219.101:8024',
       })
     );
   }
@@ -369,8 +369,8 @@ export class MainApi extends HttpClient {
     );
   }
 
-  public recruit_list(limit:number) {
-    return this.instance.get<MainApi__recruit_list__IResponseBody>(`/usr/recruit/list?limit=${limit}`);
+  public recruit_list(limit:string, filter:[]|null) {
+    return this.instance.get<MainApi__recruit_list__IResponseBody>(`/usr/recruit/list?limit=${limit}&filter=${filter}`);
   }
 
   public recruit_detail(id:number) {

@@ -42,10 +42,10 @@
 
 <script lang="ts">
 import { defineComponent, reactive, onMounted } from 'vue';
-import { useGlobalState } from '@/stores'
+import { useGlobalState } from '@/stores';
 import { useMainApi } from '@/apis';
 import router from '@/router';
-
+import * as util from '@/utils';
 
 export default defineComponent({
   name:'MainPage',
@@ -63,7 +63,7 @@ export default defineComponent({
     const loadData = (event:any) => {
       setTimeout(() => {
         limit = limit + 3
-        recruitList(limit);
+        recruitList(limit, null);
         console.log('Loaded data');
         event.target.complete();
 
@@ -77,8 +77,8 @@ export default defineComponent({
       router.push('/detail?id=' + id)
     }
 
-    function recruitList(limit: number) {
-      mainApi.recruit_list(limit)
+    function recruitList(limit: number, keyword:[]|null) {
+      mainApi.recruit_list(util.toStringOrNull(limit), keyword)
         .then(axiosResponse => {
           state.recruits = axiosResponse.data.body.recruits
         
@@ -96,7 +96,7 @@ export default defineComponent({
     }
 
     onMounted(() => { 
-      recruitList(limit);
+      recruitList(limit, null);
     });
 
     return {

@@ -69,6 +69,9 @@ export default defineComponent({
             state.recruits[i].dateDiff = Math.ceil((regDate.getTime()-today.getTime())/(1000*3600*24)); 
           }
       })
+      } else if ( event.target.value.length == 0 ){
+        state.recruits = [],
+        state.keyword = ''
       }
     }
     
