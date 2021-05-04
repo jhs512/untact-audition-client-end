@@ -53,9 +53,7 @@
 
           <div class="container mx-auto row-start-2">
             <div class="flex justify-center">
-              <a href="#">
-                <img src="https://developers.kakao.com/tool/resource/static/img/button/login/full/en/kakao_login_medium_wide.png">  
-              </a>
+              <img @click="notService" src="https://developers.kakao.com/tool/resource/static/img/button/login/full/en/kakao_login_medium_wide.png">  
             </div>
           </div>
         </section>
@@ -83,6 +81,10 @@ export default defineComponent({
     const mainApi = useMainApi();
     const loginIdElRef = ref<HTMLInputElement>();
     const loginPwElRef = ref<HTMLInputElement>();
+
+    function notService() {
+      alert('추후 서비스 예정입니다.')
+    }
 
     onMounted(() => {
       if ( route.query.email != null ) {
@@ -195,7 +197,7 @@ export default defineComponent({
       checkAndLogin,
       loginIdElRef,
       loginPwElRef,
-      
+      notService
     }
   }
 })
