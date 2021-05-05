@@ -37,7 +37,7 @@
     <div class="h-1 w-full cbg-gray my-3"></div>
 
     <div class="grid custom-grid2 my-3 gray-color text-xs">
-      <input @click="check" v-on:change="check" :checked="state.isCheckTos1 && state.isCheckTos2 && state.isCheckTos3" ref="agreeCheckElRef" type="checkbox" class="ml-4">
+      <input @click="check" v-on:change="check" :checked="state.isCheckTos1 && state.isCheckTos2 /*&& state.isCheckTos3*/" ref="agreeCheckElRef" type="checkbox" class="ml-4">
       <div class="text-left">약관 내용을 숙지하였으며, 위 모든 약관에 동의합니다.</div>
     </div>
 
