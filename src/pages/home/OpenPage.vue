@@ -2,7 +2,6 @@
   <section class="h-full grid grid-rows-2 place-items-center text-center overflow-hidden">
     <div class="row-start-1">
       <div class="text-4xl font-medium coda-font">Audictionary</div>
-      <div>(로고)</div>
     </div>
     
     <div class="row-start-2 w-64">
