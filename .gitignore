@@ -3,6 +3,7 @@
 public/gen/
 package-lock.json
 
+
 *~
 *.sw[mnpcod]
 .tmp
@@ -31,3 +32,4 @@ npm-debug.log*
 /platforms
 /plugins
 /www
+/android
