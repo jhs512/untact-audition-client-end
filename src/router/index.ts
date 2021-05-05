@@ -148,6 +148,14 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import('@/pages/member/ModifyPwPage.vue'),
     props: (route:any) => ( { email:route.query.email, emailCertKey:route.query.emailCertKey })
   },
+  {
+    path: '/tos/audictionary',
+    component: () => import('@/pages/tos/AudictionaryTosPage.vue'),
+  },
+  {
+    path: '/tos/privacyPolicy',
+    component: () => import('@/pages/tos/PrivacyPolicyTosPage.vue'),
+  },
 ]
 
 const router = createRouter({

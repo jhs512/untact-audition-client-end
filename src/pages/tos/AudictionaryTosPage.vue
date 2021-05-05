@@ -443,12 +443,12 @@ export default defineComponent({
   props:{
     modalController:{
       type: Object,
-      required:true
+      required:false
     }
   },
   setup(props){
     function setClose(){
-      props.modalController.dismiss();
+      props.modalController?.dismiss();
     }
     return{
       setClose
