@@ -3,7 +3,7 @@
     <ion-header>
       <ion-toolbar>
         <ion-buttons slot="start">
-          <ion-back-button></ion-back-button>
+          <ion-back-button default-href="/"></ion-back-button>
         </ion-buttons>
         <ion-title class="ion-text-center">로그인 페이지</ion-title>
       </ion-toolbar>
@@ -15,7 +15,7 @@
             <div>
               <form v-on:submit.prevent="checkAndLogin">
                 <FormRow title="아이디">
-                  <input ref="loginIdElRef" class="form-row-input" type="text">
+                  <input ref="loginIdElRef" class="form-row-input" type="email">
                 </FormRow>
 
                 <div class="gray-color text-right text-xs mt-1">
