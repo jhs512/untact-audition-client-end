@@ -22,10 +22,8 @@ export default defineComponent({
       const slug = data.url.split(".com")[1];
       
       if ( slug.startsWith('/member/kakaoLogin')){
-        const nameBits = slug.split('/member/')[1]
-        const name = nameBits.split('?')[0]
-        const param = slug.split('=')[1]
-        router.push({name: "kakaoLogin", params: {code: param}})
+        const code = slug.split('code=')[1]
+        router.push({name: "kakaoLogin", params: {code: code}})
       } 
 
       return{
