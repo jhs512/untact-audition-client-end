@@ -1,0 +1,10 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target" : { 
+      "namespace": "android_app", 
+      "package_name": "audictionary.io.ionic",
+      "sha256_cert_fingerprints": ["43:DF:00:4A:AB:99:A1:22:AE:E0:1A:83:4C:85:6C:E2:33:CE:69:D2:CC:6E:95:83:FB:88:90:3A:E2:D0:75:2E"] 
+    }
+  }
+]

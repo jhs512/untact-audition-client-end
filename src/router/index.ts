@@ -159,7 +159,8 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/member/kakaoLogin',
     component: () => import('@/pages/member/LoginKakaoPage.vue'),
-    props: (route:any) => ( { code:route.query.code })
+    name: 'kakaoLogin',
+    props: true
   },
   {
     path: '/member/updateKakao',

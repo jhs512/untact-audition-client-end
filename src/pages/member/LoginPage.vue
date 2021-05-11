@@ -53,7 +53,7 @@
 
           <div class="container mx-auto row-start-2">
             <div class="flex justify-center">
-              <a href="https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=a5ef56cf046727f91ab24680a98b0953&redirect_uri=http://localhost:8100/member/kakaoLogin">
+              <a href="https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=a5ef56cf046727f91ab24680a98b0953&redirect_uri=https://ap.audictionary.com/member/kakaoLogin">
                 <img src="/img/kakao_login_img.png" alt="">
               </a>
             </div>
