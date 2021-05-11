@@ -175,7 +175,6 @@ export default defineComponent({
 
     const state = reactive({
       pageNum: 1,
-      eyelidPicked: 1,
       idCheckStatus: false,
       gender: ''
     })

@@ -200,6 +200,14 @@ export interface MainApi__member_doModify__IResponseBody extends Base__IResponse
   };
 }
 
+// /usr/ap/doModifyForKakao 의 응답 타입
+export interface MainApi__member_doModifyForKakao__IResponseBody extends Base__IResponseBodyType1 {
+  body:{
+    authKey: string,
+    ap: IAp
+  };
+}
+
 // /common/genFile/getRecentImgUrl 의 응답 타입
 export interface MainApi__common_application_getRecentImg__IResponseBody extends Base__IResponseBodyType1 {
   body:{
@@ -281,6 +289,37 @@ export interface MainApi__ap__modifyPw__IResponseBody extends Base__IResponseBod
   };
 }
 
+// /usr/ap/kakaoLogin 의 응답 타입
+export interface MainApi__ap__kakaoLogin__IResponseBody extends Base__IResponseBodyType1 {
+  body: {
+    authKey: string;
+    member: {
+      id: number;
+      regDate: string;
+      updateDate: string;
+      loginId: string;
+      name: string;
+      engName: string;
+      nickName: string;
+      gender: string;
+      regNumber: string;
+      address: string;
+      cellPhoneNo: string;
+      feet: number;
+      weight: number;
+      feature: string;
+      filmgraphy: string;
+      jobArea: string;
+      corp: string;
+      authLevel: number;
+      authStatus: number;
+      extra: any
+    };
+  };
+}
+
+
+
 
 
 
@@ -292,7 +331,7 @@ export class MainApi extends HttpClient {
   public constructor() {
     super(
       axios.create({
-        //baseURL:'http://192.168.219.101:8024',
+        //baseURL:'http://192.168.219.104:8024',
         baseURL:'https://backend.audictionary.com/',
       })
     );
@@ -439,6 +478,28 @@ export class MainApi extends HttpClient {
     );
   }
 
+  public ap_doModifyForKakao(loginedMemberId: string, name:string, engName:string, gender:string, regNumber:string, address:string, cellPhoneNo:string, nickName: string, feet: number, weight: number, feature: string, filmgraphy: string, jobArea: string, corp: string) {
+    return this.postByForm<MainApi__member_doModifyForKakao__IResponseBody>(
+      `/usr/ap/doModifyForKakao`, 
+      {
+        loginedMemberId,
+        name, 
+        engName, 
+        gender, 
+        regNumber, 
+        address, 
+        cellPhoneNo, 
+        nickName,
+        feet, 
+        weight, 
+        feature, 
+        filmgraphy, 
+        jobArea, 
+        corp
+      }
+    );
+  }
+
   public recruit_listByKeyword(limit:number, keyword:string) {
     return this.instance.get<MainApi__recruit_list__IResponseBody>(`/usr/recruit/search?limit=${limit}&keyword=${keyword}`);
   }
@@ -533,7 +594,10 @@ export class MainApi extends HttpClient {
       }
     );
   }
-  
+
+  public ap_KakaoLogin(code: string){
+    return this.instance.get<MainApi__ap__kakaoLogin__IResponseBody>(`/usr/ap/kakaoLogin?code=${code}`);
+  }
   
   
 } 

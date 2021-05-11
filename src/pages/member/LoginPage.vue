@@ -53,7 +53,9 @@
 
           <div class="container mx-auto row-start-2">
             <div class="flex justify-center">
-              <img @click="notService" src="https://developers.kakao.com/tool/resource/static/img/button/login/full/en/kakao_login_medium_wide.png">  
+              <a href="https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=a5ef56cf046727f91ab24680a98b0953&redirect_uri=http://localhost:8100/member/kakaoLogin">
+                <img src="/img/kakao_login_img.png" alt="">
+              </a>
             </div>
           </div>
         </section>
@@ -81,10 +83,6 @@ export default defineComponent({
     const mainApi = useMainApi();
     const loginIdElRef = ref<HTMLInputElement>();
     const loginPwElRef = ref<HTMLInputElement>();
-
-    function notService() {
-      alert('추후 서비스 예정입니다.')
-    }
 
     onMounted(() => {
       if ( route.query.email != null ) {
@@ -197,7 +195,6 @@ export default defineComponent({
       checkAndLogin,
       loginIdElRef,
       loginPwElRef,
-      notService
     }
   }
 })
