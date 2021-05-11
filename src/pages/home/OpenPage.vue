@@ -6,7 +6,7 @@
     
     <div class="row-start-2 w-64">
       <div class="text-right">
-        <ion-button fill="clear" class="text-size" href="/">
+        <ion-button fill="clear" class="text-size" href="https://audictionary.page.link/J6y1">
         제작자이신가요?
         </ion-button>
       </div>
