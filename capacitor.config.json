@@ -1,6 +1,6 @@
 {
   "appId": "audictionary.ionic.starter",
-  "appName": "audictionary",
+  "appName": "Audictionary",
   "bundledWebRuntime": false,
   "npmClient": "npm",
   "webDir": "dist",
