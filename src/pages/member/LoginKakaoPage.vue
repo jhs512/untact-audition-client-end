@@ -44,7 +44,9 @@ export default defineComponent({
           if( axiosResponse.data.body.member.extra == null ){
             localStorage.setItem("loginedMemberExtra__thumbImg", './img/user-icon.png');
           }else{
-            localStorage.setItem("loginedMemberExtra__thumbImg", loginedMember.extra.thumbnail_image_url);
+            const imgUrl = loginedMember.extra.thumbnail_image_url.replace('http', 'https')
+            localStorage.setItem("loginedMemberExtra__thumbImg", imgUrl);
+            
           }
 
           if ( axiosResponse.data.body.member.extra.existsMember ){
