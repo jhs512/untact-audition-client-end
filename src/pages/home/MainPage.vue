@@ -15,7 +15,7 @@
               <ion-card-subtitle v-if="recruit.dateDiff == 0">기한 : 오늘까지</ion-card-subtitle>
               <ion-card-subtitle v-if="recruit.dateDiff < 0">기한 마감</ion-card-subtitle>
               <ion-card-subtitle v-if="recruit.extra != null">
-                <img :src="recruit.extra.file__common__attachment[1].forPrintUrl" alt="">
+                <img :src="recruit.extra.file__common__attachment[1].forPrintUrl" alt="" class="mx-auto">
               </ion-card-subtitle>
             </ion-card-header>
             <ion-card-content>
@@ -30,13 +30,13 @@
         </div>
 
         <div class="px-2 text-center">
-          <ion-card>
+          <ion-card @click="notService">
             <ion-card-header class="cursor-pointer font-bold py-7">
               <ion-card-title class="font-bold pb-5">캐스팅은 어떻게 진행되나요?</ion-card-title>
               <ion-card-subtitle class="font-bold justify-end mr-10 flex items-center">알아보기 <ion-icon :icon="arrowForwardOutline"></ion-icon></ion-card-subtitle>
             </ion-card-header>
           </ion-card>
-          <ion-card>
+          <ion-card @click="notService">
             <ion-card-header class="cursor-pointer font-bold py-7">
               <ion-card-title class="font-bold pb-5">익명성 보장이 되나요?</ion-card-title>
               <ion-card-subtitle class="font-bold justify-end mr-10 flex items-center">알아보기 <ion-icon :icon="arrowForwardOutline"></ion-icon></ion-card-subtitle>
@@ -74,6 +74,10 @@ export default defineComponent({
       router.push('/detail?id=' + id)
     }
 
+    function notService() {
+      util.showAlert("Alert", "추후 서비스 예정입니다.", function(){})
+    }
+
     function recruitList(limit: number, keyword:[]|null) {
       mainApi.recruit_list(util.toStringOrNull(limit), keyword)
         .then(axiosResponse => {
@@ -97,7 +101,8 @@ export default defineComponent({
       state,
       recruitList,
       showDetail,
-      arrowForwardOutline
+      arrowForwardOutline,
+      notService
     }
   }
 })

@@ -20,7 +20,7 @@
             <span>{{state.recruit.extra__aw_genre}}</span>
           </div>
           <div v-if="state.recruit.extra != null">
-            <img :src="state.recruit.extra.file__common__attachment[0].forPrintUrl" alt="">
+            <img :src="state.recruit.extra.file__common__attachment[0].forPrintUrl" alt="" class="mx-auto">
           </div>
           <div class="">감독. {{state.recruit.extra__aw_director}}</div>
           <div class="flex justify-around">
@@ -71,11 +71,6 @@
           <div class="flex justify-around mt-2">
             <span>장면 수. </span><span>{{state.recruit.extra__ar_scenesCount}}컷</span>
             <span>촬영횟수. </span><span>{{state.recruit.extra__ar_shootingsCount}}회</span>
-          </div>
-
-          <div class="text-left mt-6">
-            <div class="">배역 상세 설정.</div>
-            <div class="border border-black rounded py-2 px-1 mt-1">{{state.recruit.extra__ar_character}}</div>
           </div>
         </section>
 
@@ -159,8 +154,23 @@ export default defineComponent({
       });
     }
 
-    function showApplicationPage(id:number) {
-      router.push('/application?id=' + id)
+    async function showApplicationPage(id:number) {
+      await mainApi.application_getApplications(util.toIntOrNull(globalState.loginedMember.id))
+        .then(axiosResponse => {
+          if ( axiosResponse.data.fail ) {
+            alert(axiosResponse.data.msg);
+            return;
+          } else if (axiosResponse.data.body.applications.length != 0){
+            for ( let i = 0; i < axiosResponse.data.body.applications.length; i++){
+              if (props.id == axiosResponse.data.body.applications[i].recruitId){
+                util.showAlert("Alert", "이미 지원한 공고입니다.", function(){})
+                return;
+              }
+            }
+          } else {
+            router.push('/application?id=' + id)
+          }
+      })
     }
 
     function likeRecruit() {

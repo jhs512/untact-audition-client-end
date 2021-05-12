@@ -17,8 +17,8 @@
             <ion-card-subtitle v-if="recruit.dateDiff == 0">기한 : 오늘까지</ion-card-subtitle>
             <ion-card-subtitle v-if="recruit.dateDiff < 0">기한 마감</ion-card-subtitle>
             <ion-card-subtitle v-if="recruit.extra != null">
-                <img :src="recruit.extra.file__common__attachment[1].forPrintUrl" alt="">
-              </ion-card-subtitle>
+              <img :src="recruit.extra.file__common__attachment[1].forPrintUrl" alt="" class="mx-auto">
+            </ion-card-subtitle>
           </ion-card-header>
           <ion-card-content>
             <div>배역: ({{recruit.extra__ar_name}})</div>

@@ -352,7 +352,11 @@ export default defineComponent({
       }
 
       const startApplication = () => {
-        let profileImgIdsStr = JSON.stringify(state.profileImgIdsStr)
+        let ids = []
+        for ( let i = 0; i < state.profileImgIdsStr.length; i++){
+          ids.push(util.toStringOrNull(state.profileImgIdsStr[i].id))
+        }
+        let profileImgIdsStr = JSON.stringify(ids)
         application(state.videoFileIdsStr, state.recentImgFileIdsStr, profileImgIdsStr, util.toIntOrNull(localStorage.getItem("loginedMemberId")), props.id)
       }
 
