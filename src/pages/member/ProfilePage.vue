@@ -235,59 +235,71 @@ export default defineComponent({
               text: '사진 삭제',
               role: 'destructive',
               handler: () => {
-                presentAlertMultipleButtons()
+                if (localStorage.getItem("loginedMemberType") != "kakao"){
+                  presentAlertMultipleButtons()
+                } else {
+                  util.showAlert("Alert", "kakao 로그인 유저는 프로필 이미지 변경이 불가능합니다.", function(){});
+                }
               },
             },
             {
               text: '사진 촬영',
               handler: () => {
-                takePhoto().finally(() => {
 
-                  const input = reactive ({
-                    fileEl: photos.value[photos.value.length-1].file
-                  })
+                if (localStorage.getItem("loginedMemberType") != "kakao"){
+                  takePhoto().finally(() => {
 
-                  const changeThumnailImage = () => {
-                    mainApi.common_ap_genFile_getThumbImgUrl(util.toIntOrNull(globalState.loginedMember.id))
-                      .then(axiosResponse => {
+                    const input = reactive ({
+                      fileEl: photos.value[photos.value.length-1].file
+                    })
 
-                        if ( axiosResponse.data.fail ) {
-                          alert(axiosResponse.data.msg);
-                          return;
-                        }
-                        else {
-                          localStorage.setItem("loginedMemberExtra__thumbImg", axiosResponse.data.body.imgUrl)                          
-                          location.reload()
-                        }
-                      });
-                  }
+                    const changeThumnailImage = () => {
+                      mainApi.common_ap_genFile_getThumbImgUrl(util.toIntOrNull(globalState.loginedMember.id))
+                        .then(axiosResponse => {
 
-                  const startFileUpload = (onSuccess:Function) => {
-                    if ( input.fileEl == null || input.fileEl.size == 0 ) {
-                      return;
+                          if ( axiosResponse.data.fail ) {
+                            alert(axiosResponse.data.msg);
+                            return;
+                          }
+                          else {
+                            localStorage.setItem("loginedMemberExtra__thumbImg", axiosResponse.data.body.imgUrl)                          
+                            location.reload()
+                          }
+                        });
                     }
+
+                    const startFileUpload = (onSuccess:Function) => {
+                      if ( input.fileEl == null || input.fileEl.size == 0 ) {
+                        return;
+                      }
+                      
+                      mainApi.common_ap_genFile_doUploadForAdd(input.fileEl, util.toStringOrNull(globalState.loginedMember.id))
+                        .then(axiosResponse => {
+                          if ( axiosResponse.data.fail ) {
+                            alert(axiosResponse.data.msg);
+                            return;
+                          }
+                          else {
+                            onSuccess();
+                          }
+                        });
+                    };
                     
-                    mainApi.common_ap_genFile_doUploadForAdd(input.fileEl, util.toStringOrNull(globalState.loginedMember.id))
-                      .then(axiosResponse => {
-                        if ( axiosResponse.data.fail ) {
-                          alert(axiosResponse.data.msg);
-                          return;
-                        }
-                        else {
-                          onSuccess();
-                        }
-                      });
-                  };
-                  
-                  startFileUpload(changeThumnailImage)
-                })
-                
+                    startFileUpload(changeThumnailImage)
+                  })
+                } else {
+                  util.showAlert("Alert", "kakao 로그인 유저는 프로필 이미지 변경이 불가능합니다.", function(){});
+                }
               },
             },
             {
               text: '사진 선택',
               handler: () => {
-                document.getElementById('file')?.click();
+                if (localStorage.getItem("loginedMemberType") != "kakao"){
+                  document.getElementById('file')?.click();
+                } else {
+                  util.showAlert("Alert", "kakao 로그인 유저는 프로필 이미지 변경이 불가능합니다.", function(){});
+                }
               },
             },
             {

@@ -180,6 +180,7 @@ export default defineComponent({
           localStorage.setItem("loginedMemberCorp", loginedMemberCorp);
           localStorage.setItem("loginedMemberAuthLevel", loginedMemberAuthLevel + "");
           localStorage.setItem("loginedMemberAuthStatus", loginedMemberAuthStatus + "");
+          localStorage.setItem("loginedMemberType", "ap");
           if( axiosResponse.data.body.member.extra__thumbImg == null ){
             localStorage.setItem("loginedMemberExtra__thumbImg", './img/user-icon.png');
           }else{
