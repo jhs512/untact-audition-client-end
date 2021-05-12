@@ -60,7 +60,7 @@ export default defineComponent({
           } else {
 
             if ( axiosResponse.data.body.applications.length != 0 ){
-              for (let i = axiosResponse.data.body.applications.length -1 ; i >= 0; i--){
+              for (let i = 0; i < axiosResponse.data.body.applications.length; i++){
                 if( axiosResponse.data.body.applications[i].passStatus == 1){
                   state.applications.push(axiosResponse.data.body.applications[i])
                 }

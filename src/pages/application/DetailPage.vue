@@ -14,12 +14,14 @@
         <section class="flex">
           <div class="text-sm mt-10 w-full">
             <span class="border-b-2 pb-1 ml-4">지원 완료</span>
-            <div v-if="state.endApplyingApplications.length != 0" v-for="endApplyingApplication in state.endApplyingApplications" class="flex justify-around items-center bg-gray-100 h-12 rounded mt-5 text-xs">
-              <div>가제 : ({{endApplyingApplication.extra.Extra__aw_title}})</div>
-              <div>배역 : ({{endApplyingApplication.extra.Extra__ar_name}})</div>
-              <div v-if="endApplyingApplication.extra.dateDiff > 0">마감 : {{endApplyingApplication.extra.dateDiff}}</div>
-              <div v-if="endApplyingApplication.extra.dateDiff == 0">마감 : 오늘까지</div>
-              <div v-if="endApplyingApplication.extra.dateDiff < 0">기한 마감</div>
+            <div v-for="(endApplyingApplication,index) in state.applications">
+              <div v-if="endApplyingApplication.passStatus == 0 && state.endApplyingApplications.length != 0 && index < 3" class="flex justify-around items-center bg-gray-100 h-12 rounded mt-5 text-xs">
+                <div>가제 : ({{endApplyingApplication.extra.Extra__aw_title}})</div>
+                <div>배역 : ({{endApplyingApplication.extra.Extra__ar_name}})</div>
+                <div v-if="endApplyingApplication.extra.dateDiff > 0">마감 : {{endApplyingApplication.extra.dateDiff}}</div>
+                <div v-if="endApplyingApplication.extra.dateDiff == 0">마감 : 오늘까지</div>
+                <div v-if="endApplyingApplication.extra.dateDiff < 0">기한 마감</div>
+              </div>
             </div>
             <div v-if="state.endApplyingApplications.length == 0" class="flex justify-around items-center bg-gray-100 h-12 rounded mt-5 text-xs">
               <span>지원완료한 내역이 존재하지 않습니다.</span>
@@ -36,12 +38,14 @@
         <section class="flex">
           <div class="text-sm mt-10 w-full">
             <span class="border-b-2 pb-1 ml-4">1차 합격</span>
-            <div v-if="state.firstPassApplications.length != 0" v-for="firstPassApplication in state.firstPassApplications" class="flex justify-around items-center bg-gray-100 h-12 rounded mt-5 text-xs">
-              <div>가제 : ({{firstPassApplication.extra.Extra__aw_title}})</div>
-              <div>배역 : ({{firstPassApplication.extra.Extra__ar_name}})</div>
-              <div v-if="firstPassApplication.extra.dateDiff > 0">마감 : {{firstPassApplication.extra.dateDiff}}</div>
-              <div v-if="firstPassApplication.extra.dateDiff == 0">마감 : 오늘까지</div>
-              <div v-if="firstPassApplication.extra.dateDiff < 0">기한 마감</div>
+            <div v-for="(firstPassApplication,index) in state.applications">
+              <div v-if="firstPassApplication.passStatus == 1 && state.firstPassApplications.length != 0 && index < 3" class="flex justify-around items-center bg-gray-100 h-12 rounded mt-5 text-xs">
+                <div>가제 : ({{firstPassApplication.extra.Extra__aw_title}})</div>
+                <div>배역 : ({{firstPassApplication.extra.Extra__ar_name}})</div>
+                <div v-if="firstPassApplication.extra.dateDiff > 0">마감 : {{firstPassApplication.extra.dateDiff}}</div>
+                <div v-if="firstPassApplication.extra.dateDiff == 0">마감 : 오늘까지</div>
+                <div v-if="firstPassApplication.extra.dateDiff < 0">기한 마감</div>
+              </div>
             </div>
             <div v-if="state.firstPassApplications.length == 0" class="flex justify-around items-center bg-gray-100 h-12 rounded mt-5 text-xs">
               <span>1차 합격한 내역이 존재하지 않습니다.</span>
@@ -58,12 +62,14 @@
         <section class="flex">
           <div class="text-sm mt-10 w-full">
             <span class="border-b-2 pb-1 ml-4">최종 합격</span>
-            <div v-if="state.finalPassApplications.length != 0" v-for="finalPassApplication in state.finalPassApplications" class="flex justify-around items-center bg-gray-100 h-12 rounded mt-5 text-xs">
-              <div>가제 : ({{finalPassApplication.extra.Extra__aw_title}})</div>
-              <div>배역 : ({{finalPassApplication.extra.Extra__ar_name}})</div>
-              <div v-if="finalPassApplication.extra.dateDiff > 0">마감 : {{finalPassApplication.extra.dateDiff}}</div>
-              <div v-if="finalPassApplication.extra.dateDiff == 0">마감 : 오늘까지</div>
-              <div v-if="finalPassApplication.extra.dateDiff < 0">기한 마감</div>
+            <div v-for="(finalPassApplication,index) in state.applications">
+              <div v-if="finalPassApplication.passStatus == 2 && state.finalPassApplications.length != 0 && index < 3" class="flex justify-around items-center bg-gray-100 h-12 rounded mt-5 text-xs">
+                <div>가제 : ({{finalPassApplication.extra.Extra__aw_title}})</div>
+                <div>배역 : ({{finalPassApplication.extra.Extra__ar_name}})</div>
+                <div v-if="finalPassApplication.extra.dateDiff > 0">마감 : {{finalPassApplication.extra.dateDiff}}</div>
+                <div v-if="finalPassApplication.extra.dateDiff == 0">마감 : 오늘까지</div>
+                <div v-if="finalPassApplication.extra.dateDiff < 0">기한 마감</div>
+              </div>
             </div>
             <div v-if="state.finalPassApplications.length == 0" class="flex justify-around items-center bg-gray-100 h-12 rounded mt-5 text-xs">
               <span>최종합격한 내역이 존재하지 않습니다.</span>
@@ -80,12 +86,14 @@
         <section class="flex mb-20">
           <div class="text-sm mt-10 w-full">
             <span class="border-b-2 pb-1 ml-4">불합격</span>
-            <div v-if="state.passFailApplications.length != 0" v-for="passFailApplication in state.passFailApplications" class="flex justify-around items-center bg-gray-100 h-12 rounded mt-5 text-xs">
-              <div>가제 : ({{passFailApplication.extra.Extra__aw_title}})</div>
-              <div>배역 : ({{passFailApplication.extra.Extra__ar_name}})</div>
-              <div v-if="passFailApplication.extra.dateDiff > 0">마감 : {{passFailApplication.extra.dateDiff}}</div>
-              <div v-if="passFailApplication.extra.dateDiff == 0">마감 : 오늘까지</div>
-              <div v-if="passFailApplication.extra.dateDiff < 0">기한 마감</div>
+            <div v-for="(passFailApplication,index) in state.applications">
+              <div v-if="passFailApplication.passStatus == -1 && state.passFailApplications.length != 0 && index < 3" class="flex justify-around items-center bg-gray-100 h-12 rounded mt-5 text-xs">
+                <div>가제 : ({{passFailApplication.extra.Extra__aw_title}})</div>
+                <div>배역 : ({{passFailApplication.extra.Extra__ar_name}})</div>
+                <div v-if="passFailApplication.extra.dateDiff > 0">마감 : {{passFailApplication.extra.dateDiff}}</div>
+                <div v-if="passFailApplication.extra.dateDiff == 0">마감 : 오늘까지</div>
+                <div v-if="passFailApplication.extra.dateDiff < 0">기한 마감</div>
+              </div>
             </div>
             <div v-if="state.passFailApplications.length == 0" class="flex justify-around items-center bg-gray-100 h-12 rounded mt-5 text-xs">
               <span>불합격한 내역이 존재하지 않습니다.</span>
@@ -137,7 +145,7 @@ export default defineComponent({
             state.applications = axiosResponse.data.body.applications
 
             if ( axiosResponse.data.body.applications.length != 0 ){
-              for (let i = axiosResponse.data.body.applications.length -1 ; i > axiosResponse.data.body.applications.length - 4; i--){
+              for (let i = 0; i < axiosResponse.data.body.applications.length; i++){
                 if ( axiosResponse.data.body.applications[i].passStatus == -1 ){
                   state.passFailApplications.push(axiosResponse.data.body.applications[i])
                 }

@@ -14,97 +14,155 @@
         <section>
           <div class="text-lg font-extrabold">{{state.recruit.extra__aw_title}}</div>
           <div class="text-xs mt-2">모집기한. {{state.recruit.deadline}}</div>
-          <div class="text-right mt-2 text-xs">
-            <span>{{state.recruit.extra__aw_media}}</span>
+          <div class="text-right mt-2 text-xs mr-5">
+            <span>( {{state.recruit.extra__aw_media}}</span>
             / 
-            <span>{{state.recruit.extra__aw_genre}}</span>
+            <span>{{state.recruit.extra__aw_genre}} )</span>
           </div>
-          <div v-if="state.recruit.extra != null">
-            <img :src="state.recruit.extra.file__common__attachment[0].forPrintUrl" alt="" class="mx-auto">
-          </div>
-          <div class="">감독. {{state.recruit.extra__aw_director}}</div>
-          <div class="flex justify-around">
-            <span>프로듀서.</span><span>{{state.recruit.extra__aw_producer}}</span>
-            <span>캐스팅매니저.</span><span>{{state.recruit.extra__aw_castingManager}}</span>
-          </div>
-          <div class="text-left mt-6">
-            <div class="">스토리 라인(줄거리).</div>
-            <div class="border border-black rounded py-2 px-1 mt-1">{{state.recruit.extra__aw_story}}</div>
-          </div>
-          <div class="text-left mt-6">
-            <div class="">기타사항.</div>
-            <div class="border border-black rounded py-2 px-1 mt-1">{{state.recruit.extra__aw_etc}}기타사항</div>
-          </div>
-        </section>
-
-        <div class="border-t-2 border-black my-10"></div>
-
-        <section>
-          <div class="text-lg font-extrabold">배역 상세 내용</div>
-          <div class="mt-2">배역. {{state.recruit.extra__ar_name}}</div>
-          <div class="flex justify-around mt-2">
-            <span>배역나이. </span><span>{{state.recruit.extra__ar_age}}</span>
-            <span>배역성별. </span><span>{{state.recruit.extra__ar_gender}}</span>
-          </div>
-          <div class="flex justify-around mt-2">
-            <span>배역직업. </span><span>{{state.recruit.extra__ar_job}}</span>
-            <span>대사유무. </span><span>{{state.recruit.extra__ar_scriptStatus}}</span>
+          <div v-if="state.recruit.extra != null" >
+            <img :src="state.recruit.extra.file__common__attachment[0].forPrintUrl" alt="" class="mx-auto my-5">
           </div>
 
-          <div class="text-left mt-6">
-            <div class="">배역 상세 설정.</div>
-            <div class="border border-black rounded py-2 px-1 mt-1">{{state.recruit.extra__ar_character}}</div>
-          </div>
-
-        </section>
-
-        <div class="border-t-2 border-black my-10"></div>
-
-        <section>
-          <div class="text-lg font-extrabold">촬영 설명</div>
+          <ion-grid >
+            <ion-row>
+              <ion-col>
+                감독. {{state.recruit.extra__aw_director}}
+              </ion-col>
+            </ion-row>
+            <ion-row class="text-left">
+              <ion-col>
+                프로듀서. {{state.recruit.extra__aw_producer}}
+              </ion-col>
+              <ion-col>
+                캐스팅매니저. {{state.recruit.extra__aw_castingManager}}
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col>
+                <div class="text-left mt-10">스토리 라인 (줄거리).</div>
+                <div class="border border-black rounded py-2 px-1 mt-1">{{state.recruit.extra__aw_story}}</div>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col>
+                <div class="text-left mt-2">기타사항.</div>
+                <div class="border border-black rounded py-2 px-1 mt-1">{{state.recruit.extra__aw_etc}}기타사항</div>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
           
-          <div class="flex justify-around mt-2">
-            <span>촬영기간. </span><span>{{state.recruit.period}}</span>
-            <span>촬영지역. </span><span>{{state.recruit.location}}</span>
-          </div>
+        </section>
 
-          <div class="flex justify-around mt-2">
-            <span>장면 수. </span><span>{{state.recruit.extra__ar_scenesCount}}컷</span>
-            <span>촬영횟수. </span><span>{{state.recruit.extra__ar_shootingsCount}}회</span>
-          </div>
+        <div class="border-t-2 border-black my-10"></div>
+
+        <section>
+
+          <div class="text-lg font-extrabold">배역 상세 내용</div>
+
+          <ion-grid>
+            <ion-row class="text-left mt-10">
+              <ion-col>
+                배역나이. {{state.recruit.extra__ar_age}}
+              </ion-col>
+              <ion-col>
+                배역성별. {{state.recruit.extra__ar_gender}}
+              </ion-col>
+            </ion-row>
+            <ion-row class="text-left">
+              <ion-col>
+                배역직업. {{state.recruit.extra__ar_job}}
+              </ion-col>
+              <ion-col>
+                대사유무. {{state.recruit.extra__ar_scriptStatus}}
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col>
+                <div class="text-left mt-10">배역 상세 설정.</div>
+                <div class="border border-black rounded py-2 px-1 mt-1">{{state.recruit.extra__ar_character}}</div>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+
+        </section>
+
+        <div class="border-t-2 border-black my-10"></div>
+
+        <section>
+
+          <div class="text-lg font-extrabold">촬영 설명</div>
+
+          <ion-grid>
+            <ion-row class="text-left mt-10">
+              <ion-col>
+                촬영기간. {{state.recruit.period}}
+              </ion-col>
+              <ion-col>
+                촬영지역. {{state.recruit.location}}
+              </ion-col>
+            </ion-row>
+            <ion-row class="text-left">
+              <ion-col>
+                장면 수. {{state.recruit.extra__ar_scenesCount}}컷
+              </ion-col>
+              <ion-col>
+                촬영횟수. {{state.recruit.extra__ar_shootingsCount}}회
+              </ion-col>
+            </ion-row>
+          </ion-grid>
         </section>
 
         <div class="border-t-2 border-black my-10"></div>
 
         <section>
           <div class="text-lg font-extrabold">지원 자격 및 필요 서류</div>
-          
-          <div class="flex justify-around mt-2 mb-10">
-            <span>성별. </span><span>{{state.recruit.gender}}</span>
-            <span>나이대. </span><span>{{state.recruit.age}}</span>
-          </div>
-          
-          <div class="flex justify-between mt-2">
-            <span>현재 사진. </span><span class="text-xs">*일주일내 찍은 사진만 가능</span>
-          </div>
 
-          <div class="flex justify-between mt-2">
-            <span>연기영상. </span><span class="text-xs">*직접촬영만 가능</span>
-          </div>
-          
-          <div class="flex justify-between">
-            <span>연기촬영시간. </span><span>{{state.recruit.videoTime}}</span>
-          </div>
-
-          <div class="text-left mt-6">
-            <div class="">연기대사.</div>
-            <div class="border border-black rounded py-2 px-1 mt-1">{{state.recruit.script}}</div>
-          </div>
-
-          <div class="text-left mt-6">
-            <div class="">우대사항.</div>
-            <div class="border border-black rounded py-2 px-1 mt-1">{{state.recruit.etc}}</div>
-          </div>
+          <ion-grid>
+            <ion-row class="text-left mt-10">
+              <ion-col>
+                성별. {{state.recruit.gender}}
+              </ion-col>
+              <ion-col>
+                나이대. {{state.recruit.age}}
+              </ion-col>
+            </ion-row>
+            <ion-row class="mt-10">
+              <ion-col class="text-left">
+                현재 사진.
+              </ion-col>
+              <ion-col class="text-right">
+                *일주일내 찍은 사진만 가능
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col class="text-left">
+                연기영상.
+              </ion-col>
+              <ion-col class="text-right">
+                *직접촬영만 가능
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col class="text-left">
+                연기촬영시간.
+              </ion-col>
+              <ion-col class="text-right">
+                {{state.recruit.videoTime}}
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col>
+                <div class="text-left mt-10">연기대사.</div>
+                <div class="border border-black rounded py-2 px-1 mt-1">{{state.recruit.script}}</div>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col>
+                <div class="text-left mt-10">우대사항.</div>
+                <div class="border border-black rounded py-2 px-1 mt-1">{{state.recruit.etc}}</div>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
 
         </section>
 
