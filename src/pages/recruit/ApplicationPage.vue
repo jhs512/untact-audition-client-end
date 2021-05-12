@@ -194,6 +194,12 @@ export default defineComponent({
 
     const fileElRef = ref<HTMLIonInputElement>();
 
+    const input = reactive ({
+      fileEl: new File([''],'') as any,
+      profileImgs:[] as any[],
+      recentImgUrl: ''
+    })
+
     const takeRecentPhoto = () => {
       takePhoto().finally(()=>{
 
@@ -272,12 +278,6 @@ export default defineComponent({
       recentImgFileIdsStr:'',
       videoFileIdsStr:'',
       profileImgIdsStr: profileImage.checkedList
-    })
-
-    const input = reactive ({
-      fileEl: new File([''],''),
-      profileImgs:[] as any[],
-      recentImgUrl: ''
     })
 
     var fileType = reactive({

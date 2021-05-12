@@ -41,12 +41,11 @@ export default defineComponent({
           localStorage.setItem("loginedMemberId", loginedMember.id + "");
           localStorage.setItem("loginedMemberLoginId", loginedMember.loginId);
 
-          if( axiosResponse.data.body.member.extra == null ){
+          if( axiosResponse.data.body.member.extra.thumbnail_image_url == null ){
             localStorage.setItem("loginedMemberExtra__thumbImg", './img/user-icon.png');
-          }else{
+          } else {
             const imgUrl = loginedMember.extra.thumbnail_image_url.replace('http', 'https')
             localStorage.setItem("loginedMemberExtra__thumbImg", imgUrl);
-            
           }
 
           if ( axiosResponse.data.body.member.extra.existsMember ){

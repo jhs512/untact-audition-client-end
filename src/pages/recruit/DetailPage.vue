@@ -155,20 +155,31 @@ export default defineComponent({
     }
 
     async function showApplicationPage(id:number) {
+      let count = 0;
+
       await mainApi.application_getApplications(util.toIntOrNull(globalState.loginedMember.id))
         .then(axiosResponse => {
           if ( axiosResponse.data.fail ) {
             alert(axiosResponse.data.msg);
             return;
           } else if (axiosResponse.data.body.applications.length != 0){
+            
             for ( let i = 0; i < axiosResponse.data.body.applications.length; i++){
               if (props.id == axiosResponse.data.body.applications[i].recruitId){
-                util.showAlert("Alert", "이미 지원한 공고입니다.", function(){})
-                return;
-              }
+                count++
+              } 
+            }
+
+            if ( count > 0 ){
+              util.showAlert("Alert", "이미 지원한 공고입니다.", function(){})
+              return;
+            } else {
+              router.push('/application?id=' + id)
+              return;
             }
           } else {
             router.push('/application?id=' + id)
+            return;
           }
       })
     }
