@@ -109,7 +109,7 @@ export default defineComponent({
             return;
           } else {
             util.showAlert("Alert", axiosResponse.data.msg, function(){
-              router.replace('/member/login')
+              router.replace('/member/login?email=' + props.email)
             })
           }
         })

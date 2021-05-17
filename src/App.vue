@@ -19,12 +19,26 @@ export default defineComponent({
   },
   setup() {
     App.addListener('appUrlOpen', function (data: any) {
-      const slug = data.url.split(".com")[1];
+      const slug = data.url.split("ap.audictionary.com")[1];
       
       if ( slug.startsWith('/member/kakaoLogin')){
         const param = slug.split('code=')[1]
         router.push({name: "kakaoLogin", params: {code: param}})
       } 
+
+      if ( slug.startsWith('/member/emailCert')){
+        const params = slug.split('email=')[1];
+        const emailBits = params.split('&emailCertKey=')[0];
+        const emailCertKeyBits = params.split('&emailCertKey=')[1];
+        router.push({name: "emailCert", params: {email: emailBits, emailCertKey: emailCertKeyBits}})
+      }
+
+      if ( slug.startsWith('/member/modifyPw')){
+        const params = slug.split('email=')[1];
+        const emailBits = params.split('&emailCertKey=')[0];
+        const emailCertKeyBits = params.split('&emailCertKey=')[1];
+        router.push({name: "modifyPw", params: {email: emailBits, emailCertKey: emailCertKeyBits}})
+      }
 
       return{
         router

@@ -149,6 +149,18 @@ const routes: Array<RouteRecordRaw> = [
     props: (route:any) => ( { email:route.query.email, emailCertKey:route.query.emailCertKey })
   },
   {
+    path: '/member/modifyPwApp',
+    name: 'modifyPw',
+    component: () => import('@/pages/member/ModifyPwPage.vue'),
+    props: true
+  },
+  {
+    path: '/member/emailCertApp',
+    name: 'emailCert',
+    component: () => import('@/pages/member/EmailCertPage.vue'),
+    props: true
+  },
+  {
     path: '/tos/audictionary',
     component: () => import('@/pages/tos/AudictionaryTosPage.vue'),
   },

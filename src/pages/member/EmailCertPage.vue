@@ -5,6 +5,7 @@
 import { useMainApi } from '@/apis';
 import { defineComponent } from 'vue'
 import * as Util from '@/utils'
+import router from '@/router'
 
 export default defineComponent({
   name: 'EmailCertPage',
@@ -15,7 +16,7 @@ export default defineComponent({
     },
     emailCertKey:{
       type:String,
-      required:true
+      required: true
     }
   },
   setup(props) {
@@ -26,11 +27,11 @@ export default defineComponent({
         .then(axiosResponse => {
           
           if ( axiosResponse.data.fail ) {
-          Util.showAlert("알림",axiosResponse.data.msg, () => window.close());
+          Util.showAlert("알림",axiosResponse.data.msg, () => router.push('/'));
             return;
           }
           
-          Util.showAlert("알림",axiosResponse.data.msg, () => window.close());
+          Util.showAlert("알림",axiosResponse.data.msg, () => router.push('/member/login?email=' + props.email));
         });
     
     return {
